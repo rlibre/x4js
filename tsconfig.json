@@ -1,0 +1,23 @@
+{
+  	"compilerOptions": {
+		"module": "amd",
+		"target": "es2017",
+		"lib": [ "es2018", "dom" ],
+    	"noImplicitAny": false, 
+    	"strictNullChecks": false,
+    	"experimentalDecorators": true,
+		"outFile": "bin/x4.js",
+		"allowJs": true,
+		"declaration": true,
+		"composite": true,
+		"typeRoots": [],
+		"sourceMap": true,
+		"importHelpers": false,
+		"strict": false
+  	},
+	"include": [
+		"./*",
+		"./hosts/host.ts"
+	]
+	
+}
