@@ -43,8 +43,9 @@ interface ApplicationEventMap extends BaseComponentEventMap {
 export interface ApplicationProps extends BaseComponentProps<ApplicationEventMap> {
 	app_name: string;		// 
 	app_version: string;	//
-	app_uid: string;
-	locale: string;			// fr-FR
+	app_uid?: string;
+	locale?: string;		// fr-FR
+	renderTo?: HTMLElement;
 }
 
 /**
@@ -113,7 +114,6 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	}
 
 	ApplicationCreated( ) {
-
 	}
 
 	public get app_name( ) {
@@ -158,9 +158,14 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	 public set mainView( root: Component ) {
 
 		this.m_mainView = root;
+		this.mainView.addClass( 'x4-root-element' );
 
 		deferCall( ( ) => {
-			document.body.appendChild(root._build());
+			const dest = this.m_props.renderTo ?? document.body;
+			while (dest.firstChild) {
+				dest.removeChild(dest.firstChild);
+			}
+			dest.appendChild(root._build());
 		} );
 	}
 
@@ -174,7 +179,7 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 
 	public disableZoomWheel( ) {
 
-		window.addEventListener('mousewheel', function( ev: WheelEvent ) {
+		window.addEventListener('wheel', function( ev: WheelEvent ) {
 			if( ev.ctrlKey ) {
 				ev.preventDefault( );
 				//ev.stopPropagation( );

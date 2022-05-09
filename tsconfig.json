@@ -1,23 +1,15 @@
 {
   	"compilerOptions": {
-		"module": "amd",
-		"target": "es2017",
-		"lib": [ "es2018", "dom" ],
+		"target": "esnext",
+		"lib": [ "esnext", "dom" ],
     	"noImplicitAny": false, 
     	"strictNullChecks": false,
-    	"experimentalDecorators": true,
-		"outFile": "bin/x4.js",
-		"allowJs": true,
+    	"outDir": "./lib",
 		"declaration": true,
-		"composite": true,
-		"typeRoots": [],
-		"sourceMap": true,
-		"importHelpers": false,
-		"strict": false
+		"module": "commonjs",
+		"strict": false,
   	},
 	"include": [
-		"./*",
-		"./hosts/host.ts"
+		"./src/*",
 	]
-	
 }

@@ -1,0 +1,22 @@
+{
+	"name": "x4js",
+	"version": "1.4.7",
+	"description": "X4js core files",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"repository": {
+	  "type": "git",
+	  "url": "git+https://github.com/rlibre/x4js.git"
+	},
+	"keywords": [
+	  "typescript",
+	  "framework"
+	],
+	"author": "etienne cochard",
+	"license": "MIT",
+	"bugs": {
+	  "url": "https://github.com/rlibre/x4js/issues"
+	},
+	"homepage": "https://github.com/rlibre/x4js#readme"
+  }
+  

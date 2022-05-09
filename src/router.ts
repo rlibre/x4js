@@ -6,7 +6,7 @@ interface Route {
 	callback: Callback;
 }
 
-class Router {
+export class Router {
 
 	private routes: Route[];
 
