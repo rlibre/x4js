@@ -29,7 +29,7 @@
 
 import { Component, CProps } from './component'
 import { Stylesheet } from './styles'
-import { HtmlString } from './tools';
+import { HtmlString, isString } from './tools';
 import { BasicEvent, EvChange, EventMap, EventSource } from './x4_events';
 
 // ============================================================================
@@ -43,7 +43,6 @@ export interface IconProps extends CProps {
 	size?: number;
 }
 
-
 export interface EvLoaded extends BasicEvent {
 	url: string;
 	svg: string;
@@ -55,6 +54,17 @@ export function EvLoaded( url: string, svg: string, context = null ) {
 
 interface LoadingEventMap extends EventMap {
 	loaded: EvLoaded;
+}
+
+function trimQuotes( str:string ): string {
+	const l = str.length;
+	if( str[0]=='"' && str[l-1]=='"' ) {
+		str = str.substring( 1, l-1 )
+		str = str.replaceAll( '\\"', "'" );
+		return str;
+	}
+
+	return str;
 }
 
 class Loader extends EventSource<LoadingEventMap> {
@@ -79,13 +89,22 @@ class Loader extends EventSource<LoadingEventMap> {
 
 			// then start loading
 			const _load = async ( url ) => {
-				const r = await fetch( url );
-				if( r.ok ) {
-					const svg = await r.text();
+					
+				// shortcut
+				if( url.substring(0,24)=="data:image/svg+xml;utf8,") {
+					const svg = url.substring(24);
 					this.svgs.set( url, svg );
-
-					//console.log( 'signal=', url );
 					this.signal( 'loaded', EvLoaded(url,svg) );
+				}
+				else {
+					const r = await fetch( url );
+					if( r.ok ) {
+						const svg = await r.text();
+						this.svgs.set( url, svg );
+
+						//console.log( 'signal=', url );
+						this.signal( 'loaded', EvLoaded(url,svg) );
+					}
 				}
 			}
 
@@ -105,43 +124,95 @@ export class Icon extends Component<IconProps>
 	private m_icon: string;
 	private m_iconName: IconID;
 
-	constructor( props: IconProps ) {
-		super( props );
-				
-		this._setIcon( props.icon, false );
+	constructor( props: IconProps | string ) {
 
-		if( props.size ) {
-			this.setStyleValue( 'fontSize', props.size );
+		if( isString(props) ) {
+			super( { icon: props } );
+		}
+		else {
+			super( props );
+		}
+
+		this._setIcon( this.m_props.icon, false );
+		if( this.m_props.size ) {
+			this.setStyleValue( 'fontSize', this.m_props.size );
 		}
 	}
 
 	private _setIcon(icon: IconID, remove_old: boolean) {
 
-		const reUrl = /\s*url\s*\(\s*(.+)\s*\)\s*/gi;
-		const reSvg = /\s*svg\s*\(\s*(.+)\s*\)\s*/gi;
-		const reSvg2 = /(.*\.svg)$/gi;
-		const reCls = /\s*cls\s*\(\s*(.+)\s*\)\s*/gi;
-		
 		if( !icon ) {
 			this.m_iconName = '';
 			return;
 		}
 
 		this.removeClass( '@svg' );
-		
-		let name, url;
+
+		//	todo: deprecated
+		let name, url: string;
 		if (typeof (icon) === 'number') {
 			icon = icon.toString(16);
 			name = icon;
 		}
 		else {
+			// var( <var-name> )
+			//	
+			//	in the .css
+			//  --------------------------
+			//	:root {
+			//		--chevron-up: svgpath( "M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96z" );
+			//	}
+			//
+			//	var( "--chevron-up" )
+			const reVar = /\s*var\s*\(\s*(.+)\s*\)\s*/gi;
+			let match_var = reVar.exec( icon );
+			while( match_var ) {
+				const varname = match_var[1].trim( );
+				icon = (Stylesheet.getVar(varname) as string).trim( );
+                if (icon == '' || icon === undefined) {
+					console.error( `icon: unable to find variable named '${varname}'` );
+					return;
+				}
+				else {
+					icon = trimQuotes( icon );
+				}
+
+				match_var = reVar.exec( icon );
+			}
+			
+			//	svg( <svg-filename> )	-> 	svg( "mysvgfile.svg" )	
+			//	<svg-filename>.svg 		->  "mysvgfile.svg"
+
+			const reSvg = /\s*svg\s*\(\s*(.+)\s*\)\s*/gi;
+			const reSvg2 = /(.*\.svg)$/gi;
+			
 			let match_svg = reSvg.exec( icon ) || reSvg2.exec(icon);
 			if( match_svg ) {
 				const url  = match_svg[1].trim( );
 				this._setSVG( url );
 				return;
 			}
+
+			//	svgpath( <svg-path> )
+			//	svgpath( "M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96z" )
+			const reSvg3 = /\s*svgpath\s*\(\s*(.+)\s*\)\s*/gi;
+			let match_pth = reSvg3.exec( icon );
+			if( match_pth ) {
+				const pth  = this._setSVGPath( match_pth[1].trim( ) );
+				return;
+			}
+
+			//	data( <direct> )
+			//	data( "data:image/svg+xml;utf8,<svg...></svg>" )
+
+			const reSvg4 = /^\s*(data\:image\/.+)\s*$/gi;
+			let match_dta = reSvg4.exec( icon );
+			if( match_dta ) {
+				this._setSVG( match_dta[1] );
+				return;
+			}
 			
+			const reCls = /\s*cls\s*\(\s*(.+)\s*\)\s*/gi;
 			let match_cls = reCls.exec( icon );
 			if( match_cls ) {
 				const classes  = match_cls[1].trim( );
@@ -149,12 +220,20 @@ export class Icon extends Component<IconProps>
 				return;
 			}
 			
+			const reUrl = /\s*url\s*\(\s*(.+)\s*\)\s*/gi;
 			let match_url = reUrl.exec( icon );
 			if( match_url ) {
-				url  = match_url[1].trim( );
-				name = url.replace( /[/\\\.\* ]/g, '_' );
+				url  = trimQuotes( match_url[1].trim( ) );
+				if( url.substring(0,5)=='data:' ) {
+					this._setSVG( url );
+					return;
+				}
+				else {
+					name = url.replace( /[/\\\.\* ]/g, '_' );
+				}
 			}
 			else {
+				// todo: deprecated
 				name = icon;
 				icon = Stylesheet.getVar( 'icon-'+icon ) as string;
 
@@ -207,6 +286,7 @@ export class Icon extends Component<IconProps>
 	 * change the icon
 	 * @param icon - new icon
 	 */
+	
 	public set icon( icon: IconID ) {
 		this._setIcon( icon, true );
 	}
@@ -231,6 +311,14 @@ export class Icon extends Component<IconProps>
 		svgLoader.load( url );
 	}
 
+	/**
+	 * todo: try to extract viewbox
+	 */
+
+	private _setSVGPath( pth: string ) {
+		this.addClass( '@svg-icon' );
+		this.setContent( HtmlString.from(`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="${pth}/></svg>`), false );
+	}
 
 	/**
 	 * 

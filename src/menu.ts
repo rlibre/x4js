@@ -286,8 +286,10 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 			icon = props.checked ? 'cls(far fa-check)' : 0;	//todo: use stylesheet
 		}
 
+		let popIco = null;
 		if (this.isPopup) {
 			this.addClass('@popup-menu-item');
+			popIco = new Icon( "var( --x4-icon-chevron-right )" );
 		}
 
 		if (!text && !icon) {
@@ -304,7 +306,8 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 
 		this.setContent([
 			icon < 0 ? null : new Icon({ icon }),
-			new Label({ flex: 1, text })
+			new Label({ flex: 1, text }),
+			popIco
 		]);
 	}
 

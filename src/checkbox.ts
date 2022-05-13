@@ -49,12 +49,13 @@ interface CheckBoxProps extends CProps<CheckBoxEventMap> {
 
 	checked?: boolean;
 	value?: string;
+	slider?: boolean;
 
 	labelWidth?: number; // <0 mean flex value
 	labelAlign?: 'left' | 'right';
 	align?: 'left' | 'right';
 
-	change: EventCallback<EvChange>;
+	change?: EventCallback<EvChange>;
 }
 
 /**
@@ -69,6 +70,10 @@ export class CheckBox extends Component<CheckBoxProps, CheckBoxEventMap> {
 
 		this.setDomEvent('focus', () => this._setFocus());
 		this.mapPropEvents( props, 'change' );
+
+		if( props.slider ) {
+			this.addClass( 'slider' );
+		}
 	}
 
 	/** @ignore */

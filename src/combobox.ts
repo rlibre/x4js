@@ -160,7 +160,7 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 					this.m_ui_input,
 					this.m_ui_button = new Button({
 						cls: 'gadget',
-						icon: 'cls(far fa-angle-down)',
+						icon: 'var( --x4-icon-angle-down )',
 						tabIndex: false,
 						click: () => this.showPopup(),
 						dom_events: {

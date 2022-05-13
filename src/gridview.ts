@@ -44,6 +44,7 @@ import { downloadData } from './tools'
 import { DataView, DataStore, Record } from './datastore'
 
 import { EvContextMenu, EvSelectionChange, BasicEvent, EventDisposer } from "./x4_events";
+import { Icon } from './icon.js';
 
 export interface EvGridCheck extends BasicEvent {
 	rec: Record;
@@ -74,6 +75,12 @@ export interface GridColumn {
 	sortable?: boolean;
 }
 
+interface GridColumnInternal extends GridColumn {
+	$col: ColHeader;
+}
+
+
+
 export type CellRenderer = (rec: Record) => Component;
 export type RowClassifier = (rec: Record, Row: Component) => void;
 export type ContextMenuGridItem = (event: MouseEvent, item: Record, grid: GridView) => any;
@@ -95,6 +102,52 @@ export interface GridViewProps extends CProps<GridViewEventMap> {
 	hasMarks?: boolean;	// if true add a checkbox on left side cf. clearMarks, getMarksIds
 	hasFooter?: boolean;
 }
+
+
+class ColHeader extends Component {
+
+	private m_sens: "up" | "dn";
+	private m_sorted: boolean;
+	
+	constructor( props, title ) {
+		super( props );
+
+		this.m_sorted = false;
+		this.m_sens = 'dn';
+	
+		this.setContent( [
+			new Component({
+				tag: 'span',
+				content: title
+			}),
+			new Icon( {
+				ref: 'sorter',
+				cls: '@hidden',
+				icon: 'var( --x4-icon-arrow-down )'
+			})
+		]);
+	}
+
+	get sorted( ) {
+		return this.m_sorted;
+	}
+
+	set sorted( v ) {
+		this.m_sorted = v;
+		this.m_sens = 'dn';
+		this.itemWithRef<Icon>( 'sorter' ).show( v );
+	}
+
+	get sens( ) {
+		return this.m_sens;
+	}
+
+	toggleSens( ) {
+		this.m_sens = this.m_sens=='up' ? 'dn' : 'up';
+		this.itemWithRef<Icon>( 'sorter' ).icon = this.m_sens=='dn' ? 'var( --x4-icon-arrow-down )' : 'var( --x4-icon-arrow-up )';
+	}
+}
+
 
 
 /**
@@ -226,8 +279,6 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 	 */
 
 	private _handleKey(event: KeyboardEvent) {
-		//debugger;
-
 		if (!this.m_dataview || this.m_dataview.count == 0) {
 			return;
 		}
@@ -377,12 +428,8 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 				cls += ' ' + col.cls;
 			}
 
-			let comp = new Component({
+			let comp = new ColHeader({
 				cls,
-				content: new Component({
-					tag: 'span',
-					content: col.title
-				}),
 				flex: col.flex,
 				sizable: 'right',
 				style: {
@@ -397,7 +444,7 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 						}
 					}
 				}
-			});
+			}, col.title );
 
 			const resizeCol = ( ev: EvSize ) => {
 				this._on_col_resize(index, ev.size.width);
@@ -499,27 +546,22 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 
 		this.m_columns.forEach((c) => {
 			if (c !== col) {
-				(<any>c).$sorted = false;
-				(<any>c).$col.removeClass('sort desc');
+				(c as GridColumnInternal).$col.sorted = false;
 			}
 		});
 
-		const $col = col as any;
+		const $col = (col as GridColumnInternal).$col;
 
-		if ($col.$sorted) {
-			$col.$sens = $col.$sens ? 0 : 1;
-			$col.$col.setClass('desc', $col.$sens);
+		if ($col.sorted) {
+			$col.toggleSens( );
 		}
 		else {
-			$col.$sens = 0;
-			$col.$sorted = true;
-			$col.$col.addClass('sort');
-			$col.$col.removeClass('desc');
+			$col.sorted = true;
 		}
 
 		if (this.m_dataview) {
 			this.m_dataview.sort([
-				{ field: col.id, ascending: $col.$sens ? false : true }
+				{ field: col.id, ascending: $col.sens=='dn' ? false : true }
 			]);
 		}
 	}

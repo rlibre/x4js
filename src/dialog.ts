@@ -340,9 +340,10 @@ export class Dialog<P extends DialogProps = DialogProps, E extends DialogBoxEven
 				content: [
 					this.m_icon ? new Icon({ icon: this.m_icon }) : null,
 					this.m_ui_title = new Label({ flex: 1, text: this.m_title }),
-					this.m_minimizable ? new Icon({ cls: 'min-btn', icon: 'cls(far fa-window-minimize)', dom_events: { click: () => this._toggleMin() } }) : null,
-					this.m_maximizable ? new Icon({ cls: 'max-btn', icon: 'cls(far fa-window-maximize)', dom_events: { click: () => this._toggleMax() } }) : null,
-					this.m_closable ? new Icon({ icon: 'cls(far fa-rectangle-times)', dom_events: { click: () => this.close() } }) : null,
+					this.m_minimizable ? new Icon({ cls: 'min-btn', icon: 'var( --x4-icon-window-minimize )', dom_events: { click: () => this._toggleMin() } }) : null,
+					this.m_maximizable ? new Icon({ cls: 'max-btn', icon: 'var( --x4-icon-window-maximize )', dom_events: { click: () => this._toggleMax() } }) : null,
+					this.m_maximizable ? new Icon({ cls: 'res-btn', icon: 'var( --x4-icon-window-restore )', dom_events: { click: () => this._toggleMax() } }) : null,
+					this.m_closable ? new Icon({ cls: 'close-btn', icon: 'var( --x4-icon-rectangle-times )', dom_events: { click: () => this.close() } }) : null,
 				]
 			});
 

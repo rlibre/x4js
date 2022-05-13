@@ -98,7 +98,8 @@ export class Stylesheet {
 
 				rule += '}';
 
-				console.log( rule );
+				//console.log( rule );
+				
 				this.setRule( name+'--'+idx, rule );
 				idx++;
 			}
@@ -107,7 +108,7 @@ export class Stylesheet {
 
 	/**
 	 * return the style variable value
-	 * @param name - variable name without '--'
+	 * @param name - variable name 
 	 * @example
 	 * ```
 	 * let color = Component.getCss( ).getVar( 'button-color' );
@@ -119,7 +120,11 @@ export class Stylesheet {
 			Stylesheet.doc_style = getComputedStyle( document.documentElement );
 		}
 
-    	return Stylesheet.doc_style.getPropertyValue( '--'+name ); // #999999
+		if( name[0]!='-' ) {
+			name = '--'+name;
+		}
+
+    	return Stylesheet.doc_style.getPropertyValue( name ); // #999999
 	}
 
 	static guid: number = 1;

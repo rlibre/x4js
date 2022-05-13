@@ -51,7 +51,7 @@ export class MessageBox extends Dialog<MessageBoxProps>
 	constructor(props: MessageBoxProps) {
 
 		// remove overloaded elements from DialogBoxProps
-		let icon = props.icon ?? 'cls(far fa-circle-exclamation)';	// todo: resolve that
+		let icon = props.icon ?? 'var( --x4-icon-exclamation )';	// todo: resolve that
 		props.icon = undefined;
 
 		let buttons: FormButtons = props.buttons === undefined ? ['ok'] : props.buttons;
@@ -64,7 +64,7 @@ export class MessageBox extends Dialog<MessageBoxProps>
 		this.form.updateContent(new HLayout({
 			style: { padding: 8 },
 			content: [
-				new Icon({ cls: 'icon', icon }),
+				icon ? new Icon({ cls: 'icon', icon }) : null,
 				this.m_label = new Label({ cls: 'text', text: msg, multiline: true })
 			]
 		}), buttons);

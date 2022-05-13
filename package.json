@@ -4,6 +4,7 @@
 	"description": "X4js core files",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
+	"style": "lib/x4.css",
 	"repository": {
 	  "type": "git",
 	  "url": "git+https://github.com/rlibre/x4js.git"
@@ -12,6 +13,9 @@
 	  "typescript",
 	  "framework"
 	],
+	"scripts": {
+		"build": "build.sh"
+	},
 	"author": "etienne cochard",
 	"license": "MIT",
 	"bugs": {
