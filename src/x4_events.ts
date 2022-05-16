@@ -28,12 +28,12 @@
 **/
 
 // default stopPropagation implementation for Events
-const stopPropagation = function () {
+const stopPropagation = function ( this: any ) {
 	this.propagationStopped = true;
 }
 
 // default preventDefault implementation for Events
-const preventDefault = function () {
+const preventDefault = function ( this: any ) {
 	this.defaultPrevented = true;
 }
 
@@ -389,13 +389,14 @@ export class EventSource<Q extends EventMap, T extends EventTypes = MapEvents<Q>
 	 */
 
 	once<K extends keyof Q>(type: K, callback: (ev: Q[K]) => any) {
+		//@ts-ignore
 		this._once(type as string, callback);
 	}
 
 	_once(eventName: string, callback: EventCallback) {
 
 		const newCallback = ( ev ) => {
-			this.off(eventName, newCallback);
+			this._off(eventName, newCallback);
 			callback( ev );
 		}
 
@@ -489,6 +490,7 @@ export class EventSource<Q extends EventMap, T extends EventTypes = MapEvents<Q>
 	 */
 
 	on<K extends keyof Q>(type: K, callback: (ev: Q[K]) => any) : EventDisposer {
+		//@ts-ignore
 		return this._on(type as string, callback);
 	}
 
@@ -514,7 +516,7 @@ export class EventSource<Q extends EventMap, T extends EventTypes = MapEvents<Q>
 		}
 
 		return {
-			dispose: ( ) => { this.off( eventName, callback ); } 
+			dispose: ( ) => { this._off( eventName, callback ); } 
 		}
 	}
 
@@ -524,7 +526,12 @@ export class EventSource<Q extends EventMap, T extends EventTypes = MapEvents<Q>
 	 * @param callback - callback to remove (must be the same as in on )
 	 */
 
-	off(eventName: string, callback: EventCallback ): void {
+	off<K extends keyof Q>(type: K, callback: (ev: Q[K]) => any) {
+		//@ts-ignore
+		return this._off(type as string, callback);
+	}
+
+	_off(eventName: string, callback: EventCallback ): void {
 		if (!this.m_eventRegistry) {
 			return;
 		}

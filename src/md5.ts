@@ -363,6 +363,7 @@ export class Md5 {
         const s = self._state;
 
         return {
+			//@ts-ignore
             buffer: String.fromCharCode.apply(null, self._buffer8),
             buflen: self._bufferLength,
             length: self._dataLength,

@@ -87,7 +87,7 @@ function mkPainter(c2d: CanvasRenderingContext2D, w: number, h: number): CanvasP
 	return cp;
 }
 
-function smoothLine(points: any[], path: CanvasPath = null, move = true) {
+function smoothLine( this: CanvasRenderingContext2D, points: any[], path: CanvasPath = null, move = true) {
 	if (points.length < 2) {
 		return;
 	}
@@ -150,7 +150,7 @@ function smoothLine(points: any[], path: CanvasPath = null, move = true) {
 	path.lineTo(p1.x, p1.y);
 }
 
-function smoothLineEx(_points: any[], tension: number = 0.5, numOfSeg: number = 10, path: CanvasPath = null, move = true, close = false) {
+function smoothLineEx(this: CanvasRenderingContext2D, _points: any[], tension: number = 0.5, numOfSeg: number = 10, path: CanvasPath = null, move = true, close = false) {
 
 	let points = [];
 
@@ -261,7 +261,7 @@ function smoothLineEx(_points: any[], tension: number = 0.5, numOfSeg: number = 
 	}
 }
 
-function line(x1: number, y1: number, x2: number, y2: number, color: string, lineWidth: number = 1) {
+function line(this: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, color: string, lineWidth: number = 1) {
 	this.save();
 	this.beginPath();
 	this.moveTo(x1, y1);
@@ -272,7 +272,7 @@ function line(x1: number, y1: number, x2: number, y2: number, color: string, lin
 	this.restore();
 }
 
-function roundRect(x: number, y: number, width: number, height: number, radius: number) {
+function roundRect(this: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
 	//this.beginPath( );
 	this.moveTo(x + radius, y);
 	this.lineTo(x + width - radius, y);
@@ -286,7 +286,7 @@ function roundRect(x: number, y: number, width: number, height: number, radius: 
 	this.closePath();
 }
 
-function calcTextSize(text: string, rounded = false): { width: number, height: number } {
+function calcTextSize( this: CanvasRenderingContext2D, text: string, rounded = false): { width: number, height: number } {
 
 	let fh = this.measureText(text);
 	let lh = fh.fontBoundingBoxAscent + fh.fontBoundingBoxDescent;
@@ -299,12 +299,12 @@ function calcTextSize(text: string, rounded = false): { width: number, height: n
 	}
 }
 
-function setFontSize(fs: number) {
+function setFontSize( this: CanvasRenderingContext2D, fs: number) {
 	let fsize = Math.round(fs) + 'px';
 	this.font = this.font.replace(/\d+px/, fsize);
 }
 
-function circle(x: number, y: number, radius: number) {
+function circle( this: CanvasRenderingContext2D, x: number, y: number, radius: number) {
 	this.moveTo(x + radius, y);
 	this.arc(x, y, radius, 0, Math.PI * 2);
 }

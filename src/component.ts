@@ -1562,8 +1562,9 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 		return result ? Component.getElement<T>(result) : null;
 	}
 
-	public queryAll(selector: string, cb?: (el: Component) => void) {
-		const elements = this.m_dom.querySelectorAll(selector);
+	public queryAll(selector: string, cb?: (el: Component) => void): HTMLElement[] {
+		let elements:HTMLElement[] = Array.from( this.m_dom.querySelectorAll<HTMLElement>(selector) );
+		
 		if( cb ) {
 			elements.forEach((el) => {
 				cb(flyWrap(el as HTMLElement));

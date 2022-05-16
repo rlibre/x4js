@@ -398,7 +398,7 @@ export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<
      * @returns child or null
      */
     queryItem<T extends Component>(selector: string): T;
-    queryAll(selector: string, cb?: (el: Component) => void): NodeListOf<Element>;
+    queryAll(selector: string, cb?: (el: Component) => void): HTMLElement[];
     /**
      * find a child with the given ID
      * @param id id (without '#')

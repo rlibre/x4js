@@ -442,7 +442,7 @@ export class Record {
 
 		let fld = fields[idx];
 		if( fld.calc!==undefined ) {
-			return fld.calc.call( this );
+			return fld.calc( this );
 		}
 		
 		return this[fld.name];

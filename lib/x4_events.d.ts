@@ -248,7 +248,8 @@ export declare class EventSource<Q extends EventMap, T extends EventTypes = MapE
      * @param eventName - event name
      * @param callback - callback to remove (must be the same as in on )
      */
-    off(eventName: string, callback: EventCallback): void;
+    off<K extends keyof Q>(type: K, callback: (ev: Q[K]) => any): void;
+    _off(eventName: string, callback: EventCallback): void;
     /**
      * remove all listeners for an event
      * @param eventName - event name

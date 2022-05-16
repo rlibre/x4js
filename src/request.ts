@@ -108,7 +108,7 @@ export function ajaxRequest( cfg: RequestProps ) : Function {
 
 	if( cfg.headers ) {
 		for( let h in cfg.headers) {
-			this.xhr.setRequestHeader( h, cfg.headers[h] );
+			xhr.setRequestHeader( h, cfg.headers[h] );
 		}
 	}
 

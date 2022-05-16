@@ -167,17 +167,21 @@ export class Calendar extends VLayout<CalendarProps, CalendarEventMap>
 					cls += ' out';
 				}
 
-				days.push(new HLayout({
-					cls,
-					flex: 1,
-					content: new Component({
-						tag: 'span',
-						content: formatIntlDate(dte, 'd'),
-					}),
-					dom_events: {
-						click: () => this.select(dte.clone())
-					}
-				}));
+				const mkItem = ( dte ) => {
+					return new HLayout({
+						cls,
+						flex: 1,
+						content: new Component({
+							tag: 'span',
+							content: formatIntlDate(dte, 'd'),
+						}),
+						dom_events: {
+							click: () => this.select(dte)
+						}
+					})
+				}
+
+				days.push( mkItem( dte.clone() ) );
 
 				dte.setDate(dte.getDate() + 1);
 				first = false;

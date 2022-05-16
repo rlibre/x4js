@@ -148,15 +148,13 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 					autofocus.focus( )
 				}
 				else {
-					let tabbable = this.queryItem('[tabindex]');
+					let tabbable = this.queryAll('[tabindex]');
 
 					if( tabbable ) {
-						let tab_indexes: HTMLElement[] = [].map.call(tabbable, (e) => { return e; });
-
 						// remove hidden elements
-						tab_indexes = tab_indexes.filter((el) => el.offsetParent !== null);
-						if (tab_indexes.length) {
-							tab_indexes[0].focus( );
+						tabbable = tabbable.filter((el) => el.offsetParent !== null);
+						if (tabbable.length) {
+							tabbable[0].focus( );
 						}
 					}
 				}
@@ -447,8 +445,7 @@ function _nextTab(root: HTMLElement, el: HTMLElement, prev: boolean) {
 
 	// get a list of elements with tab index, this way we should abble to
 	// cycle on them (not on browser address nor under dialog elements)
-	let tabbable = root.querySelectorAll('[tabindex]');
-	let tab_indexes: HTMLElement[] = [].map.call(tabbable, (e) => { return e; });
+	let tab_indexes:HTMLElement[] = Array.from( root.querySelectorAll<HTMLElement>('[tabindex]') );
 
 	// remove hidden elements
 	tab_indexes = tab_indexes.filter((el) => el.offsetParent !== null);

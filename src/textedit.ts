@@ -171,7 +171,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps> extends Component
 
 			button = new Button({
 				cls: 'gadget',
-				icon: 'cls(far fa-calendar-days)',	// todo: resolve that
+				icon: 'var( --x4-icon-calendar-days )',
 				tabIndex: false,
 				click: () => this._showDatePicker(button)
 			});
@@ -461,7 +461,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps> extends Component
 				this.value = props.validator(value);
 			}
 			catch (err) {
-				this.showError(err instanceof Error ? err.message : err);
+				this.showError(err instanceof Error ? err.message : err as string);
 				return false;
 			}
 		}
