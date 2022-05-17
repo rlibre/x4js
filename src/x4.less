@@ -1312,12 +1312,13 @@ textarea {
 	}
 }
 
+@bwidth: 4px;
 
 .x-spreadsheet,
 .x-grid-view {
 	
 	@def-height: 2em;
-
+	
 	min-height: 0;
 	overflow: hidden;
 	background-color: white;
@@ -1370,7 +1371,7 @@ textarea {
 
 	.x-row {
 		position: absolute;
-		width: 100%;
+		width: calc( 100% - @bwidth );	// todo: border of 1st col
 		border-bottom: 1px solid #f0f0f0;
 		align-items: center;
 		height: @def-height;
@@ -1400,11 +1401,11 @@ textarea {
 .x-grid-view {
 	.x-footer,
 	.x-header {
-		border-left: 4px solid #f0f0f0;
+		border-left: @bwidth solid #f0f0f0;
 	}
 
 	.x-row {
-		border-left: 4px solid transparent;
+		border-left: @bwidth solid transparent;
 
 		&:hover {
 			background-color: rgba(0,0,0,0.1);

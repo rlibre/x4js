@@ -76,7 +76,8 @@ export interface GridColumn {
 }
 
 interface GridColumnInternal extends GridColumn {
-	$col: ColHeader;
+	$hdr: ColHeader;
+	$ftr: Component;
 }
 
 
@@ -421,6 +422,7 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 			content: this.m_container
 		});
 
+		let flex = false;
 		let cols = this.m_columns.map((col, index) => {
 
 			let cls = '@cell';
@@ -463,12 +465,19 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 				events: {resize: ( e ) => resizeCol(e )}
 			});
 
-			(<any>col).$col = comp;
+			if( col.flex ) {
+				flex = true;
+			}
+
+			(<any>col).$hdr = comp;
 			return comp;
 		});
 
-		(cols as any).push( new Flex( {} ) );
-
+		(cols as any).push( new Flex( {
+			ref: 'flex',
+			cls: flex ? '@hidden' : ''
+		} ) );
+		
 		// compute full width
 		let full_width = 0;
 		this.m_columns.forEach((col) => {
@@ -481,8 +490,7 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 			style: {
 				minWidth: full_width
 			}
-		});
-	
+		});	
 
 		if( this.m_props.hasFooter ) {
 			let foots = this.m_columns.map((col, index) => {
@@ -506,11 +514,15 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 					}
 				});
 
+				(col as GridColumnInternal).$ftr = comp;
 				return comp;
 			});
 
-			(foots as any).push( new Flex( {} ) );
-
+			(foots as any).push( new Flex( {
+				ref: 'flex',
+				cls: flex ? '@hidden' : ''
+			} ) );
+			
 			this.m_footer = new HLayout({
 				cls: '@footer',
 				content: <any>foots,
@@ -532,9 +544,40 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 
 	}
 
-	private _on_col_resize(col, width) {
-		this.m_columns[col].width = width;
-		this.m_columns[col].flex = undefined;
+	private _on_col_resize(col: number, width: number) {
+
+		const _col = this.m_columns[col] as GridColumnInternal;
+
+		let updateFlex = false;
+				
+		if( width>=0 ) {
+			_col.width = width;
+			if( _col.flex ) {
+				_col.$hdr.removeClass( '@flex' );
+				_col.flex = undefined;
+				updateFlex = true;
+			}
+		}
+		else if( width<0 && !_col.flex ) {
+			_col.$hdr.addClass( '@flex' );
+			_col.flex = 1;
+			updateFlex = true;
+		}
+
+		if( updateFlex ) {
+			let flex = false;
+			this.m_columns.forEach( c => {
+				if( c.flex ) {
+					flex = true;
+				}
+			});
+				
+			this.m_header.itemWithRef( 'flex' )?.show( flex ? false : true );
+			if( this.m_footer ) {
+				this.m_footer.itemWithRef( 'flex' )?.show( flex ? false : true );
+			}
+		}
+
 		this._updateScroll(true);
 	}
 
@@ -550,22 +593,22 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 
 		this.m_columns.forEach((c) => {
 			if (c !== col) {
-				(c as GridColumnInternal).$col.sorted = false;
+				(c as GridColumnInternal).$hdr.sorted = false;
 			}
 		});
 
-		const $col = (col as GridColumnInternal).$col;
+		const $hdr = (col as GridColumnInternal).$hdr;
 
-		if ($col.sorted) {
-			$col.toggleSens( );
+		if ($hdr.sorted) {
+			$hdr.toggleSens( );
 		}
 		else {
-			$col.sorted = true;
+			$hdr.sorted = true;
 		}
 
 		if (this.m_dataview) {
 			this.m_dataview.sort([
-				{ field: col.id, ascending: $col.sens=='dn' ? false : true }
+				{ field: col.id, ascending: $hdr.sens=='dn' ? false : true }
 			]);
 		}
 	}
@@ -630,7 +673,8 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 		let cidx = 0;
 		let index = this.m_topIndex;
 		let count = this.m_dataview ? this.m_dataview.count : 0;
-		let full_width = 0;
+		
+		let full_width = 0; // todo: +4 pixel of left border
 		let even = this.m_topIndex & 1 ? true : false;
 
 		// compute full width
@@ -783,17 +827,16 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 		this.m_empty_msg.show(show);
 
 		if (full_width < rc.width) {
-			//this.m_header.setStyleValue('width', null);
-			//this.m_footer?.setStyleValue('width', null);
+			this.m_header.setStyleValue('width', null);
+			this.m_footer?.setStyleValue('width', null);
 			this.m_container.setStyle({
 				height: count * this.m_itemHeight,
 				width: null
 			});
 		}
 		else {
-			this.m_header.setStyleValue('width', full_width + 5 );
-			this.m_footer?.setStyleValue('width', full_width + 5 );
-
+			this.m_header.setStyleValue('width', full_width + 1000 );
+			this.m_footer?.setStyleValue('width', full_width + 1000 );
 			this.m_container.setStyle({
 				height: count * this.m_itemHeight,
 				width: full_width
