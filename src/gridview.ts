@@ -36,7 +36,7 @@ const T_UPDATE = Symbol('update');
 
 
 import { HLayout, VLayout } from './layout'
-import { Component, ContainerEventMap, EvSize, EvDblClick, CProps, flyWrap, html, HtmlString, SizerOverlay } from './component'
+import { Component, ContainerEventMap, EvSize, EvDblClick, CProps, flyWrap, html, HtmlString, SizerOverlay, Flex } from './component'
 import { Label } from './label'
 import { _tr } from './i18n'
 import * as Formatters from './formatters'
@@ -122,7 +122,7 @@ class ColHeader extends Component {
 			}),
 			new Icon( {
 				ref: 'sorter',
-				cls: '@hidden',
+				cls: '@hidden sort',
 				icon: 'var( --x4-icon-arrow-down )'
 			})
 		]);
@@ -467,6 +467,8 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 			return comp;
 		});
 
+		(cols as any).push( new Flex( {} ) );
+
 		// compute full width
 		let full_width = 0;
 		this.m_columns.forEach((col) => {
@@ -506,6 +508,8 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 
 				return comp;
 			});
+
+			(foots as any).push( new Flex( {} ) );
 
 			this.m_footer = new HLayout({
 				cls: '@footer',
@@ -779,16 +783,16 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 		this.m_empty_msg.show(show);
 
 		if (full_width < rc.width) {
-			this.m_header.setStyleValue('width', null);
-			this.m_footer?.setStyleValue('width', null);
+			//this.m_header.setStyleValue('width', null);
+			//this.m_footer?.setStyleValue('width', null);
 			this.m_container.setStyle({
 				height: count * this.m_itemHeight,
 				width: null
 			});
 		}
 		else {
-			this.m_header.setStyleValue('width', full_width);
-			this.m_footer?.setStyleValue('width', full_width);
+			this.m_header.setStyleValue('width', full_width + 5 );
+			this.m_footer?.setStyleValue('width', full_width + 5 );
 
 			this.m_container.setStyle({
 				height: count * this.m_itemHeight,

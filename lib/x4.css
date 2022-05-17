@@ -1113,19 +1113,8 @@ textarea::selection {
 .x-grid-view .x-footer .x-cell.sort,
 .x-spreadsheet .x-header .x-cell.sort,
 .x-grid-view .x-header .x-cell.sort {
-  background-image: var(--x4-icon-arrow-down-long);
-  background-repeat: no-repeat;
-  background-size: 1rem 1rem;
-  background-position: right 0 top 6px;
-  padding-right: calc(1rem + 4px);
   height: 0.7rem;
   opacity: 0.7;
-}
-.x-spreadsheet .x-footer .x-cell.sort.desc,
-.x-grid-view .x-footer .x-cell.sort.desc,
-.x-spreadsheet .x-header .x-cell.sort.desc,
-.x-grid-view .x-header .x-cell.sort.desc {
-  background-image: var(--x4-icon-arrow-up-long);
 }
 .x-spreadsheet .x-header .x-cell,
 .x-grid-view .x-header .x-cell {
