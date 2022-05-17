@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { Container, Component, CProps, ContainerEventMap, EvDblClick } from './component'
+import { Container, Component, ContainerProps, ContainerEventMap, EvDblClick } from './component'
 import { IconID } from './icon';
 import { HLayout, VLayout } from './layout'
 import { Popup, PopupEventMap, PopupProps } from './popup';
@@ -40,7 +40,7 @@ import { EvContextMenu, EvSelectionChange, EvClick, EventCallback, BasicEvent, E
  * item definition
  */
 
-export class ListViewItem {
+export interface ListViewItem {
 	id: any;
 	text?: string | HtmlString;		// if you need pure text
 	html?: boolean;		// if text is html
@@ -79,7 +79,7 @@ export interface ListViewEventMap extends ContainerEventMap {
 /**
  * listview properties
  */
-export interface ListViewProps<E extends ListViewEventMap = ListViewEventMap> extends CProps<E> {
+export interface ListViewProps<E extends ListViewEventMap = ListViewEventMap> extends ContainerProps<E> {
 	items?: ListViewItem[];
 	populate?: PopulateItems;
 	gadgets?: Component[]; // gadgets to instert at bottom

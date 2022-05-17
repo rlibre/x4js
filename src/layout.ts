@@ -116,7 +116,7 @@ export class GridLayout<P extends GridLayoutProps = GridLayoutProps> extends Con
 	constructor(props: GridLayoutProps) {
 		/// @ts-ignore
 		// Argument of type 'GridLayoutProps' is not assignable to parameter of type 'P'.
-  		// 'GridLayoutProps' is assignable to the constraint of type 'P', but 'P' could be instantiated with a different subtype of constraint 'GridLayoutProps'.
+		// 'GridLayoutProps' is assignable to the constraint of type 'P', but 'P' could be instantiated with a different subtype of constraint 'GridLayoutProps'.
 		super(props);
 	}
 
@@ -134,8 +134,8 @@ export class GridLayout<P extends GridLayoutProps = GridLayoutProps> extends Con
 			this.setStyleValue('grid-gap', this.m_props.colGap);
 		}
 
-		if( this.m_props.template ) {
-			this.setStyleValue('grid-template-areas', this.m_props.template.join('\n') );
+		if (this.m_props.template) {
+			this.setStyleValue('grid-template-areas', this.m_props.template.join('\n'));
 		}
 	}
 }
@@ -368,3 +368,54 @@ export class ScrollView extends Component<ScrollViewProps> {
 		}
 	}
 }
+
+
+// :: MASONERY ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+// from a nice article of Andy Barefoot
+//	https://medium.com/@andybarefoot/a-masonry-style-layout-using-css-grid-8c663d355ebb
+
+export class Masonry extends Container {
+
+	constructor(props) {
+		super(props);
+
+		this.setDomEvent('sizechange', () => {
+			this.resizeAllItems( );
+		});
+	}
+
+	resizeItem(item: Component) {
+
+		const style = this.getComputedStyle();
+
+		const rowHeight = style.parse('grid-auto-rows');
+		const rowGap = style.parse('grid-row-gap');
+
+		let content = item.queryItem('.content');
+		if( !content ) {
+			content = item;
+		}
+
+		if (content && (rowHeight + rowGap)) {
+			const rc = content.getBoundingRect();
+			const rowSpan = Math.ceil( (rc.height + rowGap) / (rowHeight + rowGap) );
+			item.setStyleValue('gridRowEnd', "span " + rowSpan);
+		}
+	}
+	  
+	resizeAllItems( ) {
+		this.queryAll( ".item", ( itm ) => {;
+			this.resizeItem( itm );
+		} );
+	}
+
+	addItem( itm: Component ) {
+		itm.addClass( 'content' );
+		this.appendChild( new Container( {
+			cls: 'item',
+			content: itm
+		}));
+	}
+}
+

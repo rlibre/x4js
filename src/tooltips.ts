@@ -52,7 +52,7 @@ export class Tooltip extends Component {
 	render() {
 		this.setClass('@non-maskable', true);
 		this.setContent([
-			new Icon({ icon: 'cls(far fa-circle-info)' }),
+			new Icon({ icon: 'var( --x4-icon-tip' }),
 			this.m_text = new Label({ text: 'help' })
 		]);
 	}

@@ -98,3 +98,6 @@ export function money_formatter_nz(input: any): string {
 export function bool_formatter(input: any): string {
 	return input ? 'oui' : '-';
 }
+
+
+setCurrencySymbol( null );

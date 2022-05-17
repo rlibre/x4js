@@ -26,7 +26,7 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { Container, Component, CProps, ContainerEventMap, EvDblClick } from './component';
+import { Container, Component, ContainerProps, ContainerEventMap, EvDblClick } from './component';
 import { IconID } from './icon';
 import { VLayout } from './layout';
 import { Popup, PopupEventMap, PopupProps } from './popup';
@@ -35,7 +35,7 @@ import { EvContextMenu, EvSelectionChange, EvClick, EventCallback, BasicEvent } 
 /**
  * item definition
  */
-export declare class ListViewItem {
+export interface ListViewItem {
     id: any;
     text?: string | HtmlString;
     html?: boolean;
@@ -67,7 +67,7 @@ export interface ListViewEventMap extends ContainerEventMap {
 /**
  * listview properties
  */
-export interface ListViewProps<E extends ListViewEventMap = ListViewEventMap> extends CProps<E> {
+export interface ListViewProps<E extends ListViewEventMap = ListViewEventMap> extends ContainerProps<E> {
     items?: ListViewItem[];
     populate?: PopulateItems;
     gadgets?: Component[];

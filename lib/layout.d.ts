@@ -78,4 +78,10 @@ export declare class ScrollView extends Component<ScrollViewProps> {
     constructor(props: ScrollViewProps);
     setContent(content: ComponentContent): void;
 }
+export declare class Masonry extends Container {
+    constructor(props: any);
+    resizeItem(item: Component): void;
+    resizeAllItems(): void;
+    addItem(itm: Component): void;
+}
 export {};

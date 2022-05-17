@@ -551,9 +551,11 @@ export function parseIntlDate(value: string, fmts: string = _tr.global.date_inpu
 		let match = rematch.exec(value);
 
 		if (match) {
+			const now = new Date( );
+
 			let d = parseInt(match.groups.day ?? '1');
 			let m = parseInt(match.groups.month ?? '1');
-			let y = parseInt(match.groups.year ?? '1970');
+			let y = parseInt(match.groups.year ?? now.getFullYear()+'');
 			let h = parseInt(match.groups.hour ?? '0');
 			let i = parseInt(match.groups.min ?? '0');
 			let s = parseInt(match.groups.sec ?? '0');
