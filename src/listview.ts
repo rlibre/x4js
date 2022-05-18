@@ -100,7 +100,7 @@ export interface ListViewProps<E extends ListViewEventMap = ListViewEventMap> ex
  * Standard listview class
  */
 
-export class ListView<T extends ListViewProps = ListViewProps, E extends ListViewEventMap = ListViewEventMap> extends VLayout<T,E> {
+export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 
 	protected m_selection: {
 		item: ListViewItem;
@@ -117,7 +117,7 @@ export class ListView<T extends ListViewProps = ListViewProps, E extends ListVie
 
 	protected m_cache: Map<number, Component>; // recycling elements
 
-	constructor(props: T) {
+	constructor(props: ListViewProps) {
 		super(props);
 
 		this.setDomEvent('keydown', (e) => this._handleKey(e));

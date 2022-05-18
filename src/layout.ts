@@ -378,11 +378,20 @@ export class ScrollView extends Component<ScrollViewProps> {
 export class Masonry extends Container {
 
 	constructor(props) {
+		const items = props.items;
+		props.items = undefined;
+
 		super(props);
 
 		this.setDomEvent('sizechange', () => {
 			this.resizeAllItems( );
 		});
+
+		if( items ) {
+			items.forEach( i => {
+				this.addItem( i );
+			});
+		}
 	}
 
 	resizeItem(item: Component) {

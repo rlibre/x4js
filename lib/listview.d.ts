@@ -83,7 +83,7 @@ export interface ListViewProps<E extends ListViewEventMap = ListViewEventMap> ex
 /**
  * Standard listview class
  */
-export declare class ListView<T extends ListViewProps = ListViewProps, E extends ListViewEventMap = ListViewEventMap> extends VLayout<T, E> {
+export declare class ListView extends VLayout<ListViewProps, ListViewEventMap> {
     protected m_selection: {
         item: ListViewItem;
         citem: Component;
@@ -94,7 +94,7 @@ export declare class ListView<T extends ListViewProps = ListViewProps, E extends
     protected m_topIndex: number;
     protected m_itemHeight: number;
     protected m_cache: Map<number, Component>;
-    constructor(props: T);
+    constructor(props: ListViewProps);
     componentCreated(): void;
     render(props: ListViewProps): void;
     /**

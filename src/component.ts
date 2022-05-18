@@ -188,7 +188,7 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 	private static __privateEvents: any = {};
 	private static __sizeObserver: ResizeObserver;	// resize observer
 	private static __createObserver: MutationObserver;	// creation observer
-	private static __intersectionObserver: IntersectionObserver;	// visibility observer
+	//private static __intersectionObserver: IntersectionObserver;	// visibility observer
 
 	private static __capture: ICaptureInfo = null;
 	private static __capture_mask = null;
@@ -202,6 +202,11 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			dom_events: {},
 			uid: Component.__comp_guid++,
 			inrender: false,
+		};
+
+		// prepare iprops
+		if( this.m_props.cls ) {
+			this.addClass( this.m_props.cls );
 		}
 	}
 
@@ -1389,7 +1394,8 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			me = Object.getPrototypeOf(me);
 		}
 
-		this.addClass(this.m_props.cls);
+		//done in ctor now
+		//this.addClass(this.m_props.cls);
 	}
 
 	/**

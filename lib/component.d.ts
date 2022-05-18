@@ -107,7 +107,6 @@ export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<
     private static __privateEvents;
     private static __sizeObserver;
     private static __createObserver;
-    private static __intersectionObserver;
     private static __capture;
     private static __capture_mask;
     private static __css;

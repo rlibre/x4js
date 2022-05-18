@@ -26,9 +26,17 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-export declare class Router {
+import { EventSource, EvError, EventMap } from "./x4_events";
+declare type RouteHandler = (params: any, path: string) => void;
+interface RouterEventMap extends EventMap {
+    error: EvError;
+}
+export declare class Router extends EventSource<RouterEventMap> {
     private routes;
     constructor();
-    get(uri: any, callback: any): void;
+    get(uri: string | RegExp, handler: RouteHandler): void;
     init(): void;
+    navigate(uri: string, notify?: boolean): void;
+    private _find;
 }
+export {};

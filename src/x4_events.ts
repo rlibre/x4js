@@ -168,6 +168,19 @@ export function EvDrag(element: unknown, data: any, ctx: any ) {
 	return BasicEvent<EvDrag>({ element, data, context: ctx });
 }
 
+/**
+ * Errors
+ */
+
+export interface EvError extends BasicEvent {
+	code: number;
+	message: string;
+}
+	
+export function EvError( code: number, message: string ) : EvError {
+	return BasicEvent<EvError>( {code, message} );
+}
+
 
 /**
  * this Base interface is used to describe available events & their types

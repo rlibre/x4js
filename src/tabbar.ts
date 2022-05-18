@@ -75,9 +75,12 @@ export class TabBar extends Container<TabBarProps,TabBarEventMap> {
 		}
 
 		this.m_props.pages?.forEach( p => this.addPage(p) );
+	}
+
+	componentCreated(): void {
 		if( this.m_props.default ) {
-			this.select( this.m_props.default );
-		}
+			this.select( this.m_props.default, true );
+		}		
 	}
 
 	addPage( page: ITabPage ) {
@@ -88,33 +91,61 @@ export class TabBar extends Container<TabBarProps,TabBarEventMap> {
 	render( ) {
 		let buttons = [];
 		this.m_pages.forEach( p => {
-			p.btn = new Button( { cls: p===this.m_curPage ? 'selected' : '', text: p.title, icon: p.icon, click: () => this._select(p) } );
+			p.btn = new Button( { cls: p===this.m_curPage ? 'selected' : '', text: p.title, icon: p.icon, click: () => this._select(p,true) } );
 			buttons.push( p.btn );
 		});
 
 		this.setContent( buttons );
 	}
 
-	select( id: string ) {
-		let page = this.m_pages.find( x => x.id===id );
-		if( page ) {
-			this._select( page );
+	select( id: string | null, notify = false ): boolean {
+		if( !id ) {
+			this._select( null, notify );
+			return true;
+		}
+		else {
+			let page = this.m_pages.find( x => x.id===id );
+			if( page ) {
+				this._select( page, notify );
+				return true;
+			}
+			return false;
 		}
 	}
 
-	private _select( p: TabPage ) {
+	private _select( p: TabPage, notify: boolean ) {
 
-		if( this.dom && this.m_curPage && this.m_curPage.page ) {
+		if( this.m_curPage==p ) {
+			return;
+		}
+
+		if( !this.dom ) {
+			this.m_props.default = p.id;
+			return;
+		}
+
+		if( this.m_curPage ) {
 			this.m_curPage.btn.removeClass( 'selected' );
-			this.m_curPage.page.hide( );
+			if( this.m_curPage.page ) {
+				this.m_curPage.page.hide( );
+			}
 		}
 
 		this.m_curPage = p;
-		this.signal( 'change', EvChange(p ? p.id : null) );
 
-		if( this.dom && this.m_curPage && this.m_curPage.page ) {
-			this.m_curPage.btn.addClass( 'selected' );
-			this.m_curPage.page.show( );
+		if( notify ) {
+			this.signal( 'change', EvChange(p ? p.id : null) );
 		}
+
+		if( this.m_curPage ) {
+			this.m_curPage.btn.addClass( 'selected' );
+			if( this.m_curPage.page ) {
+				this.m_curPage.page.show( );
+			}
+		}
+	}
+
+	get selection( ) {
+		return this.m_curPage?.page;
 	}
 }

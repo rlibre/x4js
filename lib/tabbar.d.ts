@@ -48,9 +48,11 @@ export declare class TabBar extends Container<TabBarProps, TabBarEventMap> {
     private m_pages;
     private m_curPage;
     constructor(props: TabBarProps);
+    componentCreated(): void;
     addPage(page: ITabPage): void;
     render(): void;
-    select(id: string): void;
+    select(id: string | null, notify?: boolean): boolean;
     private _select;
+    get selection(): Component<CProps<import("./base_component").BaseComponentEventMap>, import("./base_component").BaseComponentEventMap>;
 }
 export {};

@@ -107,6 +107,14 @@ export interface EvDrag extends BasicEvent {
 }
 export declare function EvDrag(element: unknown, data: any, ctx: any): EvDrag;
 /**
+ * Errors
+ */
+export interface EvError extends BasicEvent {
+    code: number;
+    message: string;
+}
+export declare function EvError(code: number, message: string): EvError;
+/**
  * this Base interface is used to describe available events & their types
  *
  * you can implement your own event mapping:

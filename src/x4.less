@@ -386,6 +386,8 @@ textarea {
 	align-items: center;
 	outline: none;
 	cursor: pointer;
+	font-family: var( --x4-font );
+	font-size: var( --x4-font-size );
 
 	height: 2rem;
 	padding: 8px;
@@ -2134,4 +2136,27 @@ textarea {
 	grid-gap: 10px;
 	grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
 	grid-auto-rows: 10px;
+}
+
+.x-tab-bar {
+	border-bottom: 1px solid var(--gray-600);
+    background-color: var(--gray-100);
+
+	&> .x-button {
+		border: none;
+		color: var( --gray-600 );
+
+		&.selected {
+			font-weight: bold;
+			//border: 1px solid var( --x4-selection-color );
+			border-bottom: none;
+			color: var( --x4-selection-color );
+			background-color: transparent;
+		}
+
+		&:focus:not(.selected) {
+			text-decoration: underline;
+			color: black;;
+		}
+	}
 }

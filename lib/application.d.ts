@@ -96,5 +96,6 @@ export declare class Application<P extends ApplicationProps = ApplicationProps, 
     setTitle(title: string): void;
     disableZoomWheel(): void;
     enterModal(enter: boolean): void;
+    handleTouchEvents(): void;
 }
 export {};

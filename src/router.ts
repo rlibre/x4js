@@ -27,45 +27,157 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-type Callback = (request: { path: string }) => void;
+import { EventSource, EvError, EventMap } from "./x4_events"
 
-interface Route {
-	uri: string;
-	callback: Callback;
+type RouteHandler = ( params: any, path: string ) => void;
+
+interface Segment {
+	keys: string[],
+	pattern: RegExp;
 }
 
-export class Router {
+interface Route {
+	keys: string[],
+	pattern: RegExp;
+	handler: RouteHandler;
+}
+
+function parseRoute(str: string | RegExp, loose = false): Segment {
+
+	if (str instanceof RegExp) {
+		return {
+			keys: null,
+			pattern: str
+		};
+	}
+
+	const arr = str.split('/');
+
+	let keys = [];
+	let pattern = '';
+
+	if( arr[0]=='' ) {
+		arr.shift();
+	}
+
+	for (const tmp of arr) {
+		const c = tmp[0];
+
+		if (c === '*') {
+			keys.push('wild');
+			pattern += '/(.*)';
+		}
+		else if (c === ':') {
+			const o = tmp.indexOf('?', 1);
+			const ext = tmp.indexOf('.', 1);
+
+			keys.push(tmp.substring(1, o >= 0 ? o : ext >= 0 ? ext : tmp.length));
+			pattern += o < 0 && ext < 0 ? '(?:/([^/]+?))?' : '/([^/]+?)';
+			if (ext >= 0) {
+				pattern += (o >= 0 ? '?' : '') + '\\' + tmp.substring(ext);
+			}
+		}
+		else {
+			pattern += '/' + tmp;
+		}
+	}
+
+	return {
+		keys,
+		pattern: new RegExp( `^${pattern}${loose ? '(?=$|\/)' : '\/?$'}`, 'i' )
+	};
+}
+
+interface RouterEventMap extends EventMap {
+	error: EvError;
+}
+   
+export class Router extends EventSource< RouterEventMap > {
 
 	private routes: Route[];
 
 	constructor() {
+		super( );
+
 		this.routes = [];
+
+		window.addEventListener('popstate', (event) => {
+			const url = document.location.pathname;
+			const found = this._find(url);
+		
+			found.handlers.forEach(h => {
+				h(found.params,url);
+			});
+		});
 	}
 
-	get(uri, callback) {
-
-		// throw an error if the route uri already exists to avoid confilicting routes
-		this.routes.forEach(route => {
-			if (route.uri === uri) {
-				throw new Error(`the uri ${route.uri} already exists`);
-			}
-		});
-
-		this.routes.push({
-			uri,
-			callback
-		});
+	get(uri: string | RegExp, handler: RouteHandler ) {
+		let { keys, pattern } = parseRoute(uri);
+		this.routes.push({ keys, pattern, handler });
 	}
 
 	init() {
-		this.routes.some(route => {
+		this.navigate( window.location.pathname );
+	}
 
-			let regEx = new RegExp(`^${route.uri}$`);
-			let path = window.location.pathname;
+	navigate( uri: string, notify = true ) {
 
-			if (path.match(regEx)) {
-				return route.callback({ path });
+		const found = this._find( uri );
+
+		if( !found || found.handlers.length==0 ) {
+			//window.history.pushState({}, '', 'error')
+			console.log( 'route not found: '+uri );
+			this.signal( "error", EvError( 404, "route not found" ) );
+			return;
+		}
+
+		window.history.pushState({}, '', uri )
+
+		if( notify ) {
+			found.handlers.forEach( h => {
+				h( found.params, uri );
+			} );
+		}
+	}
+
+	private _find( url: string ): { params: any, handlers: RouteHandler[] } {
+		
+		let matches = [];
+		let params = {};
+		let handlers = [];
+
+		for (const tmp of this.routes ) {
+			if (!tmp.keys ) {
+				matches = tmp.pattern.exec(url);
+				if (!matches) {
+					continue;
+				}
+
+				if (matches['groups']) {
+					for (const k in matches['groups']) {
+						params[k] = matches['groups'][k];
+					}
+				}
+
+				handlers = [...handlers, tmp.handler];
+			} 
+			else if (tmp.keys.length > 0) {
+				matches = tmp.pattern.exec(url);
+				if (matches === null) {
+					continue;
+				}
+
+				for ( let j = 0; j < tmp.keys.length;) {
+					params[tmp.keys[j]] = matches[++j];
+				}
+
+				handlers = [...handlers, tmp.handler];
+			} 
+			else if (tmp.pattern.test(url)) {
+				handlers = [...handlers, tmp.handler];
 			}
-		})
+		}
+
+		return { params, handlers };
 	}
 }

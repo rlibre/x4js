@@ -194,6 +194,42 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 
 	public enterModal( enter: boolean ) {
 	}
+
+	public handleTouchEvents( ) {
+		document.addEventListener( 'touchstart', ( ev: TouchEvent ) => {
+
+			let me = this as any;
+			let now = new Date( ).getTime();
+
+			if( !me.__last_touch || (me.__last_touch-now) > 700 ) {
+				me.__touch_cnt = 1;
+			}
+			else {
+				me.__touch_cnt++;
+			}
+
+			me.__last_touch = now;
+
+			if( me.__touch_cnt==2 ) {
+				me.__touch_cnt = 0;
+				
+				let fake = {
+					type: "dblclick", 
+				};
+
+				const tch = ev.touches[0];
+				for( const n in tch ) {
+					fake[n] = tch[n];
+				}
+
+				// ts-ignore -> private
+				(Component as any)._dispatchEvent( fake );
+
+				ev.preventDefault( );
+				ev.stopPropagation( );
+			}
+		});
+	}
 };
 
 
