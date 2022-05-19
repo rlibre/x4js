@@ -34,6 +34,8 @@ import { Settings } from './settings'
 import { deferCall } from './tools'
 import { _tr } from './i18n'
 
+const _x4_touch_time = Symbol( );
+
 
 interface ApplicationEventMap extends BaseComponentEventMap {
 	message: EvMessage;
@@ -92,6 +94,9 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	
 	private m_local_storage: Settings;
 	private m_user_data: any;
+
+	private m_touch_time: number;
+	private m_touch_count: number;
 	
 	constructor( props : P ) {
 		console.assert( Application.self===null, 'application is a singleton' );
@@ -104,6 +109,9 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 		let settings_name = `${this.m_app_name}.${this.m_app_version}.settings`;
 		this.m_local_storage = new Settings( settings_name );
 		this.m_user_data = {};
+
+		this.m_touch_time = 0;
+		this.m_touch_count = 0;
 	
 		(Application.self as any) = this;
 
@@ -195,37 +203,31 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	public enterModal( enter: boolean ) {
 	}
 
-	public handleTouchEvents( ) {
+	public enableTouchDblClick( ) {
 		document.addEventListener( 'touchstart', ( ev: TouchEvent ) => {
 
-			let me = this as any;
-			let now = new Date( ).getTime();
-
-			if( !me.__last_touch || (me.__last_touch-now) > 700 ) {
-				me.__touch_cnt = 1;
+			let now = Date.now( );
+			if( (now-this.m_touch_time) > 700 ) {
+				this.m_touch_count = 1;
 			}
 			else {
-				me.__touch_cnt++;
+				this.m_touch_count++;
 			}
 
-			me.__last_touch = now;
+			this.m_touch_time = now;
 
-			if( me.__touch_cnt==2 ) {
-				me.__touch_cnt = 0;
-				
-				let fake = {
-					type: "dblclick", 
-				};
+			if( this.m_touch_count==2 ) {
+				this.m_touch_count = 0;
 
+				// dirty fake dblclick event
 				const tch = ev.touches[0];
+				let fake: any = {type: "dblclick" };
 				for( const n in tch ) {
 					fake[n] = tch[n];
 				}
 
-				// ts-ignore -> private
+				// ignore -> private: dirty x2
 				(Component as any)._dispatchEvent( fake );
-
-				ev.preventDefault( );
 				ev.stopPropagation( );
 			}
 		});

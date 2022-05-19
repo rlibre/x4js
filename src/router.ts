@@ -72,7 +72,7 @@ function parseRoute(str: string | RegExp, loose = false): Segment {
 			const ext = tmp.indexOf('.', 1);
 
 			keys.push(tmp.substring(1, o >= 0 ? o : ext >= 0 ? ext : tmp.length));
-			pattern += o < 0 && ext < 0 ? '(?:/([^/]+?))?' : '/([^/]+?)';
+			pattern += o >= 0 && ext < 0 ? '(?:/([^\/]+?))?' : '/([^\/]+?)';
 			if (ext >= 0) {
 				pattern += (o >= 0 ? '?' : '') + '\\' + tmp.substring(ext);
 			}

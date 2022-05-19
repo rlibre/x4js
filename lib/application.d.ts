@@ -75,6 +75,8 @@ export declare class Application<P extends ApplicationProps = ApplicationProps, 
     private m_app_uid;
     private m_local_storage;
     private m_user_data;
+    private m_touch_time;
+    private m_touch_count;
     constructor(props: P);
     ApplicationCreated(): void;
     get app_name(): string;
@@ -96,6 +98,6 @@ export declare class Application<P extends ApplicationProps = ApplicationProps, 
     setTitle(title: string): void;
     disableZoomWheel(): void;
     enterModal(enter: boolean): void;
-    handleTouchEvents(): void;
+    enableTouchDblClick(): void;
 }
 export {};
