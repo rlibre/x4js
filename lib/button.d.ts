@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { Component, CProps, CEventMap, HtmlString } from './component';
-import { EventCallback, EvClick, EvChange } from './x4_events';
+import { EventCallback, EvClick, EvChange } from './x4events';
 import { IconID } from './icon';
 import { MenuItem, MenuOrSep } from './menu';
 /**

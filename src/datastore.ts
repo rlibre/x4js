@@ -29,7 +29,7 @@
 
 import { ajaxRequest } from './request';
 import { isArray, isString } from './tools';
-import { BasicEvent, EvChange, EventSource, EventMap, MapEvents } from './x4_events';
+import { BasicEvent, EvChange, EventSource, EventMap, MapEvents } from './x4events';
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component';
 
 export type ChangeCallback = (type: string, id?: any) => void;

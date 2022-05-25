@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { _tr } from './i18n'; 	// you MUST create a file named translation.js
 
 // :: ENVIRONMENT ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -102,6 +104,14 @@ export function pascalCase(string: string): string {
 
 	result = result.trim();
 	return result.replace(/ /g, '-');
+}
+
+export function camelCase( text: string ) {
+	let result = text.toLowerCase( );
+	result = result.replace( /[^a-zA-Z0-9]+(.)/g, (m,chr) => {
+		return chr.toUpperCase();
+	} );
+	return result;
 }
 
 // :: MISC CLASSES ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -800,11 +810,11 @@ export function downloadData(data, mimetype: string, filename: string) {
 	let blob = new Blob([data], { type: mimetype });
 	let url = window.URL.createObjectURL(blob);
 
-	let a = document.createElement("a");
+	let a = x4document.createElement("a");
 	a.style['display'] = "none";
 	a.href = url;
 	a.download = filename;
-	document.body.appendChild(a);
+	x4document.body.appendChild(a);
 
 	a.click();
 	window.URL.revokeObjectURL(url);
@@ -894,7 +904,7 @@ export function waitFontLoading(name: string) {
 	// pitfall: if the font is already loaded, ne never end.
 	// @review that
 
-	let ct = document.createElement('div');
+	let ct = x4document.createElement('div');
 
 	ct.style.position = 'absolute';
 	ct.style.fontFamily = name;
@@ -902,7 +912,7 @@ export function waitFontLoading(name: string) {
 	ct.style.opacity = '0.001';
 	ct.innerText = 'X';
 
-	document.body.appendChild(ct);
+	x4document.body.appendChild(ct);
 
 	return new Promise<void>((resolve) => {
 
@@ -912,7 +922,7 @@ export function waitFontLoading(name: string) {
 			let nrc = ct.getBoundingClientRect();
 			if (nrc.height != irc.height) {
 				clearInterval(tm);
-				document.body.removeChild(ct);
+				x4document.body.removeChild(ct);
 
 				resolve();
 			}

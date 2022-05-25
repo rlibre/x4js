@@ -27,8 +27,10 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Component, CProps, CEventMap } from './component'
-import { EvChange, EventCallback } from './x4_events'
+import { EvChange, EventCallback } from './x4events'
 
 import { IconID } from './icon';
 import { Input } from './input'
@@ -131,7 +133,7 @@ export class RadioBtn extends Component<RadioBtnProps,RadioBtnEventMap> {
 		let props = this.m_props;
 
 		let query = '.x-input[name='+props.name+']';
-		let nlist = document.querySelectorAll( query );		//todo: document ?
+		let nlist = x4document.querySelectorAll( query );		//todo: document ?
 
 		nlist.forEach( (dom) => {
 			let radio = Component.getElement( <HTMLElement>dom, RadioBtn );

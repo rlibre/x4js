@@ -26,16 +26,12 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-/**
- * todo: sizable column
- * todo: button in a column
- */
 import { VLayout } from './layout';
 import { Component, ContainerEventMap, EvDblClick, CProps, HtmlString } from './component';
 import { Label } from './label';
 import * as Formatters from './formatters';
 import { DataView, DataStore, Record } from './datastore';
-import { EvContextMenu, EvSelectionChange, BasicEvent, EventDisposer } from "./x4_events";
+import { EvContextMenu, EvSelectionChange, BasicEvent, EventDisposer } from "./x4events";
 export interface EvGridCheck extends BasicEvent {
     rec: Record;
     chk: boolean;

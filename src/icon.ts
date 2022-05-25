@@ -30,7 +30,7 @@
 import { Component, CProps } from './component'
 import { Stylesheet } from './styles'
 import { HtmlString, isString } from './tools';
-import { BasicEvent, EvChange, EventMap, EventSource } from './x4_events';
+import { BasicEvent, EvChange, EventMap, EventSource } from './x4events';
 
 // ============================================================================
 // [ICON]
@@ -153,6 +153,7 @@ export class Icon extends Component<IconProps>
 		if (typeof (icon) === 'number') {
 			icon = icon.toString(16);
 			name = icon;
+			console.error( "deprecation error: invalid icon name" );	
 		}
 		else {
 			// var( <var-name> )
@@ -160,7 +161,7 @@ export class Icon extends Component<IconProps>
 			//	in the .css
 			//  --------------------------
 			//	:root {
-			//		--chevron-up: svgpath( "M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96z" );
+			//		--chevron-up: data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96z"/></svg>';
 			//	}
 			//
 			//	var( "--chevron-up" )
@@ -193,15 +194,6 @@ export class Icon extends Component<IconProps>
 				return;
 			}
 
-			//	svgpath( <svg-path> )
-			//	svgpath( "M0 96C0 78.33 14.33 64 32 64H416C433.7 64 448 78.33 448 96C448 113.7 433.7 128 416 128H32C14.33 128 0 113.7 0 96z" )
-			const reSvg3 = /\s*svgpath\s*\(\s*(.+)\s*\)\s*/gi;
-			let match_pth = reSvg3.exec( icon );
-			if( match_pth ) {
-				const pth  = this._setSVGPath( match_pth[1].trim( ) );
-				return;
-			}
-
 			//	data( <direct> )
 			//	data( "data:image/svg+xml;utf8,<svg...></svg>" )
 
@@ -212,6 +204,8 @@ export class Icon extends Component<IconProps>
 				return;
 			}
 			
+			//	cls( "fas fa-angle-up" )
+			//
 			const reCls = /\s*cls\s*\(\s*(.+)\s*\)\s*/gi;
 			let match_cls = reCls.exec( icon );
 			if( match_cls ) {
@@ -220,6 +214,8 @@ export class Icon extends Component<IconProps>
 				return;
 			}
 			
+			//	url( "www.google.com" )
+			//
 			const reUrl = /\s*url\s*\(\s*(.+)\s*\)\s*/gi;
 			let match_url = reUrl.exec( icon );
 			if( match_url ) {
@@ -234,6 +230,8 @@ export class Icon extends Component<IconProps>
 			}
 			else {
 				// todo: deprecated
+				console.error( "deprecation error: invalid icon name" );	
+
 				name = icon;
 				icon = Stylesheet.getVar( 'icon-'+icon ) as string;
 
@@ -241,7 +239,6 @@ export class Icon extends Component<IconProps>
 					// name your icon 'icon-xxx'
 					// ex:
 					// :root { --icon-zoom-p: f00e; }
-					console.assert( false );	
 					icon = '0'; 
 				}
 			}

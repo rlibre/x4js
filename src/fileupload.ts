@@ -27,6 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
 import { Component, CProps } from './component'
 
 import { HLayout } from './layout'
@@ -157,7 +158,7 @@ function _createFileInput() {
 		});
 
 		// ajoute un input type:file caché pour pouvoir choir un fichier a ouvrir
-		document.body.appendChild(g_file_input._build());
+		x4document.body.appendChild(g_file_input._build());
 	}
 
 	g_file_input.clearDomEvent('change');

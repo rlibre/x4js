@@ -30,7 +30,7 @@
  * TODO: replace custom combo list by listview or gridview
  */
 import { Component, CProps, ContainerEventMap } from './component';
-import { EvChange, EvSelectionChange, EventCallback } from './x4_events';
+import { EvChange, EvSelectionChange, EventCallback } from './x4events';
 import { Input } from './input';
 import { HLayout } from './layout';
 import { ListViewItem, PopulateItems, EvCancel } from './listview';

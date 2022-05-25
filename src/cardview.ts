@@ -28,7 +28,7 @@
 **/
 
 import { Component, CProps, CEventMap } from './component'
-import { EvChange } from './x4_events'
+import { EvChange } from './x4events'
 
 import { IconID } from './icon'
 import { asap, isFunction } from './tools'

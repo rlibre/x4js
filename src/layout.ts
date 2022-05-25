@@ -28,7 +28,7 @@
 */
 
 import { Component, CProps, ComponentContent, Container, ContainerProps, ContainerEventMap } from './component'
-import { } from './x4_events'
+import { } from './x4events'
 import { isArray } from './tools';
 
 // ============================================================================

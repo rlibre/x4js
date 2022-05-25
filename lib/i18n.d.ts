@@ -27,45 +27,47 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 /**
- * current language
- * FR by default
- * @example ```typescript
- * console.log( _tr.global.ok );
+ * create a new language
+ * @param name language name (code)
+ * @param base base language (code)
+ * @example:
+ * ```js
+ * createLanguage( 'en', 'fr' );
+ * ```
  */
+export declare function createLanguage(name: string, base: string): void;
+/**
+ * check if the given language is known
+ * @param name language name (code)
+ */
+export declare function isLanguage(name: string): boolean;
+/**
+ * build the language with given fragments
+ * @param name language name (code)
+ * @param parts misc elements that make the language
+ * @example:
+ * ```js
+ * createLanguage( 'en', 'fr' );
+ * const app = {
+ * 	clients: {
+ * 		translation1: "hello",
+ *  }
+ * }
+ * addTranslation( 'en', app );
+ * ```
+  */
+export declare function addTranslation(name: any, ...parts: any[]): void;
 export declare let _tr: any;
 /**
- * check if the language is known
- * @param name - language name to test
- * @example ```typescript
- * if( isLanguage('fr') ) {
- * }
+ * select the given language as current
+ * @param name laguage name (code)
  */
-export declare function isLanguage(name: any): boolean;
+export declare function selectLanguage(name: string): void;
 /**
- * select the current language
- * @param name - language name
- * @example ```typescript
- * selectLanguage( 'en' );
- */
-export declare function selectLanguage(name: any): void;
-/**
- * define a translation
- * you can also patch 'global' elements witch are defined by x4
- * @param name - language name
- * @param definition - definition of the language
- * @example ```typescript
- * setTranslation( 'fr', {
- * 	this_is_an_example: 'ceci est un exemple',
- * 	this_is: {
- * 		another_example: 'ceci est un autre exemple'
- *  },
- *  global: {
- *    ok: 'O.K.'
- *  }
- * });
- * console.log( _tr.this_is_an_example ); // defined by the previous line
- * selectLanguage( 'en' );
- * console.log( _tr.this_is_an_example ); // 'en' do not define this, so we get 'fr' one
  *
  */
-export declare function extendTranslation(name: any, definition: any): void;
+export declare function getCurrentLanguage(): string;
+/**
+ *
+ */
+export declare function getAvailableLanguages(): string[];

@@ -28,7 +28,6 @@
 **/
 export * from "./application";
 export * from "./base_component";
-export * from "./base64";
 export * from "./button";
 export * from "./calendar";
 export * from "./canvas";
@@ -67,7 +66,6 @@ export * from "./request";
 export * from "./router";
 export * from "./settings";
 export * from "./sidebarview";
-export * from "./smartedit";
 export * from "./spreadsheet";
 export * from "./styles";
 export * from "./svgcomponent";
@@ -75,9 +73,8 @@ export * from "./tabbar";
 export * from "./tabview";
 export * from "./textarea";
 export * from "./textedit";
-export * from "./texthiliter";
 export * from "./toaster";
 export * from "./tools";
 export * from "./tooltips";
 export * from "./treeview";
-export * from "./x4_events";
+export * from "./x4events";

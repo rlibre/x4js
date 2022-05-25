@@ -31,7 +31,7 @@
  */
 import { Container, ContainerProps, ContainerEventMap } from './component';
 import { Dialog, DialogBoxEventMap, DialogProps } from './dialog';
-import { EvChange, EventCallback } from './x4_events';
+import { EvChange, EventCallback } from './x4events';
 import { HLayout } from './layout';
 import { Color } from './color';
 interface ColorPickerEventMap extends ContainerEventMap {

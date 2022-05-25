@@ -27,14 +27,16 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { Component, CProps, SizerOverlay, EvDblClick, EvSize, ContainerEventMap, ContainerProps } from './component'
+import { x4document } from './x4dom'
+
+import { Component, SizerOverlay, EvDblClick, EvSize, ContainerEventMap, ContainerProps } from './component'
 import { Input, InputProps } from './input';
 import { HLayout, VLayout } from './layout';
 import { TextEditProps, TextEdit } from './textedit';
 import * as Formatters from './formatters';
 import { asap, parseIntlFloat } from './tools';
 import { deferCall } from './tools';
-import { EvContextMenu, EvChange, EvSelectionChange, EventCallback } from './x4_events'
+import { EvContextMenu, EvChange, EvSelectionChange, EventCallback } from './x4events'
 import { ComboBox } from './combobox';
 
 
@@ -153,7 +155,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 			this.m_row_limit = props.maxrows;
 		}
 
-		this.setAttribute('tabIndex', 0);
+		this.setAttribute('tabindex', 0);
 
 		this.setDomEvent('click', (e) => this._itemClick(e) );
 		this.setDomEvent('dblclick', (e) => this._itemDblClick(e) );
@@ -459,13 +461,13 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 	 */
 
 	private _computeItemHeight() {
-		let g1 = document.createElement('div');
+		let g1 = x4document.createElement('div');
 		g1.classList.add('x-spreadsheet');
 
-		let g2 = document.createElement('div');
+		let g2 = x4document.createElement('div');
 		g2.classList.add('content');
 
-		let g3 = document.createElement('div');
+		let g3 = x4document.createElement('div');
 		g3.classList.add('x-cell');
 		g3.append( '&nbsp;' )
 

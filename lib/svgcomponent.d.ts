@@ -43,7 +43,7 @@ declare abstract class SVGItem {
      * change the stroke color
      * @param color
      */
-    stroke(color: string): this;
+    stroke(color: string, width?: number): this;
     /**
      * change the stroke width
      * @param width

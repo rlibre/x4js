@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { Component, Container, ContainerEventMap, CProps, EventHandler } from './component';
-import { EvChange } from './x4_events';
+import { EvChange } from './x4events';
 import { IconID } from './icon.js';
 interface TabBarEventMap extends ContainerEventMap {
     change: EvChange;

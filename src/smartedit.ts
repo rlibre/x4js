@@ -27,7 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { InputProps } from './input'
+import { x4document } from './dom-gen'
+
 import { TextEdit, TextEditProps } from './textedit'
 import { DataStore, DataView, Record } from './datastore'
 import { Popup, PopupProps, PopupEventMap } from './popup';
@@ -481,7 +482,7 @@ export class PopupTable extends Popup<PopupTableProps, PopupTableEventMap> {
 		}
 
 		// @TODO: this is a minimal overflow problem solution
-		let rc = document.body.getBoundingClientRect(),
+		let rc = x4document.body.getBoundingClientRect(),
 			rm = this.getBoundingRect();
 
 		if (halign == 'r') {

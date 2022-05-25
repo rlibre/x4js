@@ -28,7 +28,7 @@
 *
 **/
 
-import { EventMap, MapEvents, EventSource, EvTimer } from './x4_events';
+import { EventMap, MapEvents, EventSource, EvTimer } from './x4events';
 
 /**
  * Timer Callback

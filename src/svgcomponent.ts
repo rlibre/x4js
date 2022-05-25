@@ -88,8 +88,11 @@ abstract class SVGItem {
 	 * @param color 
 	 */
 
-	stroke( color: string ): this {
+	stroke( color: string, width?: number ): this {
 		this.attr( 'stroke', color );
+		if( width!==undefined ) {
+			this.attr( 'stroke-width', width+'px' );	
+		}
 		return this;
 	}
 

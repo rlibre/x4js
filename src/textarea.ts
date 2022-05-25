@@ -28,7 +28,7 @@
 **/
 
 import { Component, CProps, CEventMap } from './component'
-import { EvChange, EventCallback } from './x4_events'
+import { EvChange, EventCallback } from './x4events'
 import { asap } from './tools'
 
 interface TextAreaEventMap extends CEventMap {

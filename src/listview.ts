@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Container, Component, ContainerProps, ContainerEventMap, EvDblClick } from './component'
 import { IconID } from './icon';
 import { HLayout, VLayout } from './layout'
@@ -34,7 +36,7 @@ import { Popup, PopupEventMap, PopupProps } from './popup';
 import { HtmlString, isFunction } from './tools';
 import { Menu, MenuItem } from "./menu";
 
-import { EvContextMenu, EvSelectionChange, EvClick, EventCallback, BasicEvent, EvChange } from "./x4_events";
+import { EvContextMenu, EvSelectionChange, EvClick, EventCallback, BasicEvent, EvChange } from "./x4events";
 
 /**
  * item definition
@@ -728,18 +730,18 @@ export class PopupListView extends Popup<PopupListViewProps,PopupListViewEventMa
 
 	// todo: move into popup
 	show(modal?: boolean) {
-		document.addEventListener('mousedown', this._handleClick);
+		x4document.addEventListener('mousedown', this._handleClick);
 		super.show(modal);
 	}
 
 	hide( ) {
-		document.removeEventListener('mousedown', this._handleClick);
+		x4document.removeEventListener('mousedown', this._handleClick);
 		super.hide( );
 	}
 
 	// todo: move into popup
 	close() {
-		document.removeEventListener('mousedown', this._handleClick);
+		x4document.removeEventListener('mousedown', this._handleClick);
 		super.close();
 	}
 

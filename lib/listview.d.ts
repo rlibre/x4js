@@ -31,7 +31,7 @@ import { IconID } from './icon';
 import { VLayout } from './layout';
 import { Popup, PopupEventMap, PopupProps } from './popup';
 import { HtmlString } from './tools';
-import { EvContextMenu, EvSelectionChange, EvClick, EventCallback, BasicEvent } from "./x4_events";
+import { EvContextMenu, EvSelectionChange, EvClick, EventCallback, BasicEvent } from "./x4events";
 /**
  * item definition
  */

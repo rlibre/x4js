@@ -27,10 +27,12 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Button } from './button';
 import { Popup } from './popup';
 import { Component, CProps, ContainerEventMap, Flex } from './component'
-import { EvChange, EventCallback } from './x4_events'
+import { EvChange, EventCallback } from './x4events'
 
 import { _tr } from './i18n';
 import { Label } from './label';
@@ -307,13 +309,13 @@ export class PopupCalendar extends Popup {
 
 	/** @ignore */
 	show(modal?: boolean) {
-		document.addEventListener('mousedown', this._handleClick);
+		x4document.addEventListener('mousedown', this._handleClick);
 		super.show(modal);
 	}
 
 	/** @ignore */
 	close() {
-		document.removeEventListener('mousedown', this._handleClick);
+		x4document.removeEventListener('mousedown', this._handleClick);
 		super.close();
 	}
 

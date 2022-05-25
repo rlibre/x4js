@@ -28,7 +28,7 @@
 **/
 
 import { CEventMap, Component, CProps } from './component'
-import { EvChange, EventCallback } from './x4_events'
+import { EvChange, EventCallback } from './x4events'
 import { HtmlString } from './tools'
 
 import { Input } from './input'

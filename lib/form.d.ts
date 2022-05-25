@@ -30,7 +30,7 @@ import { Component, Container, CProps, ContainerEventMap, ComponentContent } fro
 import { HLayout, VLayout } from './layout';
 import { Button } from './button';
 import { RequestProps } from './request';
-import { EventCallback } from './x4_events';
+import { EventCallback } from './x4events';
 import { EvBtnClick } from './dialog';
 export declare type FormBtn = 'ok' | 'cancel' | 'ignore' | 'yes' | 'no' | 'close' | 'save' | 'dontsave';
 export declare type FormButtons = (FormBtn | Button | Component)[];

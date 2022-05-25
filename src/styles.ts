@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { pascalCase, isString, isArray } from "./tools";
 
 
@@ -42,8 +44,8 @@ export class Stylesheet {
 	constructor() {
 		
 		function getStyleSheet( name ) : CSSStyleSheet {
-			for(let i=0; i<document.styleSheets.length; i++) {
-			  	let sheet = document.styleSheets[i];
+			for(let i=0; i<x4document.styleSheets.length; i++) {
+			  	let sheet = x4document.styleSheets[i];
 			  	if(sheet.title === name ) {
 					return <CSSStyleSheet>sheet;
 			  	}
@@ -52,9 +54,9 @@ export class Stylesheet {
 
 		this.m_sheet = getStyleSheet( '@dynamic-css' );
 		if( !this.m_sheet ) {
-			let dom = document.createElement( 'style' );
+			let dom = x4document.createElement( 'style' );
 			dom.setAttribute('id', '@dynamic-css' );
-			document.head.appendChild(dom);
+			x4document.head.appendChild(dom);
 
 			this.m_sheet = <CSSStyleSheet>dom.sheet
 		}
@@ -117,7 +119,7 @@ export class Stylesheet {
 
 	public static getVar( name: string ) : any {
 		if( !Stylesheet.doc_style ) {
-			Stylesheet.doc_style = getComputedStyle( document.documentElement );
+			Stylesheet.doc_style = getComputedStyle( x4document.documentElement );
 		}
 
 		if( name[0]!='-' ) {

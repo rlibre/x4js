@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Component, CProps, html } from './component'
 
 // ============================================================================
@@ -167,7 +169,7 @@ export class Image extends Component<ImageProps>
 				src = el.src;
 				
 			// skip deleted elements
-			if( !dom || !document.contains(dom) ) {
+			if( !dom || dom.offsetParent === null ) {
 				// do not append to newList
 				return;
 			}
@@ -177,8 +179,8 @@ export class Image extends Component<ImageProps>
 			// if it is visible & inserted inside the document
 			if( !done && dom.offsetParent!==null && 
 				rc.bottom >= 0 && rc.right >= 0 &&  
-				rc.top <= (window.innerHeight || document.documentElement.clientHeight) && 
-				rc.left <= (window.innerWidth || document.documentElement.clientWidth) ) {
+				rc.top <= (window.innerHeight || x4document.documentElement.clientHeight) && 
+				rc.left <= (window.innerWidth || x4document.documentElement.clientWidth) ) {
 
 				// ok, we load the image
 				let img = <HTMLElement>dom.firstChild;

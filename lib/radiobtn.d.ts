@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { Component, CProps, CEventMap } from './component';
-import { EvChange, EventCallback } from './x4_events';
+import { EvChange, EventCallback } from './x4events';
 import { IconID } from './icon';
 import { Input } from './input';
 interface RadioBtnEventMap extends CEventMap {

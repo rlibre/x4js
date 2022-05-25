@@ -28,7 +28,7 @@
 **/
 
 import { Component, CProps, CEventMap, html } from './component'
-import { BasicEvent, EventCallback } from './x4_events'
+import { BasicEvent, EventCallback } from './x4events'
 
 interface EvPaint extends BasicEvent {
 	ctx: CanvasPainter;

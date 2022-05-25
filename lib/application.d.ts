@@ -26,7 +26,7 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { EvMessage } from './x4_events';
+import { EvMessage } from './x4events';
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component';
 import { Component } from './component';
 import { Settings } from './settings';

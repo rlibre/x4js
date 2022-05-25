@@ -1,6 +1,6 @@
 {
 	"name": "x4js",
-	"version": "1.4.17",
+	"version": "1.4.20",
 	"description": "X4js core files",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
@@ -14,13 +14,14 @@
 	  "framework"
 	],
 	"scripts": {
-		"build": "build.sh"
+		"build": "build.sh",
+		"mkdoc": "typedoc --tsconfig tsconfig.json --readme none"
 	},
 	"author": "etienne cochard",
 	"license": "MIT",
 	"bugs": {
 	  "url": "https://github.com/rlibre/x4js/issues"
 	},
-	"homepage": "https://github.com/rlibre/x4js#readme"
+	"homepage": "https://x4js.org"
   }
   

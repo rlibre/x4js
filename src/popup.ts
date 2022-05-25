@@ -27,9 +27,11 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Container, CProps, flyWrap, SizerOverlay, EvOverlayResize, Component, ContainerEventMap, EvSize } from './component'
 import { Point, Size, getMousePos, asap } from './tools'
-import { BasicEvent } from './x4_events';
+import { BasicEvent } from './x4events';
 import { Application } from './application';
 
 
@@ -89,11 +91,11 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 		if (this.m_hasMask) {
 
 			// remove the focus
-			const focus = document.activeElement as HTMLElement;
+			const focus = x4document.activeElement as HTMLElement;
 			if (focus) {
 				focus.blur()
 			}
-			this.m_ui_mask = <HTMLElement>document.body.lastChild;
+			this.m_ui_mask = <HTMLElement>x4document.body.lastChild;
 
 			while (this.m_ui_mask) {
 
@@ -134,13 +136,13 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 			top: 0
 		});
 
-		document.body.appendChild(this._build());
+		x4document.body.appendChild(this._build());
 
 		this.removeClass('@hidden');
 		this.centerOnScreen( );
 
 		if (modal) {
-			let focus = document.activeElement;
+			let focus = x4document.activeElement;
 			if (!this.dom.contains(focus)) {
 				
 				const autofocus = this.queryItem('[autofocus]');
@@ -167,8 +169,8 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 	centerOnScreen( ) {
 		let rc = this.getBoundingRect();
 
-		let x = (document.body.clientWidth - rc.width) / 2,
-			y = (document.body.clientHeight - rc.height) / 2;
+		let x = (x4document.body.clientWidth - rc.width) / 2,
+			y = (x4document.body.clientHeight - rc.height) / 2;
 
 		this.setStyleValue('left', x);
 		this.setStyleValue('top', y);
@@ -196,7 +198,7 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 		}
 
 		// @TODO: this is a minimal overflow problem solution
-		let rc = document.body.getBoundingClientRect(),
+		let rc = x4document.body.getBoundingClientRect(),
 			rm = this.getBoundingRect();
 
 		if (halign == 'r') {
@@ -418,7 +420,7 @@ function x4handleKeyDown(e: KeyboardEvent) {
 			return;
 		}
 
-		let topStack = document.body;
+		let topStack = x4document.body;
 		if (Popup.modal_stack.length) {
 			topStack = Popup.modal_stack[Popup.modal_stack.length - 1];
 		}
@@ -436,7 +438,7 @@ function x4handleKeyDown(e: KeyboardEvent) {
 function _nextTab(root: HTMLElement, el: HTMLElement, prev: boolean) {
 
 	// first check if the focus is one of our child (disabled...)
-	let focusEl = document.activeElement;
+	let focusEl = x4document.activeElement;
 	if (!root.contains(focusEl)) {
 		return;
 	}
@@ -482,8 +484,8 @@ function _nextTab(root: HTMLElement, el: HTMLElement, prev: boolean) {
 
 function installKBHandler( ) {
 	// set on body to be called after document (where all component domevent go)
-	document.body.addEventListener('keydown', x4handleKeyDown, true);
+	x4document.body.addEventListener('keydown', x4handleKeyDown, true);
 }
 
 // too early ?
-document.body ? installKBHandler( ) : window.addEventListener( 'load', installKBHandler );
+x4document.body ? installKBHandler( ) : window.addEventListener( 'load', installKBHandler );

@@ -27,8 +27,10 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { CEventMap, Component, CProps } from './component'
-import { EvClick, EventCallback } from './x4_events'
+import { EvClick, EventCallback } from './x4events'
 
 import { Popup, PopupProps } from './popup'
 import { Icon, IconID } from './icon'
@@ -155,7 +157,7 @@ export class Menu extends Popup<MenuProps>
 		//console.log( 'addmenu' );
 		if (Menu.watchCount == 0) {
 			Menu.rootMenu = menu;
-			document.addEventListener('mousedown', Menu._mouseWatcher);
+			x4document.addEventListener('mousedown', Menu._mouseWatcher);
 		}
 
 		Menu.watchCount++;
@@ -167,7 +169,7 @@ export class Menu extends Popup<MenuProps>
 		Menu.watchCount--;
 
 		if (Menu.watchCount == 0) {
-			document.removeEventListener('mousedown', Menu._mouseWatcher);
+			x4document.removeEventListener('mousedown', Menu._mouseWatcher);
 		}
 	}
 

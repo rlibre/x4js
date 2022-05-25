@@ -26,6 +26,9 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
+
+import { x4document } from './x4dom'
+
 import { Component } from './component';
 import { Point } from './tools';
 
@@ -61,7 +64,7 @@ class DragManager {
 			this.dragGhost = el.dom.cloneNode(true) as HTMLElement;
 			
 			this.dragGhost.classList.add('dragged');
-			document.body.appendChild(this.dragGhost);
+			x4document.body.appendChild(this.dragGhost);
 
 			el.addClass( 'dragging' );
 

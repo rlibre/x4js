@@ -27,7 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { EvMessage } from './x4_events'
+import { x4document } from './x4dom'
+import { EvMessage } from './x4events'
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component'
 import { Component } from './component'
 import { Settings } from './settings'
@@ -173,7 +174,7 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 		this.mainView.addClass( 'x4-root-element' );
 
 		deferCall( ( ) => {
-			const dest = this.m_props.renderTo ?? document.body;
+			const dest = this.m_props.renderTo ?? x4document.body;
 			while (dest.firstChild) {
 				dest.removeChild(dest.firstChild);
 			}
@@ -186,7 +187,7 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	}
 
 	public setTitle( title: string ) {
-		document.title = this.m_app_name + ' > ' + title;
+		x4document.title = this.m_app_name + ' > ' + title;
 	}
 
 	public disableZoomWheel( ) {
@@ -204,7 +205,7 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	}
 
 	public enableTouchDblClick( ) {
-		document.addEventListener( 'touchstart', ( ev: TouchEvent ) => {
+		x4document.addEventListener( 'touchstart', ( ev: TouchEvent ) => {
 
 			let now = Date.now( );
 			if( (now-this.m_touch_time) > 700 ) {

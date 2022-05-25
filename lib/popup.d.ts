@@ -28,7 +28,7 @@
 **/
 import { Container, CProps, ContainerEventMap, EvSize } from './component';
 import { Point } from './tools';
-import { BasicEvent } from './x4_events';
+import { BasicEvent } from './x4events';
 export interface EvMove extends BasicEvent {
     pos: Point;
 }

@@ -29,7 +29,7 @@
 
 import { Component, Container, ContainerEventMap, CProps, EventHandler } from './component';
 import { Button } from './button';
-import { EvChange } from './x4_events';
+import { EvChange } from './x4events';
 import { IconID } from './icon.js';
 
 interface TabBarEventMap extends ContainerEventMap {

@@ -31,7 +31,7 @@ import { IconID } from './icon';
 import { Label } from './label';
 import { Form, FormButtons } from './form';
 import { Component, ComponentContent } from './component';
-import { BasicEvent, EventCallback } from './x4_events';
+import { BasicEvent, EventCallback } from './x4events';
 import { Rect, Size } from './tools';
 interface Geometry {
     left: number;

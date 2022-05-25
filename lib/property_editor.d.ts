@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { CEventMap, Component, CProps } from './component';
-import { EvChange, EventCallback } from './x4_events';
+import { EvChange, EventCallback } from './x4events';
 import { InputProps } from './input';
 import { Spreadsheet } from './spreadsheet';
 import { Record } from './datastore';

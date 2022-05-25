@@ -27,7 +27,9 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { EventSource, EvError, EventMap } from "./x4_events"
+import { x4document } from './x4dom'
+
+import { EventSource, EvError, EventMap } from "./x4events"
 
 type RouteHandler = ( params: any, path: string ) => void;
 
@@ -102,7 +104,7 @@ export class Router extends EventSource< RouterEventMap > {
 		this.routes = [];
 
 		window.addEventListener('popstate', (event) => {
-			const url = document.location.pathname;
+			const url = x4document.location.pathname;
 			const found = this._find(url);
 		
 			found.handlers.forEach(h => {

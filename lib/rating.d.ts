@@ -28,7 +28,7 @@
 **/
 import { CProps, ContainerEventMap } from './component';
 import { HLayout } from './layout';
-import { EvChange, EventCallback } from './x4_events';
+import { EvChange, EventCallback } from './x4events';
 interface RatingEventMap extends ContainerEventMap {
     change: EvChange;
 }

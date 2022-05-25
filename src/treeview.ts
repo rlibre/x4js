@@ -32,7 +32,7 @@ import { HtmlString, Rect } from './tools';
 import { Icon, IconID } from './icon';
 import { Label } from './label';
 import { HLayout, VLayout } from './layout';
-import { EvClick, BasicEvent, EvDrag, EvSelectionChange, EvContextMenu } from './x4_events';
+import { EvClick, BasicEvent, EvDrag, EvSelectionChange, EvContextMenu } from './x4events';
 
 export interface EvExpand extends BasicEvent {
 	node: TreeNode;

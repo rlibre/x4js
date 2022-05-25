@@ -28,6 +28,205 @@
 **/
 
 
+
+
+/**
+ * language definition
+ */
+
+ interface Language {
+    name: string;
+    base: string;
+	src_translations: any;
+    translations: any;
+}
+
+const sym_lang = Symbol( "i18n" );
+
+let languages: Record<string,Language> = {
+};
+
+/**
+ * create a new language
+ * @param name language name (code)
+ * @param base base language (code)
+ * @example:
+ * ```js
+ * createLanguage( 'en', 'fr' );
+ * ```
+ */
+
+export function createLanguage( name: string, base: string ) {
+    languages[name] = { 
+        name,
+        base,
+		src_translations: {},
+        translations: {}
+    };
+}
+
+/**
+ * check if the given language is known
+ * @param name language name (code)
+ */
+
+export function isLanguage( name: string ): boolean {
+    return languages[name]!==undefined;
+}
+
+/**
+ * build the language with given fragments
+ * @param name language name (code)
+ * @param parts misc elements that make the language
+ * @example:
+ * ```js
+ * createLanguage( 'en', 'fr' );
+ * const app = {
+ * 	clients: {
+ * 		translation1: "hello",
+ *  }
+ * }
+ * addTranslation( 'en', app );
+ * ```
+  */
+
+export function addTranslation( name, ...parts ) {
+	
+	if( !isLanguage(name) ) {
+		return;
+	}
+
+	const lang = languages[name];
+    
+	parts.forEach( p => {
+		_patch( lang.src_translations, p, lang.base );
+	} );
+
+	lang.translations = _mk_proxy( lang.src_translations, lang.base, true );
+}
+
+/**
+ * 
+ */
+
+function _patch( obj: any, by: any, def: string ) {
+	for( let n in by ) {
+		if( obj[n] instanceof Object ) {
+			_patch( obj[n], by[n], def );
+		}
+		else {
+			obj[n] = by[n];
+			obj[n] = _mk_proxy( obj[n], def, false );
+		}
+	}
+
+	return obj;
+}
+
+/**
+ * when we ask for _tr.xxx
+ * reqpath is set to [xxx]
+ * 
+ * then when we try to get _tr.xxx.yyy
+ * reqpath is [xxx,yyy]
+ * if yyy is not found, we try with base langage for the full reqpath 
+ * until no base found
+ */
+
+let req_path: (string | symbol)[];
+
+/**
+ * 
+ */
+
+function _findBaseTrans( base ) {
+
+	while( base ) {
+		const lang = languages[base];
+		let trans = lang.translations;
+		let value;
+
+		for( const p of req_path ) {
+			value = trans[p];
+			if( value===undefined ) {
+				break;
+			}
+
+			trans = value;
+		}
+
+		if( value!==undefined ) {
+			return trans;
+		}
+
+		base = lang.base;
+	}
+
+	console.error( "I18N error: unable to find", '_tr.'+req_path.join('.') );
+	return undefined;
+}
+
+/**
+ * 
+ */
+
+function _mk_proxy( obj: any, base: string, root: boolean ) : any {
+	return new Proxy( obj, {
+		get: (target, prop) => {
+			if( root ) {
+				req_path = [prop];
+			}
+			else {
+				req_path.push( prop );
+			}
+
+			let value = target[prop];
+			if( value===undefined && base ) {
+				value = _findBaseTrans( base );
+				// keep it for later
+				target[prop] = value;
+			}
+			return value;
+		}
+	});
+}
+
+export let _tr: any = {};
+
+/**
+ * select the given language as current
+ * @param name laguage name (code)
+ */
+
+export function selectLanguage( name: string ) {
+
+	if( !isLanguage(name) ) {
+		return;
+	}
+
+	_tr = languages[name].translations;
+	_tr[sym_lang] = name;
+}
+
+/**
+ * 
+ */
+
+export function getCurrentLanguage( ): string {
+	return _tr[sym_lang];
+}
+
+/**
+ * 
+ */
+
+export function getAvailableLanguages( ): string[] {
+	return Object.keys( languages );
+}
+
+
+
+
 /**
  * language definition
  * x4 specific strings
@@ -55,9 +254,9 @@ let fr = {
 		invalid_email: 'adresse mail invalide',
 		invalid_number: 'valeur numérique invalide',
 
-		diff_date_seconds: '{0} seconds',
+		diff_date_seconds: '{0} secondes',
 		diff_date_minutes: '{0} minutes',
-		diff_date_hours: '{0} hours',
+		diff_date_hours: '{0} heures',
 
 		invalid_date: 'Date non reconnue ({0})',
 		empty_list: 'Liste vide',
@@ -83,6 +282,7 @@ let fr = {
 };
 
 /** @ignore */
+
 let en = {
 	global: {
 		ok: 'OK',
@@ -91,119 +291,56 @@ let en = {
 		yes: 'Yes',
 		no: 'No',
 
-		required_field: "required field",
+		open: 'Open',
+		new: 'New',
+		delete: 'Delete',
+		close: 'Close',
+		save: 'Save',
+
+		search: 'Search',
+		search_tip: 'Type in the text to search. <b>Enter</b> to start the search. <b>Esc</b> to cancel.',
+
+		required_field: "missing information",
 		invalid_format: "invalid format",
+		invalid_email: 'invalid email address',
+		invalid_number: 'bad numeric value',
 
 		diff_date_seconds: '{0} seconds',
 		diff_date_minutes: '{0} minutes',
 		diff_date_hours: '{0} hours',
 
-		invalid_date: 'Bad date format {0}',
+		invalid_date: 'Unrecognized date({0})',
+		empty_list: 'Empty list',
+
+		date_input_formats: 'm/d/y|m.d.y|m d y|m-d-y|mdy',
+		date_format: 'M/D/Y',
+
+		day_short: [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ],
+		day_long: [ 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday' ],
+
+		month_short: [ 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jui', 'aug', 'sep', 'oct', 'nov', 'dec' ],
+		month_long: [ 'january', 'february', 'march', 'april', 'mau', 'june', 'jully', 'august', 'september', 'october', 'november', 'december' ],
+
+		property: 'Property',
+		value: 'Value',
+
+		err_403: `You do not have sufficient rights to do that action`,
 
 		copy: 'Copy',
 		cut: 'Cut',
 		paste: 'Paste'
 	}
-}
-
-/** @ignore */
-let all_langs = {
-	'fr': fr,
-	'en': _mk_proxy( _patch( {}, en ) )
 };
 
-/**
- * current language
- * FR by default
- * @example ```typescript
- * console.log( _tr.global.ok );
- */
+createLanguage( 'fr', null );
+addTranslation( 'fr', fr );
 
-export let _tr: any = all_langs['fr'];
+createLanguage( 'en', 'fr' );
+addTranslation( 'en', en );
 
-/**
- * check if the language is known
- * @param name - language name to test 
- * @example ```typescript
- * if( isLanguage('fr') ) {
- * }
- */
-
-export function isLanguage( name ) {
-	return all_langs[name]!==undefined;
-}
-
-/**
- * select the current language
- * @param name - language name
- * @example ```typescript
- * selectLanguage( 'en' );
- */
-
-export function selectLanguage( name ) {
-
-	if( !isLanguage(name) ) {
-		return;
-	}
-
-	_tr = all_langs[name];
-}
-
-/**
- * define a translation
- * you can also patch 'global' elements witch are defined by x4
- * @param name - language name
- * @param definition - definition of the language
- * @example ```typescript
- * setTranslation( 'fr', {
- * 	this_is_an_example: 'ceci est un exemple',
- * 	this_is: {
- * 		another_example: 'ceci est un autre exemple'
- *  },
- *  global: {
- *    ok: 'O.K.'
- *  }
- * });
- * console.log( _tr.this_is_an_example ); // defined by the previous line
- * selectLanguage( 'en' );
- * console.log( _tr.this_is_an_example ); // 'en' do not define this, so we get 'fr' one
- * 
- */
-
-export function extendTranslation( name, definition ) {
-	
-	if( !isLanguage(name) ) {
-		return;
-	}
-
-	_patch( all_langs[name], definition );
-}
+selectLanguage( 'fr' );	// by default
 
 
-function _patch( obj, by ) {
-	for( let n in by ) {
-		if( obj[n] instanceof Object ) {
-			_patch( obj[n], by[n] );
-		}
-		else {
-			obj[n] = by[n];
-			if( obj[n] instanceof Object ) {
-				obj[n] = _mk_proxy( obj[n] );
-			}
-		}
-	}
 
-	return obj;
-}
 
-function _mk_proxy( obj: any ) : any {
-	return new Proxy( obj, {
-		get: function(target, prop, receiver) {
-			let value = target[prop];
-			if( value===undefined ) {
-				return fr[prop];
-			}
-			return value;
-		}
-	});
-}
+

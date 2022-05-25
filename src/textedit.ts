@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Component, EvFocus, HtmlString } from './component'
 import { Input, InputProps, InputEventMap } from './input'
 import { IconID } from './icon'
@@ -36,7 +38,7 @@ import { Label } from './label'
 import { PopupCalendar } from './calendar'
 import { sprintf, parseIntlDate, formatIntlDate } from './tools';
 import { Tooltip } from './tooltips'
-import { EvClick, EvChange, EventCallback } from './x4_events';
+import { EvClick, EvChange, EventCallback } from './x4events';
 
 import { _tr } from './i18n'
 
@@ -307,7 +309,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps> extends Component
 
 		if (!this.m_error_tip) {
 			this.m_error_tip = new Tooltip({ cls: 'error' });
-			document.body.appendChild(this.m_error_tip._build());
+			x4document.body.appendChild(this.m_error_tip._build());
 		}
 
 		let rc = this.m_ui_input.getBoundingRect();

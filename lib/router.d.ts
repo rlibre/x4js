@@ -26,7 +26,7 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { EventSource, EvError, EventMap } from "./x4_events";
+import { EventSource, EvError, EventMap } from "./x4events";
 declare type RouteHandler = (params: any, path: string) => void;
 interface RouterEventMap extends EventMap {
     error: EvError;

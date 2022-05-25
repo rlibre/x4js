@@ -26,7 +26,7 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { BasicEvent, EvChange, EventSource, EventMap } from './x4_events';
+import { BasicEvent, EvChange, EventSource, EventMap } from './x4events';
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component';
 export declare type ChangeCallback = (type: string, id?: any) => void;
 export declare type CalcCallback = () => string;

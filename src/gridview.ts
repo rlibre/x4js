@@ -34,6 +34,7 @@ const T_UPDATE = Symbol('update');
  * todo: button in a column
  */
 
+import { x4document } from './x4dom'
 
 import { HLayout, VLayout } from './layout'
 import { Component, ContainerEventMap, EvSize, EvDblClick, CProps, flyWrap, html, HtmlString, SizerOverlay, Flex } from './component'
@@ -43,7 +44,7 @@ import * as Formatters from './formatters'
 import { downloadData } from './tools'
 import { DataView, DataStore, Record } from './datastore'
 
-import { EvContextMenu, EvSelectionChange, BasicEvent, EventDisposer } from "./x4_events";
+import { EvContextMenu, EvSelectionChange, BasicEvent, EventDisposer } from "./x4events";
 import { Icon } from './icon.js';
 
 export interface EvGridCheck extends BasicEvent {
@@ -618,10 +619,10 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 	 */
 
 	private _computeItemHeight() {
-		let gr = document.createElement('div');
+		let gr = x4document.createElement('div');
 		gr.classList.add('x-row');
 
-		let gv = document.createElement('div');
+		let gv = x4document.createElement('div');
 		gv.classList.add('x-grid-view');
 		gv.style.position = 'absolute';
 		gv.style.top = '-1000px';

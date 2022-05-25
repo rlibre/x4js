@@ -32,7 +32,7 @@
  */
 
 import { Component, CProps, ContainerEventMap } from './component'
-import { EvChange, EvSelectionChange, EventCallback } from './x4_events'
+import { EvChange, EvSelectionChange, EventCallback } from './x4events'
 
 import { Input } from './input'
 import { Label } from './label'

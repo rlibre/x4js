@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { Component, CProps, CEventMap, HtmlString } from './component';
-import { EvClick, EventCallback } from './x4_events';
+import { EvClick, EventCallback } from './x4events';
 interface LinkEventMap extends CEventMap {
     click: EvClick;
 }

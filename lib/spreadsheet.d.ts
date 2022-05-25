@@ -30,7 +30,7 @@ import { Component, EvDblClick, ContainerEventMap, ContainerProps } from './comp
 import { InputProps } from './input';
 import { VLayout } from './layout';
 import * as Formatters from './formatters';
-import { EvContextMenu, EvChange, EvSelectionChange, EventCallback } from './x4_events';
+import { EvContextMenu, EvChange, EvSelectionChange, EventCallback } from './x4events';
 export interface EditorFactory {
     (props: InputProps, row: number, col: number): Component;
 }

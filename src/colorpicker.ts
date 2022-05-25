@@ -35,7 +35,7 @@
 import { Container, Component, ContainerProps, ContainerEventMap } from './component'
 import { CheckBox } from './checkbox'
 import { Dialog, DialogBoxEventMap, DialogProps } from './dialog'
-import { EvChange, EventCallback } from './x4_events'
+import { EvChange, EventCallback } from './x4events'
 import { VLayout, HLayout } from './layout'
 import { Label } from './label'
 import { Color } from './color'

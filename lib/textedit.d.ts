@@ -29,7 +29,7 @@
 import { Component, EvFocus, HtmlString } from './component';
 import { Input, InputProps, InputEventMap } from './input';
 import { IconID } from './icon';
-import { EvClick, EvChange, EventCallback } from './x4_events';
+import { EvClick, EvChange, EventCallback } from './x4events';
 declare type ValidationFunction = (value: string) => string;
 interface TextEditEventMap extends InputEventMap {
     click: EvClick;

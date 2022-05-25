@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Component } from './component'
 import { Label } from './label'
 import { Icon } from './icon'
@@ -79,7 +81,7 @@ export class Tooltip extends Component {
 		}
 
 		// @TODO: this is a minimal overflow problem solution
-		let rc = document.body.getBoundingClientRect(),
+		let rc = x4document.body.getBoundingClientRect(),
 			rm = this.getBoundingRect();
 
 		if (halign == 'r') {
@@ -163,7 +165,7 @@ export function initTooltips(cb?: TooltipHandler) {
 
 				if (tooltip === undefined) {
 					tooltip = new Tooltip({});
-					document.body.appendChild(tooltip._build());
+					x4document.body.appendChild(tooltip._build());
 				}
 
 				tooltip.text = tip;
@@ -183,7 +185,7 @@ export function initTooltips(cb?: TooltipHandler) {
 		}
 	}
 
-	document.body.addEventListener('mouseover', handle_mouse);
-	document.body.addEventListener('mouseout', handle_mouse);
-	document.body.addEventListener('mousemove', handle_mpos);
+	x4document.body.addEventListener('mouseover', handle_mouse);
+	x4document.body.addEventListener('mouseout', handle_mouse);
+	x4document.body.addEventListener('mousemove', handle_mpos);
 }

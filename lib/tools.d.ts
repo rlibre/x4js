@@ -50,6 +50,7 @@ export declare function parseIntlFloat(num: string): number;
  * @param {String} str
  */
 export declare function pascalCase(string: string): string;
+export declare function camelCase(text: string): string;
 export declare type Constructor<T> = new (...args: any[]) => T;
 export declare class Point {
     x: number;

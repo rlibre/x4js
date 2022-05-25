@@ -28,7 +28,7 @@
 **/
 
 import { Component, CProps, CEventMap, isHtmlString, HtmlString, html } from './component'
-import { EvClick, EventCallback } from './x4_events'
+import { EvClick, EventCallback } from './x4events'
 
 // ============================================================================
 // [LINK]

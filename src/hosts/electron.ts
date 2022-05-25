@@ -17,11 +17,14 @@
 * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 **/
 
+import { x4document } from '../dom-gen'
 import { FileStat, PathType, PartType, Host } from './host'
 
 export * from './host';
 
+declare const require;
 declare const host_require;
+
 if( !globalThis.host_require ) {
 	globalThis.host_require = require;
 }
@@ -154,7 +157,7 @@ export class ElectronHost extends Host {
 	}
 
 	createCanvas = ( ) => {
-		return document.createElement('canvas');
+		return x4document.createElement('canvas');
 	}
 }
 

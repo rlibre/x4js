@@ -30,7 +30,7 @@ import { Component, Container, ContainerEventMap, ContainerProps, EvDblClick, Ev
 import { HtmlString } from './tools';
 import { IconID } from './icon';
 import { VLayout } from './layout';
-import { EvClick, BasicEvent, EvDrag, EvSelectionChange, EvContextMenu } from './x4_events';
+import { EvClick, BasicEvent, EvDrag, EvSelectionChange, EvContextMenu } from './x4events';
 export interface EvExpand extends BasicEvent {
     node: TreeNode;
 }

@@ -34,9 +34,11 @@
  */
 
 import { pascalCase, Rect, isString, isArray, Size, Point, isNumber, asap, HtmlString, isHtmlString, Constructor, getMousePos } from './tools';
+import { x4document } from './x4dom';
+
 import { Stylesheet, ComputedStyle } from './styles';
 import { _tr } from './i18n';
-import { BasicEvent, EventCallback } from './x4_events';
+import { BasicEvent, EventCallback } from './x4events';
 import { BaseComponent, BaseComponentProps, BaseComponentEventMap } from './base_component';
 import { IDOMEvents, X4ElementEventMap } from './dom_events';
 
@@ -725,21 +727,12 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 		}
 	}
 
-	///@deprecated
-	//private build(): void  {}
-	/**
-	 * @deprecated
-	 */
-	
-	private Build(): void { }
-
 	public _build(): HTMLElement {
 		if (this.m_dom) {
 			return this.m_dom;
 		}
 
 		this._createDOM();
-
 		return this.m_dom;
 	}
 
@@ -800,10 +793,10 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 		let vdom = this.m_iprops;
 
 		if (props.ns) {
-			this.m_dom = <HTMLElement>document.createElementNS(props.ns, props.tag ?? 'div');
+			this.m_dom = <HTMLElement>x4document.createElementNS(props.ns, props.tag ?? 'div');
 		}
 		else {
-			this.m_dom = document.createElement(props.tag ?? 'div');
+			this.m_dom = x4document.createElement( (props.tag ?? 'div') as any );
 		}
 
 		this.m_dom[_x4_el_sym] = this;
@@ -880,7 +873,7 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 		// wait for dom insertion inside document.body
 		if (!Component.__createObserver) {
 			Component.__createObserver = new MutationObserver(Component._observeCreation);
-			Component.__createObserver.observe(document.body, { childList: true, subtree: true });
+			Component.__createObserver.observe(x4document.body, { childList: true, subtree: true });
 		}
 
 		return this.m_dom;
@@ -1190,10 +1183,10 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			Component.__privateEvents[name] = true; // todo count it
 
 			if (passiveEvents[name]) {
-				document.addEventListener(name, Component._dispatchEvent, { passive: false, capture: true });
+				x4document.addEventListener(name as any, Component._dispatchEvent, { passive: false, capture: true });
 			}
 			else {
-				document.addEventListener(name, Component._dispatchEvent, true);
+				x4document.addEventListener(name as any, Component._dispatchEvent, true);
 			}
 		}
 
@@ -1415,8 +1408,8 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 	 * 
 	 */
 
-	private static dispatchCaptures(event: UIEvent) {
-		Component.__capture.handler(event);
+	private static dispatchCaptures(event: Event) {
+		Component.__capture.handler(event as UIEvent);
 	}
 
 	/**
@@ -1447,12 +1440,12 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 
 		//	todo: review that
 
-		let iframes = document.querySelectorAll("iframe");
+		let iframes = x4document.querySelectorAll<HTMLIFrameElement>("iframe");
 		iframes.forEach( f => {
 			flyWrap(f).setStyleValue( 'pointer-events', 'none' );
 		});
 
-		let overs = document.querySelectorAll(":hover");
+		let overs = x4document.querySelectorAll(":hover");
 
 		let cursor = null;
 		if (overs.length) {
@@ -1461,7 +1454,7 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			cursor = style.cursor;
 		}
 
-		Component.__capture_mask = document.createElement('div');
+		Component.__capture_mask = x4document.createElement('div');
 		let mask = flyWrap(Component.__capture_mask);
 		mask.addClass('@capture-mask');
 
@@ -1469,15 +1462,15 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			mask.setStyleValue('cursor', cursor);
 		}
 
-		document.body.appendChild(mask.dom);
+		x4document.body.appendChild(mask.dom);
 
-		document.addEventListener('mousedown', Component.dispatchCaptures);
-		document.addEventListener('mousemove', Component.dispatchCaptures);
-		document.addEventListener('mouseup', Component.dispatchCaptures);
+		x4document.addEventListener('mousedown', Component.dispatchCaptures);
+		x4document.addEventListener('mousemove', Component.dispatchCaptures);
+		x4document.addEventListener('mouseup', Component.dispatchCaptures);
 
-		document.addEventListener('touchstart', Component.dispatchCaptures);
-		document.addEventListener('touchmove', Component.dispatchCaptures);
-		document.addEventListener('touchend', Component.dispatchCaptures);
+		x4document.addEventListener('touchstart', Component.dispatchCaptures);
+		x4document.addEventListener('touchmove', Component.dispatchCaptures);
+		x4document.addEventListener('touchend', Component.dispatchCaptures);
 
 		Component.__capture = {
 			initiator,
@@ -1490,13 +1483,13 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 
 		console.assert(!!Component.__capture);
 
-		document.removeEventListener('touchstart', Component.dispatchCaptures);
-		document.removeEventListener('touchmove', Component.dispatchCaptures);
-		document.removeEventListener('touchend', Component.dispatchCaptures);
+		x4document.removeEventListener('touchstart', Component.dispatchCaptures);
+		x4document.removeEventListener('touchmove', Component.dispatchCaptures);
+		x4document.removeEventListener('touchend', Component.dispatchCaptures);
 
-		document.removeEventListener('mousedown', Component.dispatchCaptures);
-		document.removeEventListener('mousemove', Component.dispatchCaptures);
-		document.removeEventListener('mouseup', Component.dispatchCaptures);
+		x4document.removeEventListener('mousedown', Component.dispatchCaptures);
+		x4document.removeEventListener('mousemove', Component.dispatchCaptures);
+		x4document.removeEventListener('mouseup', Component.dispatchCaptures);
 		
 		Component.__capture.iframes.forEach( f => {
 			flyWrap(f).setStyleValue( 'pointer-events', null );
@@ -1504,7 +1497,7 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 
 		Component.__capture = null;
 		if (Component.__capture_mask) {
-			document.body.removeChild(Component.__capture_mask);
+			x4document.body.removeChild(Component.__capture_mask);
 			Component.__capture_mask = null;
 		}
 	}
@@ -1525,7 +1518,9 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			let right = undefined;
 
 			let pn = this.dom.parentElement;
-			while( pn && pn!=document.body ) {
+			const bdy = x4document.body;
+
+			while( pn && pn!=bdy ) {
 
 				const pr = pn.getBoundingClientRect( );
 
@@ -1696,18 +1691,18 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 	static getScrollbarSize() {
 
 		if (Component.__sb_width === undefined) {
-			let outerDiv = document.createElement('div');
+			let outerDiv = x4document.createElement('div');
 			outerDiv.style.cssText = 'overflow:auto;position:absolute;top:0;width:100px;height:100px';
 
-			let innerDiv = document.createElement('div');
+			let innerDiv = x4document.createElement('div');
 			innerDiv.style.width = '200px';
 			innerDiv.style.height = '200px';
 
 			outerDiv.appendChild(innerDiv);
-			document.body.appendChild(outerDiv);
+			x4document.body.appendChild(outerDiv);
 
 			Component.__sb_width = outerDiv.offsetWidth - outerDiv.clientWidth;
-			document.body.removeChild(outerDiv);
+			x4document.body.removeChild(outerDiv);
 		}
 
 		return Component.__sb_width;

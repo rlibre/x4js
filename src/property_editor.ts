@@ -28,7 +28,7 @@
 **/
 
 import { CEventMap, Component, CProps } from './component'
-import { EvChange, EventCallback } from './x4_events'
+import { EvChange, EventCallback } from './x4events'
 
 import { InputProps, Input } from './input'
 import { TextEdit } from './textedit'

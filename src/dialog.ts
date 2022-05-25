@@ -27,13 +27,15 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+
 import { Popup, PopupProps, PopupEventMap, EvMove } from './popup'
 import { Icon, IconID } from './icon'
 import { HLayout } from './layout'
 import { Label } from './label'
 import { Form, FormButtons } from './form'
 import { Component, ComponentContent, EvSize, flyWrap } from './component'
-import { BasicEvent, EventCallback } from './x4_events'
+import { BasicEvent, EventCallback } from './x4events'
 import { Rect, getMousePos, isFunction, isTouchDevice, isString, Size } from './tools'
 
 interface Geometry {
@@ -458,7 +460,7 @@ export class Dialog<P extends DialogProps = DialogProps, E extends DialogBoxEven
 
 		let { x, y } = getMousePos(event, true);
 
-		let wrc = flyWrap(document.body).getBoundingRect();
+		let wrc = flyWrap(x4document.body).getBoundingRect();
 		let rc = this.getBoundingRect(true);
 		let trc = this.m_el_title.getBoundingRect();
 

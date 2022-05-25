@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { Component, CProps } from './component';
-import { BasicEvent } from './x4_events';
+import { BasicEvent } from './x4events';
 export declare type IconID = string | number;
 export interface IconProps extends CProps {
     icon: IconID;

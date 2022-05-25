@@ -11,5 +11,15 @@
   	},
 	"include": [
 		"./src/*",
-	]
+	],
+	"exclude": [
+		"src/hosts/nwjs_types.ts",
+		"src/hosts/nwjs.ts",
+		"src/texthiliter.ts",
+		"src/smartedit.ts"
+	],
+	"typedocOptions": {
+        "entryPoints": ["src/index.ts"],
+        "out": "../doc/api"
+    }
 }

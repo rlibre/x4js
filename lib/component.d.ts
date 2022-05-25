@@ -32,7 +32,7 @@
  */
 import { Rect, Size, HtmlString, Constructor } from './tools';
 import { Stylesheet, ComputedStyle } from './styles';
-import { BasicEvent, EventCallback } from './x4_events';
+import { BasicEvent, EventCallback } from './x4events';
 import { BaseComponent, BaseComponentProps, BaseComponentEventMap } from './base_component';
 import { IDOMEvents, X4ElementEventMap } from './dom_events';
 export { HtmlString, isHtmlString, html } from './tools';
@@ -274,10 +274,6 @@ export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<
      * this is usefull for component recycling & reusing
      */
     clearClasses(): string;
-    /**
-     * @deprecated
-     */
-    private Build;
     _build(): HTMLElement;
     render(props: P): void;
     _createDOM(): HTMLElement;

@@ -33,7 +33,7 @@ import { Button } from './button'
 import { Input } from './input'
 import { TextEdit } from './textedit'
 import { ajaxRequest, RequestProps } from './request'
-import { EventCallback } from './x4_events'
+import { EventCallback } from './x4events'
 import { EvBtnClick } from './dialog'
 
 import { _tr } from './i18n'

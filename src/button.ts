@@ -29,7 +29,7 @@
 
 
 import { Component, CProps, CEventMap, HtmlString } from './component'
-import { EventCallback, EvClick, EvChange } from './x4_events'
+import { EventCallback, EvClick, EvChange } from './x4events'
 
 import { Icon, IconID } from './icon'
 import { Label } from './label'

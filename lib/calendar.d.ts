@@ -28,7 +28,7 @@
 **/
 import { Popup } from './popup';
 import { CProps, ContainerEventMap } from './component';
-import { EvChange, EventCallback } from './x4_events';
+import { EvChange, EventCallback } from './x4events';
 import { VLayout } from './layout';
 interface CalendarEventMap extends ContainerEventMap {
     change?: EvChange;
