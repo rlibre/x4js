@@ -100,10 +100,15 @@ class Loader extends EventSource<LoadingEventMap> {
 					const r = await fetch( url );
 					if( r.ok ) {
 						const svg = await r.text();
-						this.svgs.set( url, svg );
-
-						//console.log( 'signal=', url );
-						this.signal( 'loaded', EvLoaded(url,svg) );
+						// check response, must be svg
+						if( !svg.startsWith("<svg") ) {
+							console.error( "svg loading error: ", svg );
+							this.signal( 'loaded', EvLoaded(url,"") );
+						}
+						else {
+							this.svgs.set( url, svg );
+							this.signal( 'loaded', EvLoaded(url,svg) );
+						}
 					}
 				}
 			}

@@ -27,8 +27,6 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { host } from './hosts/host';
-
 export class Settings {
 
 	private m_data: any;
@@ -52,7 +50,7 @@ export class Settings {
 
 	private _save( ) {
 		let data = JSON.stringify(this.m_data);
-		host.writeLocalStorage( this.m_name, data );
+		localStorage.write( this.m_name, data );
 	}
 
 	private _load( ) {
@@ -62,7 +60,7 @@ export class Settings {
 
 		this.m_data = {};
 
-		let data = host.readLocalStorage( this.m_name );
+		let data = localStorage.read( this.m_name );
 		if( data!==null ) {
 			data = JSON.parse( data );
 			if( data ) {

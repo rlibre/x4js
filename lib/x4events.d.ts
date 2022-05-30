@@ -5,7 +5,7 @@
 *   /  _  \____   _|
 *  /__/ \__\   |_|
 *
-* @file observable.ts
+* @file x4events.ts
 * @author Etienne Cochard
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
