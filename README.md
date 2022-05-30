@@ -1,5 +1,5 @@
-# x4js
+# x4js framework
 
-**x4js framework repository**
+This is the x4 framework repository.
 
 You will find the documentation & tutorials [Here](https://x4js.org)
