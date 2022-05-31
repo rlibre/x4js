@@ -41,6 +41,7 @@ import { _tr } from './i18n';
 import { BasicEvent, EventCallback } from './x4events';
 import { BaseComponent, BaseComponentProps, BaseComponentEventMap } from './base_component';
 import { IDOMEvents, X4ElementEventMap } from './dom_events';
+import { IconID } from 'x4js';
 
 export { HtmlString, isHtmlString, html } from './tools'
 
@@ -1141,15 +1142,6 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 				delete store[type];
 			}
 		}
-	}
-
-	public mapPropEvents<N extends keyof E>(props: P, ...elements: N[] ) {
-		elements.forEach( name => {
-			const n = name as string;
-			if (props[n]) {
-				this._on(n, props[n]);
-			}
-		})
 	}
 
 	/**
@@ -2334,3 +2326,5 @@ export class Container<P extends ContainerProps = ContainerProps, E extends Cont
 }
 
 export type ComponentConstructor<T> = new (props: CProps) => T;
+
+

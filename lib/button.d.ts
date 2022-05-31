@@ -28,6 +28,7 @@
 **/
 import { Component, CProps, CEventMap, HtmlString } from './component';
 import { EventCallback, EvClick, EvChange } from './x4events';
+import { Action } from './action';
 import { IconID } from './icon';
 import { MenuItem, MenuOrSep } from './menu';
 /**
@@ -48,6 +49,7 @@ interface ButtonProps<E extends ButtonEventMap = ButtonEventMap> extends CProps<
     autoRepeat?: number;
     menu?: MenuOrSep[] | MenuCallBack;
     click?: EventCallback<EvClick>;
+    action?: Action;
 }
 /**
  * Base button

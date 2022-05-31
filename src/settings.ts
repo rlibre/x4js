@@ -50,7 +50,7 @@ export class Settings {
 
 	private _save( ) {
 		let data = JSON.stringify(this.m_data);
-		localStorage.write( this.m_name, data );
+		localStorage.setItem( this.m_name, data );
 	}
 
 	private _load( ) {
@@ -60,7 +60,7 @@ export class Settings {
 
 		this.m_data = {};
 
-		let data = localStorage.read( this.m_name );
+		let data = localStorage.getItem( this.m_name );
 		if( data!==null ) {
 			data = JSON.parse( data );
 			if( data ) {

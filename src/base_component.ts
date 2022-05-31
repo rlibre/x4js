@@ -132,4 +132,19 @@ export class BaseComponent< P extends BaseComponentProps<BaseComponentEventMap>,
 	singleShot( callback: TimerCallback, timeout = 0 ) {
 		setTimeout( callback, timeout );
 	}
+
+	/**
+	 * 
+	 * @param props 
+	 * @param elements 
+	 */
+	
+	public mapPropEvents<N extends keyof E>(props: P, ...elements: N[] ) {
+		elements.forEach( name => {
+			const n = name as string;
+			if (props[n]) {
+				this._on(n, props[n]);
+			}
+		})
+	}
 }

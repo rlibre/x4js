@@ -31,6 +31,7 @@
 import { Component, CProps, CEventMap, HtmlString } from './component'
 import { EventCallback, EvClick, EvChange } from './x4events'
 
+import { Action } from './action'
 import { Icon, IconID } from './icon'
 import { Label } from './label'
 import { Menu, MenuItem, MenuOrSep } from './menu'
@@ -57,8 +58,9 @@ interface ButtonProps<E extends ButtonEventMap = ButtonEventMap> extends CProps<
 	align?: 'center' | 'left' | 'right';	// text alignment
 	autoRepeat?: number; // time in ms or 0/undefined for none
 	menu?: MenuOrSep[] | MenuCallBack;
-
 	click?: EventCallback<EvClick>;	// shortcut to events: { click: ... }
+
+	action?: Action;
 }
 
 
@@ -83,11 +85,26 @@ export class BaseButton<P extends ButtonProps = ButtonProps, E extends ButtonEve
 
 	render(props: ButtonProps) {
 
-		let icon = props.icon ? new Icon({ icon: props.icon, cls: 'left', ref: 'l_icon' }) : null;
-		let label = new Label({ flex: 1, text: props.text ?? '', align: props.align, ref: 'label' });
-		let ricon = props.rightIcon ? new Icon({ icon: props.rightIcon, cls: 'right', ref: 'r_icon' }) : null;
+		const action = props.action;
+		
+		let icon = props.icon;
+		let text = props.text;
+		
+		if( action ) {
+			if( !icon && action.props.icon ) {
+				icon = action.props.icon;
+			}
 
-		this.setContent([icon, label, ricon]);
+			if( text===undefined && action.props.text ) {
+				text = action.props.text;
+			}
+		}
+
+		const ui_icon = icon ? new Icon({ icon, cls: 'left', ref: 'l_icon' }) : null;
+		const ui_label = new Label({ flex: 1, text: text ?? '', align: props.align, ref: 'label' });
+		const ui_ricon = props.rightIcon ? new Icon({ icon: props.rightIcon, cls: 'right', ref: 'r_icon' }) : null;
+
+		this.setContent([ui_icon, ui_label, ui_ricon]);
 		this._setTabIndex(props.tabIndex);
 	}
 
@@ -164,6 +181,9 @@ export class BaseButton<P extends ButtonProps = ButtonProps, E extends ButtonEve
 		}
 		else {
 			this.emit('click', EvClick());
+			if( this.m_props.action ) {
+				this.m_props.action.fire( );
+			}
 		}
 	}
 

@@ -314,7 +314,6 @@ export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<
      *
      */
     clearDomEvent<K extends keyof X4ElementEventMap>(type: K): void;
-    mapPropEvents<N extends keyof E>(props: P, ...elements: N[]): void;
     /**
      *
      * @param name

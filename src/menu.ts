@@ -32,6 +32,8 @@ import { x4document } from './x4dom'
 import { CEventMap, Component, CProps } from './component'
 import { EvClick, EventCallback } from './x4events'
 
+import { Action } from './action'
+
 import { Popup, PopupProps } from './popup'
 import { Icon, IconID } from './icon'
 import { Label } from './label'
@@ -244,8 +246,9 @@ export interface MenuItemProps extends CProps {
 	items?: MenuOrSep[];
 	checked?: boolean;
 	cls?: string;
-
 	click?: EventCallback<EvClick>;	// shortcut to events: { click ... }
+	
+	action?: Action;
 }
 
 
@@ -254,12 +257,21 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 
 	private m_menu: Menu;
 	private m_isOpen: boolean;
+	private m_action: Action;
 
+	constructor( action: Action );
 	constructor( text: string, click: EventCallback<EvClick> );
 	constructor( props: MenuItemProps);
 	constructor( a, b? ) {
 
-		if( isString(a) ) {
+		if( a instanceof Action ) {
+			super( {
+				click: ( ) => { a.fire(); }
+			});
+
+			this.m_action = a;
+		}
+		else if( isString(a) ) {
 			super( {
 				text: a,
 				click: b
@@ -286,6 +298,16 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 
 		if (props.checked !== undefined) {
 			icon = props.checked ? 'cls(far fa-check)' : 0;	//todo: use stylesheet
+		}
+
+		if( this.m_action ) {
+			if( !icon ) {
+				icon = this.m_action.props.icon;
+			}
+
+			if( text===undefined ) {
+				text = this.m_action.props.text;
+			}
 		}
 
 		let popIco = null;

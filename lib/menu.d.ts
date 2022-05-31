@@ -28,6 +28,7 @@
 **/
 import { CEventMap, Component, CProps } from './component';
 import { EvClick, EventCallback } from './x4events';
+import { Action } from './action';
 import { Popup, PopupProps } from './popup';
 import { IconID } from './icon';
 import { Label } from './label';
@@ -99,10 +100,13 @@ export interface MenuItemProps extends CProps {
     checked?: boolean;
     cls?: string;
     click?: EventCallback<EvClick>;
+    action?: Action;
 }
 export declare class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
     private m_menu;
     private m_isOpen;
+    private m_action;
+    constructor(action: Action);
     constructor(text: string, click: EventCallback<EvClick>);
     constructor(props: MenuItemProps);
     /** @ignore */

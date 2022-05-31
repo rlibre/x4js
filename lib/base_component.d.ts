@@ -77,5 +77,11 @@ export declare class BaseComponent<P extends BaseComponentProps<BaseComponentEve
      * @param timeout
      */
     singleShot(callback: TimerCallback, timeout?: number): void;
+    /**
+     *
+     * @param props
+     * @param elements
+     */
+    mapPropEvents<N extends keyof E>(props: P, ...elements: N[]): void;
 }
 export {};

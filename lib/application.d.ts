@@ -91,8 +91,9 @@ export declare class Application<P extends ApplicationProps = ApplicationProps, 
      *
      * let myApp = new Application( ... );
      * let mainView = new VLayout( ... );
-     * myApp.setMainView( mainView  );
+     * myApp.mainView = mainView;
      */
+    setMainView(root: Component, clearBefore: boolean): void;
     set mainView(root: Component);
     get mainView(): Component;
     setTitle(title: string): void;

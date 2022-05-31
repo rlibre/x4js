@@ -34,6 +34,7 @@ import { Component } from './component'
 import { Settings } from './settings'
 import { deferCall } from './tools'
 import { _tr } from './i18n'
+import { flyWrap } from 'x4js'
 
 const _x4_touch_time = Symbol( );
 
@@ -165,21 +166,29 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	 * 
 	 * let myApp = new Application( ... );
 	 * let mainView = new VLayout( ... );
-	 * myApp.setMainView( mainView  );
+	 * myApp.mainView = mainView;
 	 */
 
-	 public set mainView( root: Component ) {
+	 public setMainView( root: Component, clearBefore: boolean ) {
+
+		const ddom = this.m_props.renderTo ?? x4document.body;
+		const dest = flyWrap( ddom );
+
+		dest.addClass( 'x4-root-element' );
+		if( clearBefore ) {
+			dest._empty( );
+		}
 
 		this.m_mainView = root;
-		this.mainView.addClass( 'x4-root-element' );
 
-		deferCall( ( ) => {
-			const dest = this.m_props.renderTo ?? x4document.body;
-			while (dest.firstChild) {
-				dest.removeChild(dest.firstChild);
-			}
-			dest.appendChild(root._build());
-		} );
+		root.setStyleValue( 'position', 'absolute' );
+		root._build();
+
+		ddom.appendChild( root.dom );
+	}
+
+	set mainView( root: Component ) {
+		this.setMainView( root, false );
 	}
 
 	public get mainView( ) : Component {
