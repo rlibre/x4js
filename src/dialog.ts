@@ -469,16 +469,16 @@ export class Dialog<P extends DialogProps = DialogProps, E extends DialogBoxEven
 
 		let cstyle = this.getComputedStyle();
 
-		let topw = cstyle.parse('marginTop') + cstyle.parse('paddingTop') + cstyle.parse('borderTopWidth');
-		let botw = cstyle.parse('marginBottom') + cstyle.parse('paddingBottom') + cstyle.parse('borderBottomWidth');
-		let lftw = cstyle.parse('marginLeft') + cstyle.parse('paddingLeft') + cstyle.parse('borderLeftWidth');
-		let rgtw = cstyle.parse('marginRight') + cstyle.parse('paddingRight') + cstyle.parse('borderRightWidth');
+		//let topw = cstyle.parse('marginTop') + cstyle.parse('paddingTop') + cstyle.parse('borderTopWidth');
+		//let botw = cstyle.parse('marginBottom') + cstyle.parse('paddingBottom') + cstyle.parse('borderBottomWidth');
+		//let lftw = cstyle.parse('marginLeft') + cstyle.parse('paddingLeft') + cstyle.parse('borderLeftWidth');
+		//let rgtw = cstyle.parse('marginRight') + cstyle.parse('paddingRight') + cstyle.parse('borderRightWidth');
 
-		wrc.top += topw - trc.height;
-		wrc.height -= topw + botw - trc.height;
+		//wrc.top += topw - trc.height;
+		//wrc.height -= topw + botw - trc.height;
 
-		wrc.left += lftw;
-		wrc.width -= lftw + rgtw;
+		//wrc.left += lftw;
+		//wrc.width -= lftw + rgtw;
 
 		// custom handling double click
 		const now = Date.now();
@@ -496,22 +496,37 @@ export class Dialog<P extends DialogProps = DialogProps, E extends DialogBoxEven
 		}
 
 		let __move = (ex, ey) => {
+			
+			if( ex>wrc.right ) {
+				ex = wrc.right;
+			}
+			else if( ex<wrc.left ) {
+				ex = wrc.left;
+			}
+
+			if( ey>wrc.bottom ) {
+				ey = wrc.bottom;
+			}
+			else if( ey<wrc.top ) {
+				ey = wrc.top;
+			}
+
 			let x = ex - dx,
 				y = ey - dy;
 
-			if (x + rc.width < wrc.left) {
-				x = wrc.left - rc.width;
-			}
-			else if (x > wrc.right) {
-				x = wrc.right;
-			}
-
-			if (y < wrc.top) { // title grip is on top
-				y = wrc.top;
-			}
-			else if (y > wrc.bottom) {
-				y = wrc.bottom;
-			}
+			//if (x + rc.width < wrc.left) {
+			//	x = wrc.left - rc.width;
+			//}
+			//else if (x > wrc.right) {
+			//	x = wrc.right;
+			//}
+			//
+			//if (y < wrc.top) { // title grip is on top
+			//	y = wrc.top;
+			//}
+			//else if (y > wrc.bottom) {
+			//	y = wrc.bottom;
+			//}
 
 			this.setStyle({
 				left: x,

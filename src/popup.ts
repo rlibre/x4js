@@ -169,8 +169,11 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 	centerOnScreen( ) {
 		let rc = this.getBoundingRect();
 
-		let x = (x4document.body.clientWidth - rc.width) / 2,
-			y = (x4document.body.clientHeight - rc.height) / 2;
+		//let x = (x4document.body.clientWidth - rc.width) / 2,
+		//	y = (x4document.body.clientHeight - rc.height) / 2;
+
+		const x = `max( 0px, 50vw - ${rc.width/2}px )`;	//(x4dom_1.x4document.body.clientWidth - rc.width) / 2;
+		const y = `max( 0px, 50vh - ${rc.height/2}px )`;	//(x4dom_1.x4document.body.clientHeight - rc.height) / 2;
 
 		this.setStyleValue('left', x);
 		this.setStyleValue('top', y);

@@ -134,8 +134,8 @@ export declare class ListView extends VLayout<ListViewProps, ListViewEventMap> {
     /**
      * return the current selection or null
      */
-    get selection(): ListViewItem;
-    set selection(id: ListViewItem);
+    get selection(): any;
+    set selection(id: any);
     private _findItemWithId;
     /**
      * append or prepend a new item

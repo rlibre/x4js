@@ -551,7 +551,7 @@ export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 		return this.m_selection ? this.m_selection.item : null;
 	}
 
-	public set selection(id) {
+	public set selection(id: any) {
 		if (id === null || id === undefined) {
 			this._selectItem(null, null);
 		}

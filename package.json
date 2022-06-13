@@ -1,6 +1,6 @@
 {
 	"name": "x4js",
-	"version": "1.4.24",
+	"version": "1.4.26",
 	"description": "X4js core files",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
@@ -14,7 +14,7 @@
 	  "framework"
 	],
 	"scripts": {
-		"build": "build.sh",
+		"build": "tsc && lessc src/x4.less >lib/x4.css",
 		"mkdoc": "typedoc --tsconfig tsconfig.json --readme none"
 	},
 	"author": "etienne cochard",

@@ -171,7 +171,7 @@ function _createFileInput() {
  * @param cb - callback to call when user select a file
  */
 
-export function openFile(extensions: string, cb: (filename: FileList) => void, multiple = false) {
+export function openFileDialog(extensions: string, cb: (filename: FileList) => void, multiple = false) {
 
 	let fi = _createFileInput();
 
@@ -195,7 +195,7 @@ export function openFile(extensions: string, cb: (filename: FileList) => void, m
  * @param cb - callback to call when user choose the destination
  */
 
-export function saveFile(defFileName: string, extensions: string, cb: (filename: File) => void) {
+export function saveFileDialog(defFileName: string, extensions: string, cb: (filename: File) => void) {
 
 	let fi = _createFileInput();
 	fi.setAttribute('nwsaveas', defFileName);

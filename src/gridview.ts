@@ -1126,19 +1126,21 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 
 		this.m_footer.enumChilds( (c) => {
 			let cid = c.getData( 'col' );
-			let col = this.m_columns[cid];
+			if( cid ) {
+				let col = this.m_columns[cid];
 
-			let fmt = col.formatter;
-			
-			let text;
-			if (fmt && fmt instanceof Function) {
-				text = fmt(rec[col.id], rec);
-			}
-			else {
-				text = rec[col.id];
-			}
+				let fmt = col.formatter;
+				
+				let text;
+				if (fmt && fmt instanceof Function) {
+					text = fmt(rec[col.id], rec);
+				}
+				else {
+					text = rec[col.id];
+				}
 
-			c.setContent( text, false );
+				c.setContent( text, false );
+			}
 		});
 	}
 }

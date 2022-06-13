@@ -128,6 +128,7 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	}
 
 	ApplicationCreated( ) {
+		this.setTitle( '' );
 	}
 
 	public get app_name( ) {
@@ -174,6 +175,10 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 		const ddom = this.m_props.renderTo ?? x4document.body;
 		const dest = flyWrap( ddom );
 
+		if( !this.m_props.renderTo ) {
+			dest.setStyleValue( 'position', 'absolute' );	
+		}
+
 		dest.addClass( 'x4-root-element' );
 		if( clearBefore ) {
 			dest._empty( );
@@ -196,7 +201,7 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	}
 
 	public setTitle( title: string ) {
-		x4document.title = this.m_app_name + ' > ' + title;
+		x4document.title = this.m_app_name + (title ? (' > ' + title) : '');
 	}
 
 	public disableZoomWheel( ) {

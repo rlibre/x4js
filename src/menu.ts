@@ -293,11 +293,11 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 	/** @ignore */
 	render(props: MenuItemProps) {
 
-		let icon = props.icon ?? 0x20;
+		let icon = props.icon ?? 0;
 		let text = props.text;
 
 		if (props.checked !== undefined) {
-			icon = props.checked ? 'cls(far fa-check)' : 0;	//todo: use stylesheet
+			icon = props.checked ? 'var( --x4-icon-check )' : 0;
 		}
 
 		if( this.m_action ) {
@@ -313,7 +313,7 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 		let popIco = null;
 		if (this.isPopup) {
 			this.addClass('@popup-menu-item');
-			popIco = new Icon( "var( --x4-icon-chevron-right )" );
+			popIco = new Icon( { icon: "var( --x4-icon-chevron-right )", cls: "pop-mark" } );
 		}
 
 		if (!text && !icon) {

@@ -369,10 +369,11 @@ export function escapeHtml(unsafe: string, nl_br = false): string {
  */
 
 export function removeHtmlTags(unsafe: string, nl_br = false): string {
-	if (!unsafe || unsafe.length == 0) {
-		return unsafe;
-	}
-	debugger;
+	
+	if ( unsafe===undefined || unsafe===null || !isString(unsafe) || unsafe.length == 0 ) {
+		return "";
+	} 
+
 	let ret_val = '';
 	for (let i = 0; i < unsafe.length; i++) {
 		const ch = unsafe.codePointAt(i);

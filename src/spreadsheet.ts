@@ -546,6 +546,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 		if (this.m_recycler.length) {
 			cell = this.m_recycler.pop();
 			cell.clearClasses();
+			cell.addClass( '@comp' );	// todo: find better to reset to default
 		}
 		else {
 			cell = new Component({
@@ -681,7 +682,8 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 				cell.setStyle({
 					left: x,
 					top: top + y,
-					width: calcw[colIdx]
+					width: calcw[colIdx],
+					height: this.m_itemHeight
 				});
 
 				if (this.m_selection.row == rowIdx && this.m_selection.col == colIdx) {

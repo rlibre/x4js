@@ -101,7 +101,8 @@ class Loader extends EventSource<LoadingEventMap> {
 					if( r.ok ) {
 						const svg = await r.text();
 						// check response, must be svg
-						if( !svg.startsWith("<svg") ) {
+						//TODO: find better
+						if (!svg.startsWith("<svg") && !svg.startsWith('<?xml') ) {
 							console.error( "svg loading error: ", svg );
 							this.signal( 'loaded', EvLoaded(url,"") );
 						}
@@ -225,13 +226,10 @@ export class Icon extends Component<IconProps>
 			let match_url = reUrl.exec( icon );
 			if( match_url ) {
 				url  = trimQuotes( match_url[1].trim( ) );
-				if( url.substring(0,5)=='data:' ) {
-					this._setSVG( url );
-					return;
-				}
-				else {
-					name = url.replace( /[/\\\.\* ]/g, '_' );
-				}
+				// this value is escaped				
+				url = url.replaceAll( "\\", "" );
+				this._setSVG( url );
+				return;
 			}
 			else {
 				// todo: deprecated

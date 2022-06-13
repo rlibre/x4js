@@ -12,10 +12,6 @@
 	"include": [
 		"./src/*",
 	],
-	"exclude": [
-		"src/texthiliter.ts",
-		"src/smartedit.ts"
-	],
 	"typedocOptions": {
         "entryPoints": ["src/index.ts"],
         "out": "../doc/api"

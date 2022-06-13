@@ -5,7 +5,7 @@
 *   /    \____   _|
 *  /__/\__\   |_|
 *
-* @file fileupload.ts
+* @file action.ts
 * @author Etienne Cochard
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
@@ -26,39 +26,32 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { CProps } from './component';
-import { HLayout } from './layout';
-export interface FileUploadProps extends CProps {
-    name: string;
-    value: string;
+import { BasicEvent } from './x4events';
+import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component';
+import { IconID } from "./icon";
+import { EvChange, EventHandler } from 'x4js';
+export interface EvAction extends BasicEvent {
 }
-export declare class FileUpload extends HLayout<FileUploadProps> {
-    constructor(props: FileUploadProps);
-    clear(): void;
+export declare function EvAction(source: Action): EvAction;
+interface ActionEventMap extends BaseComponentEventMap {
+    run: EvAction;
+    change: EvChange;
 }
-/**
- *
- */
-export declare class ImageUpload extends FileUpload {
-    private m_path;
-    private m_ui_img;
-    private m_ui_input;
-    /** @ignore */
-    render(props: FileUploadProps): void;
-    clear(): void;
-    private _get_value;
-    private _set_value;
-    private _handleChange;
+interface ActionProps extends BaseComponentProps<ActionEventMap> {
+    id?: any;
+    text?: string;
+    icon?: IconID;
+    disabled?: boolean;
+    hidden?: boolean;
+    checked?: boolean;
+    run: EventHandler<EvAction>;
+    change?: EventHandler<EvChange>;
 }
-/**
- * show openfile dialog
- * @param extensions - string - ex: '.doc,.docx'
- * @param cb - callback to call when user select a file
- */
-export declare function openFileDialog(extensions: string, cb: (filename: FileList) => void, multiple?: boolean): void;
-/**
- * open saveas dialog
- * @param defFileName - string - proposed filename
- * @param cb - callback to call when user choose the destination
- */
-export declare function saveFileDialog(defFileName: string, extensions: string, cb: (filename: File) => void): void;
+export declare class Action extends BaseComponent<ActionProps, ActionEventMap> {
+    constructor(props: ActionProps);
+    get props(): ActionProps;
+    set text(t: string);
+    set icon(i: IconID);
+    fire(): void;
+}
+export {};
