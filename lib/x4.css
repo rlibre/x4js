@@ -31,7 +31,9 @@
   --x4-font-size: 13px;
   --x4-base-color: #266888;
   --x4-selection-color: #2458B3;
+  --x4-selection-text: white;
   --x4-hover-color: rgba(36, 88, 179, 0.9);
+  --x4-hover-text: white;
   --x4-mask-color: rgba(36, 88, 179, 0.6);
   --x4-focus-color: #2458B3;
   --x4-error-color: #b92a09;
@@ -758,11 +760,11 @@ textarea::selection {
 }
 .x-list-view .x-list-item:hover {
   background-color: var(--x4-hover-color);
-  color: white;
+  color: var(--x4-hover-text);
 }
 .x-list-view .x-list-item.x-selected {
   background-color: var(--x4-selection-color);
-  color: white;
+  color: var(--x4-selection-text);
 }
 .x-list-view .x-list-item:focus {
   outline: none;

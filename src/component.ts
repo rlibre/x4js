@@ -2251,6 +2251,12 @@ export class Container<P extends ContainerProps = ContainerProps, E extends Cont
 				reseq += 'ctrl+';
 			}
 
+			let cmd = seq.match(/CMD/i);
+			if (cmd) {
+				seq = seq.replace(/CMD/i, '');
+				reseq += 'cmd+';
+			}
+
 			let alt = seq.match(/ALT/i);
 			if (alt) {
 				seq = seq.replace(/ALT/i, '');
@@ -2293,6 +2299,10 @@ export class Container<P extends ContainerProps = ContainerProps, E extends Cont
 
 		if (e.ctrlKey) {
 			seq += 'ctrl+';
+		}
+
+		if (e.metaKey) {
+			seq += 'cmd+';
 		}
 
 		if (e.altKey) {

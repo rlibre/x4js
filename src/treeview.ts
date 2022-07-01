@@ -520,20 +520,19 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 						return;
 					}
 				}
-			
-				this.m_selection = { id: nd.id, el: null };
-				this.update( );
 
+				this.selection = nd.id;
+				
+				this.emit('click', EvClick(nd) );
 				this.emit('contextMenu', EvContextMenu(ev, nd));
+				
 				return;
 			}
 
 			dom = dom.parentElement;
 		}
 
-		this.m_selection = null;
-		this.update( );
-
+		this.selection = null;
 		this.emit('contextMenu', EvContextMenu(ev, null));
 	}
 

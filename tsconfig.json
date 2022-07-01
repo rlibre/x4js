@@ -9,8 +9,8 @@
 		"module": "commonjs",
 		"strict": true//false,
   	},
-	"include": [
-		"./src/*",
+	"files": [
+		"./src/index.ts",
 	],
 	"typedocOptions": {
         "entryPoints": ["src/index.ts"],

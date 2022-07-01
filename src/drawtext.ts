@@ -261,7 +261,9 @@ export function drawText(ctx: CanvasRenderingContext2D, input_Text: string, rc: 
 	}
 
 	//print all lines of text
-	let idx = 1, yy = 0;
+	//let idx = 1, yy = 0;
+
+	let maxw = 0;
 	textarray.some( line => {
 
 		//console.log( idx++, yy );
@@ -272,6 +274,8 @@ export function drawText(ctx: CanvasRenderingContext2D, input_Text: string, rc: 
 		}
 
 		let x = col_left;
+		let cw = 0;
+
 		if (align == 1) { 
 			x += col_width - line.width; 
 		}
@@ -302,10 +306,15 @@ export function drawText(ctx: CanvasRenderingContext2D, input_Text: string, rc: 
 
 			ctx.fillText(w.text, x, y);
 			x += w.width + line.space;
+			cw += w.width + line.space;
 		});
 
 		y += lineHeight;
-		yy += lineHeight;
+		//yy += lineHeight;
+
+		if( maxw<cw ) {
+			maxw = cw;
+		}
 
 		if (y > (rc.bottom+lineHeight) ) {
 			y = col_top;
@@ -321,7 +330,7 @@ export function drawText(ctx: CanvasRenderingContext2D, input_Text: string, rc: 
 	//console.timeEnd( 'drawtext' );
 
 	// todo autogrow + multi-columns
-	return { height: (textarray.length+0.3) * lineHeight };
+	return { width: maxw, height: (textarray.length+0.3) * lineHeight };
 }
 
 // Calculate Height of the font

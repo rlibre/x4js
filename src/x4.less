@@ -36,7 +36,11 @@
 	--x4-base-color: #266888;
 	
 	--x4-selection-color: #2458B3;
+	--x4-selection-text: white;
+
 	--x4-hover-color: fadeout( #2458B3, 10% );
+	--x4-hover-text: white;
+
 	--x4-mask-color: fadeout( #2458B3, 40% );
 	--x4-focus-color: #2458B3;
 	--x4-error-color: #b92a09;
@@ -947,12 +951,12 @@ textarea {
 		
 		&:hover {
 			background-color: var( --x4-hover-color );
-			color: white;
+			color: var( --x4-hover-text );
 		}
 		
 		&.x-selected {
 			background-color: var( --x4-selection-color );
-			color: white;
+			color: var( --x4-selection-text );
 		}
 	
 		&:focus {
