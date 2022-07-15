@@ -74,7 +74,9 @@ export function money_formatter(input: any): string {
 	}
 
 	let val: number = roundTo(typeof (input) == 'string' ? parseFloat(input) : input, 2);
-	if (val === -0.00) val = 0.00;
+	if (Object.is(val, -0.00)) {
+		val = 0.00;
+	}
 
 	let res = moneyFmt.format(val);
 	return res;

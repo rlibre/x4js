@@ -90,6 +90,7 @@ export interface ColorPickerEditorProps extends ColorPickerProps {
     label?: string;
     labelWidth?: number;
     cust_colors?: Color[];
+    displayValue?: false;
     change: EventCallback<EvChange>;
 }
 export declare class ColorPickerEditor extends HLayout<ColorPickerEditorProps, ColorPickerEventMap> {

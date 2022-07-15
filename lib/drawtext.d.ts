@@ -43,5 +43,6 @@ export interface DrawTextStyle {
     rotation?: number;
 }
 export declare function drawText(ctx: CanvasRenderingContext2D, input_Text: string, rc: Rect, drawStyle: DrawTextStyle): {
+    width: number;
     height: number;
 };

@@ -41,6 +41,7 @@ export interface  PanelProps<E extends ContainerEventMap = ContainerEventMap> ex
 	title: string;
 	gadgets?: Component[];
 	sens?: 'horizontal' | 'vertical';	// vertical by default
+	bodyStyle?: any;
 }
 
 export class Panel<T extends PanelProps = PanelProps, E extends ContainerEventMap = ContainerEventMap> extends VLayout<T,E> {
@@ -54,7 +55,7 @@ export class Panel<T extends PanelProps = PanelProps, E extends ContainerEventMa
 
 		//todo: cannot be called twice do to content overload
 		this.m_ui_title = new Label({cls: 'title', text: this.m_props.title});
-		this.m_ui_body = new Component( { cls: 'body '+sens, content: this.m_props.content } );
+		this.m_ui_body = new Component( { cls: 'body '+sens, content: this.m_props.content, style: props.bodyStyle } );
 	}
 
 	/** @ignore */	

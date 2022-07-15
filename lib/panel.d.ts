@@ -34,6 +34,7 @@ export interface PanelProps<E extends ContainerEventMap = ContainerEventMap> ext
     title: string;
     gadgets?: Component[];
     sens?: 'horizontal' | 'vertical';
+    bodyStyle?: any;
 }
 export declare class Panel<T extends PanelProps = PanelProps, E extends ContainerEventMap = ContainerEventMap> extends VLayout<T, E> {
     private m_ui_title;
