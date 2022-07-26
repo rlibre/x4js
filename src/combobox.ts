@@ -191,7 +191,7 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	showPopup() {
 
 		let props = this.m_props;
-		if (props.readOnly) {
+		if (props.readOnly || this.hasClass("@disable") ) {
 			return;
 		}
 
@@ -278,6 +278,11 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 				this.m_props.value = item.id;
 			}
 		}
+		else {
+			if( this.m_ui_input && this.m_ui_input instanceof Input ) {
+				this.m_ui_input.value = "";
+			}
+		}
 	}
 
 	/**
@@ -303,13 +308,18 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 			items = items( );
 		}
 
-		items.some( (v) => {
+		const found = items.some( (v) => {
 			if (v.id === id) {
 				this._setInput( v );
 				this.m_selection = v;
 				return true;
 			}
 		});
+
+		if( !found ) {
+			this._setInput( null );
+			this.m_selection = null;
+		}
 	}
 
 	get input( ) : Input {

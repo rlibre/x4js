@@ -67,7 +67,7 @@ const _x4_el_store = Symbol();
 const _x4_el_sym = Symbol();
 
 /** @ignore properties without 'px' unit */
-const _x4_unitless = {
+export const _x4_unitless = {
 	animationIterationCount: 1, borderImageOutset: 1, borderImageSlice: 1, borderImageWidth: 1, boxFlex: 1, boxFlexGroup: 1,
 	boxOrdinalGroup: 1, columnCount: 1, flex: 1, flexGrow: 1, flexPositive: 1, flexShrink: 1, flexNegative: 1, flexOrder: 1,
 	gridRow: 1, gridColumn: 1, fontWeight: 1, lineClamp: 1, lineHeight: 1, opacity: 1, order: 1, orphans: 1, tabSize: 1, widows: 1,

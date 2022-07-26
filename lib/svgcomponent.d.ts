@@ -33,6 +33,7 @@ import { Component, CProps } from './component';
 declare abstract class SVGItem {
     private m_tag;
     private m_attrs;
+    private m_style;
     constructor(tag: string);
     /**
      * render the item
@@ -61,6 +62,7 @@ declare abstract class SVGItem {
      * @returns this
      */
     attr(name: string, value: string): this;
+    style(name: string, value: string | number): this;
     /**
      * add a class
      * @param name class name to add
@@ -70,6 +72,10 @@ declare abstract class SVGItem {
      *
      */
     renderAttrs(): string;
+    /**
+     *
+     */
+    renderStyle(): string;
     renderContent(): string;
 }
 /**

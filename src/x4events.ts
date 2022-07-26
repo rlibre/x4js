@@ -108,11 +108,14 @@ export function EvChange(value: unknown, context = null ) {
  * value is the new selection or null
  */
 
-export interface EvSelectionChange extends BasicEvent {
-	readonly selection: unknown;
+interface X4Selection {
 }
 
-export function EvSelectionChange( selection: unknown, context = null ) {
+export interface EvSelectionChange extends BasicEvent {
+	readonly selection: X4Selection;
+}
+
+export function EvSelectionChange( selection: X4Selection, context = null ) {
 	return BasicEvent<EvSelectionChange>( { selection, context } );
 }
 

@@ -70,10 +70,12 @@ export declare function EvChange(value: unknown, context?: any): EvChange;
  * Selection Event
  * value is the new selection or null
  */
-export interface EvSelectionChange extends BasicEvent {
-    readonly selection: unknown;
+interface X4Selection {
 }
-export declare function EvSelectionChange(selection: unknown, context?: any): EvSelectionChange;
+export interface EvSelectionChange extends BasicEvent {
+    readonly selection: X4Selection;
+}
+export declare function EvSelectionChange(selection: X4Selection, context?: any): EvSelectionChange;
 /**
  * ContextMenu Event
  */
@@ -264,3 +266,4 @@ export declare class EventSource<Q extends EventMap, T extends EventTypes = MapE
      */
     removeAllListeners(eventName: string | null): void;
 }
+export {};

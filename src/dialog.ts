@@ -234,6 +234,10 @@ export class Dialog<P extends DialogProps = DialogProps, E extends DialogBoxEven
 		
 		this.addClass('@resized');
 
+		if( this.m_el_title ) {
+			this.m_el_title.setStyleValue( "width", "auto" );
+		}
+
 		if (this.m_props.maximized) {
 			this._maximize();
 			this.emit('size', EvSize(null));
@@ -462,13 +466,12 @@ export class Dialog<P extends DialogProps = DialogProps, E extends DialogBoxEven
 
 		let wrc = flyWrap(x4document.body).getBoundingRect();
 		let rc = this.getBoundingRect(true);
-		let trc = this.m_el_title.getBoundingRect();
+		///let trc = this.m_el_title.getBoundingRect();
 
 		let dx = x - rc.left,
 			dy = y - rc.top;
 
-		let cstyle = this.getComputedStyle();
-
+		//let cstyle = this.getComputedStyle();
 		//let topw = cstyle.parse('marginTop') + cstyle.parse('paddingTop') + cstyle.parse('borderTopWidth');
 		//let botw = cstyle.parse('marginBottom') + cstyle.parse('paddingBottom') + cstyle.parse('borderBottomWidth');
 		//let lftw = cstyle.parse('marginLeft') + cstyle.parse('paddingLeft') + cstyle.parse('borderLeftWidth');

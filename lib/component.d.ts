@@ -44,6 +44,43 @@ export interface ICaptureInfo {
     handler: EventHandler<UIEvent>;
     iframes: NodeListOf<HTMLIFrameElement>;
 }
+/** @ignore properties without 'px' unit */
+export declare const _x4_unitless: {
+    animationIterationCount: number;
+    borderImageOutset: number;
+    borderImageSlice: number;
+    borderImageWidth: number;
+    boxFlex: number;
+    boxFlexGroup: number;
+    boxOrdinalGroup: number;
+    columnCount: number;
+    flex: number;
+    flexGrow: number;
+    flexPositive: number;
+    flexShrink: number;
+    flexNegative: number;
+    flexOrder: number;
+    gridRow: number;
+    gridColumn: number;
+    fontWeight: number;
+    lineClamp: number;
+    lineHeight: number;
+    opacity: number;
+    order: number;
+    orphans: number;
+    tabSize: number;
+    widows: number;
+    zIndex: number;
+    zoom: number;
+    fillOpacity: number;
+    floodOpacity: number;
+    stopOpacity: number;
+    strokeDasharray: number;
+    strokeDashoffset: number;
+    strokeMiterlimit: number;
+    strokeOpacity: number;
+    strokeWidth: number;
+};
 /**
  *
  */

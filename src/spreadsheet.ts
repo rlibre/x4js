@@ -1015,6 +1015,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 			case 'Enter': {
 				this.editCurCell();
 				event.stopPropagation( );
+				event.preventDefault( );
 				break;
 			}
 
@@ -1200,8 +1201,8 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 			style: {
 				left: rc.left - prc.left,
 				top: rc.top - prc.top,
-				width: rc.width,
-				height: rc.height
+				width: rc.width - 1,
+				height: rc.height - 1
 			},
 			tabIndex: false,
 			value: cellvalue,
@@ -1247,11 +1248,16 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 			} );
 
 			input.setDomEvent( 'keydown', (e: KeyboardEvent) => {
-				
+				// prevented by edit...
+				if( e.defaultPrevented ) {
+					return;
+				}
+
 				switch (e.key) {
 					case 'Escape': {
 						this.killEditor(false);
 						e.stopPropagation();
+						e.preventDefault( );
 						break;
 					}
 
@@ -1264,6 +1270,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 
 						movesel(0, sens);
 						e.stopPropagation();
+						e.preventDefault( );
 						break;
 					}
 
@@ -1271,6 +1278,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 					case 'Up': {
 						movesel(-1, 0);
 						e.stopPropagation();
+						e.preventDefault( );
 						break;
 					}
 
@@ -1278,6 +1286,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 					case 'Down': {
 						movesel(1, 0);
 						e.stopPropagation();
+						e.preventDefault( );
 						break;
 					}
 				}
@@ -1296,6 +1305,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 					case 'Escape': {
 						this.killEditor(false);
 						e.stopPropagation();
+						e.preventDefault( );
 						break;
 					}
 
@@ -1308,6 +1318,7 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 
 						movesel(0, sens);
 						e.stopPropagation();
+						e.preventDefault( );
 						break;
 					}
 				}

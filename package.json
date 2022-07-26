@@ -1,6 +1,6 @@
 {
 	"name": "x4js",
-	"version": "1.4.36",
+	"version": "1.4.42",
 	"description": "X4js core files",
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
@@ -11,7 +11,8 @@
 	},
 	"keywords": [
 	  "typescript",
-	  "framework"
+	  "framework",
+	  "sap", "web", "desktop", "application"
 	],
 	"scripts": {
 		"build": "tsc && lessc src/x4.less >lib/x4.css",

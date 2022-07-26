@@ -27,8 +27,10 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { Component, CProps } from './component'
+import { Component, CProps, _x4_unitless } from './component'
+import { isNumber } from "./tools"
 
+const reNumber = /^-?\d+(\.\d+)?$/;
 
 // degrees to radian
 function d2r( d: number ): number {
@@ -69,10 +71,12 @@ function clean( a, ...b ) {
 abstract class SVGItem {
 	private m_tag: string
 	private m_attrs: Map<string,string>;
+	private m_style: Map<string,string>;
 
 	constructor( tag: string ) {
 		this.m_tag = tag;
 		this.m_attrs = new Map( );
+		this.m_style = new Map( );
 	}
 
 	/**
@@ -80,7 +84,7 @@ abstract class SVGItem {
 	 * @returns 
 	 */
 	render( ) : string {
-		return `<${this.m_tag} ${this.renderAttrs()}>${this.renderContent( )}</${this.m_tag}>`;
+		return `<${this.m_tag} ${this.renderAttrs()} ${this.renderStyle()}>${this.renderContent( )}</${this.m_tag}>`;
 	}
 
 	/**
@@ -127,6 +131,21 @@ abstract class SVGItem {
 		return this;
 	}
 
+	style( name: string, value: string | number ) : this {
+		
+		if (value === undefined || value==='' || value===undefined ) {
+			this.m_style.delete( name );
+			return;
+		}
+		
+		if (!_x4_unitless[name] && (isNumber(value) || reNumber.test(value))) {
+			value = value + 'px';
+		}
+
+		this.m_style.set( name, ''+value );
+		return this;
+	}
+
 	/**
 	 * add a class
 	 * @param name class name to add 
@@ -142,12 +161,35 @@ abstract class SVGItem {
 	 * 
 	 */
 	
-	renderAttrs( ) {
+	renderAttrs( ): string {
+		if( !this.m_attrs.size ) {
+			return "";
+		}
+
 		let result = '';
 		this.m_attrs.forEach( (v,k) => {
 			result += ` ${k} = "${v}"`
 		});
+
 		return result;
+	}
+
+	/**
+	 * 
+	 */
+	
+	 renderStyle( ): string {
+
+		if( !this.m_style.size ) {
+			return "";
+		}
+
+		let result = 'style="';
+		this.m_style.forEach( (v,k) => {
+			result += `${k}:${v};`
+		});
+
+		return result+'"';
 	}
 	
 	renderContent( ): string {

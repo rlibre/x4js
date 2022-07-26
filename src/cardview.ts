@@ -137,12 +137,15 @@ export class CardView<P extends CardViewProps = CardViewProps, E extends CardVie
 				}
 
 				let page = this.m_cpage.page as Component;
-
 				page.addClass('@active');
 				page.removeClass('@hidden');
 
 				if (!page.dom) {
 					this._preparePage(page);
+				}
+
+				if (this.m_cpage.selector) {
+					this.m_cpage.selector.addClass('@active');
 				}
 			}
 

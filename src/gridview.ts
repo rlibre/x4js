@@ -555,12 +555,14 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 			_col.width = width;
 			if( _col.flex ) {
 				_col.$hdr.removeClass( '@flex' );
+				_col.$ftr?.removeClass( '@flex' );
 				_col.flex = undefined;
 				updateFlex = true;
 			}
 		}
 		else if( width<0 && !_col.flex ) {
 			_col.$hdr.addClass( '@flex' );
+			_col.$ftr?.addClass( '@flex' );
 			_col.flex = 1;
 			updateFlex = true;
 		}
@@ -855,6 +857,12 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 		}
 
 		const update = () => {
+
+			// element destroyed between updateScroll and now
+			if( !this.dom ) {
+				return;
+			}
+
 			let newTop = Math.floor(this.m_view_el.dom.scrollTop / (this.m_itemHeight || 1));
 
 			if (newTop != this.m_topIndex || forceUpdate) {

@@ -691,6 +691,7 @@ export class PopupListView extends Popup<PopupListViewProps,PopupListViewEventMa
 		super({ tabIndex: false });
 
 		this.enableMask(false);
+		this.addClass( "@non-maskable" );
 
 		props.tabIndex = false;
 		this.m_list = new ListView(props);
