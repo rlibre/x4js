@@ -1406,3 +1406,63 @@ function shuffle(str: string, maxlength?: number) {
 
 	return shuffled;
 }
+
+
+
+/**
+ * taken from live-server 
+ * https://github.com/tapio/live-server
+ * @param host 
+ * @param port 
+ */
+ 
+export function installHMR(host = "127.0.0.1", port = "9876", reloadCallback?: Function ) {
+
+	let tm;
+
+	function refreshCSS() {
+
+		document.body.style.visibility = "hidden";
+
+		let sheets = [].slice.call(document.getElementsByTagName("link"));
+		let head = document.getElementsByTagName("head")[0];
+		
+		for (let i = 0; i < sheets.length; ++i) {
+			let elem = sheets[i];
+			head.removeChild(elem);
+
+			let rel = elem.rel;
+			if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+				let url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+				elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+			}
+			
+			head.appendChild(elem);
+		}
+
+		if( tm ) { clearTimeout(tm); }
+		tm = setTimeout( () => {
+			document.body.style.visibility = "unset";
+		}, 50 );
+	}
+
+	const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+	const address = `${protocol}${host}:${port}/ws`;	
+	const socket = new WebSocket(address);
+
+	socket.onmessage = function (msg) {
+		if (msg.data == 'reload') {
+			if( reloadCallback ) {
+				reloadCallback( );
+			}
+			else {
+				window.location.reload();
+			}
+		}
+		else if (msg.data == 'refreshcss') {
+			refreshCSS();
+		}
+	};
+
+	console.log('Live reload enabled.');
+}

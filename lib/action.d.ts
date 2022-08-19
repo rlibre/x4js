@@ -26,10 +26,10 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { BasicEvent } from './x4events';
+import { BasicEvent, EvChange } from './x4events';
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component';
 import { IconID } from "./icon";
-import { EvChange, EventHandler } from 'x4js';
+import { EventHandler } from './component';
 export interface EvAction extends BasicEvent {
 }
 export declare function EvAction(source: Action): EvAction;

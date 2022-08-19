@@ -30,11 +30,9 @@
 import { x4document } from './x4dom'
 import { EvMessage } from './x4events'
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component'
-import { Component } from './component'
+import { Component, flyWrap } from './component'
 import { Settings } from './settings'
-import { deferCall } from './tools'
 import { _tr } from './i18n'
-import { flyWrap } from 'x4js'
 
 const _x4_touch_time = Symbol( );
 

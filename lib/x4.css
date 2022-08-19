@@ -1115,17 +1115,17 @@ textarea::selection {
 .x-spreadsheet .x-header .x-cell,
 .x-grid-view .x-header .x-cell {
   border-right: 1px solid rgba(0, 0, 0, 0.1);
-  height: unset;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .x-spreadsheet .x-footer .x-cell span,
 .x-grid-view .x-footer .x-cell span,
 .x-spreadsheet .x-header .x-cell span,
 .x-grid-view .x-header .x-cell span {
   min-width: 0;
-  text-transform: uppercase;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-weight: bold;
 }
 .x-spreadsheet .x-footer .x-cell.sort,
 .x-grid-view .x-footer .x-cell.sort,
@@ -1134,14 +1134,11 @@ textarea::selection {
   height: 0.7rem;
   opacity: 0.7;
 }
-.x-spreadsheet .x-header .x-cell,
-.x-grid-view .x-header .x-cell {
-  display: flex;
-  align-items: center;
-}
 .x-spreadsheet .x-header .x-cell span,
 .x-grid-view .x-header .x-cell span {
   width: unset;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 .x-spreadsheet .x-header .x-cell .sort,
 .x-grid-view .x-header .x-cell .sort {

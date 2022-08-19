@@ -123,6 +123,10 @@ export declare class GridView extends VLayout<GridViewProps, GridViewEventMap> {
     /**
      *
      */
+    sortCol(name: string, asc?: boolean): void;
+    /**
+     *
+     */
     private _sortCol;
     /**
      *

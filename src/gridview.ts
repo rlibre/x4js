@@ -41,7 +41,7 @@ import { Component, ContainerEventMap, EvSize, EvDblClick, CProps, flyWrap, html
 import { Label } from './label'
 import { _tr } from './i18n'
 import * as Formatters from './formatters'
-import { downloadData } from './tools'
+import { downloadData, isFunction } from './tools'
 import { DataView, DataStore, Record } from './datastore'
 
 import { EvContextMenu, EvSelectionChange, BasicEvent, EventDisposer } from "./x4events";
@@ -134,10 +134,19 @@ class ColHeader extends Component {
 		return this.m_sorted;
 	}
 
-	set sorted( v ) {
+	//set sorted( v ) {
+	//	this.m_sorted = v;
+	//	this.m_sens = 'dn';
+	//	this.itemWithRef<Icon>( 'sorter' ).show( v );
+	//}
+
+	sort( v: boolean, sens: "up" | "dn" ) {
 		this.m_sorted = v;
-		this.m_sens = 'dn';
-		this.itemWithRef<Icon>( 'sorter' ).show( v );
+        this.m_sens = sens;
+
+		const ic = this.itemWithRef<Icon>('sorter');
+        ic.icon = this.m_sens == 'up' ? 'var( --x4-icon-arrow-down )' : 'var( --x4-icon-arrow-up )';
+		ic.show(v);
 	}
 
 	get sens( ) {
@@ -146,7 +155,7 @@ class ColHeader extends Component {
 
 	toggleSens( ) {
 		this.m_sens = this.m_sens=='up' ? 'dn' : 'up';
-		this.itemWithRef<Icon>( 'sorter' ).icon = this.m_sens=='dn' ? 'var( --x4-icon-arrow-down )' : 'var( --x4-icon-arrow-up )';
+		this.itemWithRef<Icon>( 'sorter' ).icon = this.m_sens=='up' ? 'var( --x4-icon-arrow-down )' : 'var( --x4-icon-arrow-up )';
 	}
 }
 
@@ -588,7 +597,21 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 	 * 
 	 */
 
-	private _sortCol(col: GridColumn ) {
+	sortCol( name: string, asc = true ) {
+		const col = this.m_columns.find(c => c.id==name );
+		if( col===undefined ) {
+			console.assert( false, "unknown field "+name+" in grid.sortCol" );
+			return;
+		}
+
+		this._sortCol( col, asc ? "dn" : "up" );
+	}
+
+	/**
+	 * 
+	 */
+
+	private _sortCol(col: GridColumn, sens: "up" | "dn" = "up" ) {
 
 		if (col.sortable === false) {
 			return;
@@ -596,7 +619,7 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 
 		this.m_columns.forEach((c) => {
 			if (c !== col) {
-				(c as GridColumnInternal).$hdr.sorted = false;
+				(c as GridColumnInternal).$hdr.sort( false, "dn" );
 			}
 		});
 
@@ -606,7 +629,7 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 			$hdr.toggleSens( );
 		}
 		else {
-			$hdr.sorted = true;
+			$hdr.sort( true, sens );
 		}
 
 		if (this.m_dataview) {
@@ -1137,17 +1160,24 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 			if( cid ) {
 				let col = this.m_columns[cid];
 
-				let fmt = col.formatter;
-				
-				let text;
-				if (fmt && fmt instanceof Function) {
-					text = fmt(rec[col.id], rec);
-				}
-				else {
-					text = rec[col.id];
-				}
+				let value = rec[col.id];
+				if( value!==undefined ) {
+					if( isFunction(value)  ) {	// FooterRenderer
+						value( c );
+					}
+					else {
+						let text;
+						const fmt = col.formatter;
+						if (fmt && fmt instanceof Function) {
+							text = fmt(value, rec);
+						}
+						else {
+							text = value;
+						}
 
-				c.setContent( text, false );
+						c.setContent( text, false );
+					}
+				}
 			}
 		});
 	}

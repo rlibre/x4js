@@ -27,10 +27,10 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { BasicEvent } from './x4events'
+import { BasicEvent, EvChange } from './x4events'
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component'
 import { IconID } from "./icon"
-import { EvChange, EventHandler } from 'x4js';
+import { EventHandler } from './component';
 
 //TODO: implement all
 

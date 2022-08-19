@@ -33,7 +33,7 @@
  *		create Container class
  */
 
-import { pascalCase, Rect, isString, isArray, Size, Point, isNumber, asap, HtmlString, isHtmlString, Constructor, getMousePos } from './tools';
+import { pascalCase, Rect, isString, isArray, Size, isNumber, asap, HtmlString, isHtmlString, Constructor, getMousePos } from './tools';
 import { x4document } from './x4dom';
 
 import { Stylesheet, ComputedStyle } from './styles';
@@ -41,7 +41,6 @@ import { _tr } from './i18n';
 import { BasicEvent, EventCallback } from './x4events';
 import { BaseComponent, BaseComponentProps, BaseComponentEventMap } from './base_component';
 import { IDOMEvents, X4ElementEventMap } from './dom_events';
-import { IconID } from 'x4js';
 
 export { HtmlString, isHtmlString, html } from './tools'
 

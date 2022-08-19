@@ -384,4 +384,11 @@ interface PasswordRule {
     min: number;
 }
 export declare function generatePassword(length: number, rules?: PasswordRule[]): string;
+/**
+ * taken from live-server
+ * https://github.com/tapio/live-server
+ * @param host
+ * @param port
+ */
+export declare function installHMR(host?: string, port?: string, reloadCallback?: Function): void;
 export {};

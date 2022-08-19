@@ -1366,14 +1366,14 @@ textarea {
 
 		.x-cell {
 			border-right: 1px solid rgba(0,0,0,0.1);
-			height: unset;
+			height: 100%;
+			display: flex;
+			align-items: center;
 
 			span {
 				min-width: 0;
-				text-transform: uppercase;
 				text-overflow: ellipsis;
 				overflow: hidden;
-				font-weight: bold;
 			}
 
 			&.sort {
@@ -1385,10 +1385,10 @@ textarea {
 
 	.x-header {
 		.x-cell {
-			display: flex;
-			align-items: center;
 			span {
 				width: unset;
+				text-transform: uppercase;
+				font-weight: bold;
 			}
 
 			.sort {
