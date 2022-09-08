@@ -48,6 +48,7 @@ export interface InputProps<P extends InputEventMap = InputEventMap> extends CPr
     value_hook?: ValueHook;
     min?: number;
     max?: number;
+    autosel?: boolean;
 }
 /**
  * base class for elements implementing an input

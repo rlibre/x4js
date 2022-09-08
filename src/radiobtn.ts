@@ -87,9 +87,9 @@ export class RadioBtn extends Component<RadioBtnProps,RadioBtnEventMap> {
 		let value = props.value;
 		let icon = props.icon;
 		
+		this.setTag( 'label' );
 		this.addClass( '@hlayout' );
-		this.setProp( 'tag', 'label' );
-
+		
 		this.addClass( align );
 		this._setTabIndex( props.tabIndex );
 

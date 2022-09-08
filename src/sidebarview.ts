@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { Component, CProps, Flex } from './component'
+import { Component, CProps, Flex, Separator } from './component'
 import { HLayout, VLayout } from './layout'
 import { Button } from './button'
 import { CardView, CardViewProps, ICardViewItem } from './cardview'
@@ -37,13 +37,14 @@ export interface SideBarItem extends ICardViewItem {
 
 export interface SideBarProps extends CardViewProps {
 	bar_sizable?: boolean;
+	bar_width?: number;
 }
 
 /**
  * 
  */
 
-export class SideBarView extends CardView {
+export class SideBarView extends CardView<SideBarProps> {
 	m_sidebar: VLayout;
 	m_content: Component;
 
@@ -55,7 +56,7 @@ export class SideBarView extends CardView {
 
 		this.m_sidebar = new VLayout( {
 			cls: '@side-bar',
-			sizable: props.bar_sizable ? 'right' : undefined,
+			width: props.bar_width ?? undefined,
 		});
 
 		this.m_content = new HLayout( { flex: 1, cls: '@tab-container' } );
@@ -78,6 +79,7 @@ export class SideBarView extends CardView {
 
 		this.setContent( [
 			this.m_sidebar,
+			this.m_props.bar_sizable ? new Separator( { orientation: "horizontal", sizing: "before" }) : undefined,
 			this.m_content
 		] );
 	}

@@ -206,24 +206,24 @@ export class Menu extends Popup<MenuProps>
 		}
 	}
 
-	public displayAt(ev: UIEvent ): void;
-	public displayAt(x: number, y?: number, align?: string, offset?: { x, y } ): void;
-	public displayAt( ...args ) {
-		
+	public displayAt(ev: UIEvent): void;
+	public displayAt(x: number, y?: number, align?: string, offset?: { x, y }): void;
+	public displayAt(...args) {
+
 		if (!this.m_lock) {
 			Menu._discardAll();
 		}
 
 		let x, y, align, offset;
 
-		if( args.length==1 ) {
-			({x,y} = getMousePos( args[0], true ));
+		if (args.length == 1) {
+			({ x, y } = getMousePos(args[0], true));
 		}
 		else {
-			[x,y,align,offset] = args;
+			[x, y, align, offset] = args;
 		}
 
-		if( !align ) {
+		if (!align) {
 			align = 'top left';
 		}
 
@@ -247,7 +247,7 @@ export interface MenuItemProps extends CProps {
 	checked?: boolean;
 	cls?: string;
 	click?: EventCallback<EvClick>;	// shortcut to events: { click ... }
-	
+
 	action?: Action;
 }
 
@@ -259,20 +259,20 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 	private m_isOpen: boolean;
 	private m_action: Action;
 
-	constructor( action: Action );
-	constructor( text: string, click: EventCallback<EvClick> );
-	constructor( props: MenuItemProps);
-	constructor( a, b? ) {
+	constructor(action: Action);
+	constructor(text: string, click: EventCallback<EvClick>);
+	constructor(props: MenuItemProps);
+	constructor(a, b?) {
 
-		if( a instanceof Action ) {
-			super( {
-				click: ( ) => { a.fire(); }
+		if (a instanceof Action) {
+			super({
+				click: () => { a.fire(); }
 			});
 
 			this.m_action = a;
 		}
-		else if( isString(a) ) {
-			super( {
+		else if (isString(a)) {
+			super({
 				text: a,
 				click: b
 			});
@@ -281,7 +281,7 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 			super(a);
 		}
 
-		this.mapPropEvents( this.m_props, 'click');
+		this.mapPropEvents(this.m_props, 'click');
 
 		this.m_menu = null;
 		this.m_isOpen = false;
@@ -300,12 +300,12 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 			icon = props.checked ? 'var( --x4-icon-check )' : 0;
 		}
 
-		if( this.m_action ) {
-			if( !icon ) {
+		if (this.m_action) {
+			if (!icon) {
 				icon = this.m_action.props.icon;
 			}
 
-			if( text===undefined ) {
+			if (text === undefined) {
 				text = this.m_action.props.text;
 			}
 		}
@@ -313,7 +313,7 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 		let popIco = null;
 		if (this.isPopup) {
 			this.addClass('@popup-menu-item');
-			popIco = new Icon( { icon: "var( --x4-icon-chevron-right )", cls: "pop-mark" } );
+			popIco = new Icon({ icon: "var( --x4-icon-chevron-right )", cls: "pop-mark" });
 		}
 
 		if (!text && !icon) {
@@ -324,7 +324,7 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 			this.addClass(props.cls);
 		}
 
-		this.setProp('tag', 'a');
+		this.setTag('a');
 		//@bug: do not kill focus on click 
 		//	this.setAttribute( 'tabindex', '0' );
 

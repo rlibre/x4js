@@ -45,13 +45,13 @@ export interface FormProps extends CProps<FormEventMap> {
 /**
  *
  */
-export declare class Form extends VLayout<FormProps, FormEventMap> {
+export declare class Form<T extends FormProps = FormProps, E extends FormEventMap = FormEventMap> extends VLayout<T, E> {
     protected m_height: string | number;
     protected m_container: Container;
     protected m_buttons: HLayout;
     protected m_dirty: boolean;
     protected m_watchChanges: boolean;
-    constructor(props: FormProps);
+    constructor(props: T);
     /**
      * returns the container object
      */

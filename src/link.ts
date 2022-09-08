@@ -69,8 +69,8 @@ export class Link extends Component<LinkProps, LinkEventMap>
 		let text = props.text ?? '';
 		let href = props.href ?? '#';
 
+		this.setTag( 'a');
 		this.setAttribute('tabindex', 0);
-		this.setProp('tag', 'a');
 		this.setAttribute('href', href);
 		this.setAttribute('target', props.target);
 

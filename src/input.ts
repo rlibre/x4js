@@ -56,6 +56,7 @@ export interface InputProps<P extends InputEventMap = InputEventMap> extends CPr
 	value_hook?: ValueHook;
 	min?: number;
 	max?: number;
+	autosel?: boolean;
 }
 
 
@@ -73,7 +74,7 @@ export class Input extends Component<InputProps,InputEventMap>
 	/** @ignore */	
 	render( props: InputProps ) {
 
-		this.setProp( 'tag', 'input' );
+		this.setTag( 'input' );
 		this._setTabIndex( props.tabIndex );
 
 		this.setAttributes( {
@@ -91,8 +92,16 @@ export class Input extends Component<InputProps,InputEventMap>
 			...props.attrs
 		});
 
+		this.m_props.autosel = props.autosel ?? true;
+		
 		if( props.uppercase ) {
 			this.setStyleValue( 'textTransform', 'uppercase' );
+		}
+
+		if( this.m_props.autosel ) {
+			this.setDomEvent( "focus", ( ) => {
+				this.selectAll( );
+			});
 		}
 	}
 

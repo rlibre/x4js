@@ -73,7 +73,7 @@ export class BaseButton<P extends ButtonProps = ButtonProps, E extends ButtonEve
 	constructor(props: P) {
 		super(props);
 
-		this.setProp('tag', 'button');
+		this.setTag( 'button');
 
 		this.setDomEvent('click', (e) => this._handleClick(e));
 		this.setDomEvent('mousedown', () => { this._startAutoRep(true) });
@@ -104,6 +104,10 @@ export class BaseButton<P extends ButtonProps = ButtonProps, E extends ButtonEve
 		const ui_label = new Label({ flex: 1, text: text ?? '', align: props.align, ref: 'label' });
 		const ui_ricon = props.rightIcon ? new Icon({ icon: props.rightIcon, cls: 'right', ref: 'r_icon' }) : null;
 
+		if( text===undefined ) {
+			ui_label.addClass( "@hidden" );
+		}
+		
 		this.setContent([ui_icon, ui_label, ui_ricon]);
 		this._setTabIndex(props.tabIndex);
 	}
@@ -203,7 +207,7 @@ export class BaseButton<P extends ButtonProps = ButtonProps, E extends ButtonEve
 		this.m_props.text = text;
 
 		let label = this.itemWithRef<Label>('label');
-		if (label) { label.text = text; }
+		if (label) { label.text = text; label.removeClass("@hidden") }
 	}
 
 	public get text(): string | HtmlString {

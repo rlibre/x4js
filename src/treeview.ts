@@ -289,12 +289,14 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 		}
 
 		let icon: IconID = node.icon;
-		if (icon === undefined) {
+		if (icon === undefined ) {
 			if (node.children) {
-				icon = 'cls(far fa-chevron-down)';
-			}
-			else {
-				icon = 'cls(far fa-file-archive)';
+				if( node.open===true ) {
+					icon = 'var(--x4-icon-chevron-down)';
+				}
+				else {
+					icon = 'var(--x4-icon-chevron-right)';
+				}
 			}
 		}
 

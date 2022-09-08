@@ -46,6 +46,7 @@ export interface TextEditProps extends InputProps<TextEditEventMap> {
     pattern?: string;
     uppercase?: boolean;
     format?: string | 'native';
+    autosel?: boolean;
     gadgets?: Component[];
     validator?: ValidationFunction;
     change?: EventCallback<EvChange>;
@@ -55,11 +56,11 @@ export interface TextEditProps extends InputProps<TextEditEventMap> {
 /**
  * TextEdit is a single line editor, it can have a label and an error descriptor.
  */
-export declare class TextEdit<T extends TextEditProps = TextEditProps> extends Component<TextEditProps, TextEditEventMap> {
+export declare class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEditEventMap = TextEditEventMap> extends Component<T, E> {
     private m_cal_popup;
     protected m_ui_input: Input;
     private m_error_tip;
-    constructor(props: TextEditProps);
+    constructor(props: T);
     componentCreated(): void;
     componentDisposed(): void;
     focus(): void;
@@ -113,7 +114,7 @@ export declare class TextEdit<T extends TextEditProps = TextEditProps> extends C
      * @returns
      */
     validate(): boolean;
-    private _validate;
+    protected _validate(value: string): boolean;
     _date_validator(value: string): string;
     private _showDatePicker;
     get input(): Input;

@@ -46,6 +46,7 @@ export interface BaseComponentEventMap extends EventMap {
  */
 export interface BaseComponentProps<T = BaseComponentEventMap> {
     events?: MapEvents<T>;
+    [key: string]: any;
 }
 /**
  * BaseComponent class

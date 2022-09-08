@@ -192,8 +192,21 @@ abstract class SVGItem {
 		return result+'"';
 	}
 	
+	/**
+	 * 
+	 */
+
 	renderContent( ): string {
 		return '';
+	}
+
+	/**
+	 * 
+	 */
+
+	clip( id: string ) {
+		this.attr( "clip-path", `url(#${id})` );
+		return this;
 	}
 }
 
@@ -391,12 +404,13 @@ class SVGGradient extends SVGItem {
  * 
  */
 
-export class SVGPathBuilder 
-{
-	private m_items: SVGItem[];
+class SVGGroup extends SVGItem {
+	protected m_items: SVGItem[];
 
-	constructor( ) {
-		this.m_items = [];
+	constructor( tag = "g" ) {
+		super( tag )
+
+        this.m_items = [];
 	}
 
 	path( ) {
@@ -445,7 +459,7 @@ export class SVGPathBuilder
 		this.m_items = [];
 	}
 
-	render( ) {
+	renderContent( ) {
 		let result: string[] = [];
 		this.m_items.forEach( i => {
 			result.push( i.render() );
@@ -453,6 +467,41 @@ export class SVGPathBuilder
 
 		return result.join( '\n' );
 	}
+}
+
+
+/**
+ * 
+ */
+
+export class SVGPathBuilder extends SVGGroup
+{
+	private static g_clip_id = 1;
+	
+	constructor( ) {
+		super( '' );
+	}
+
+	addClip( x: number, y: number, w: number, h: number ) {
+        
+		const id = 'c-'+SVGPathBuilder.g_clip_id++;
+		const clip = new SVGGroup( 'clipPath' );
+		clip.attr('id', id );
+		clip.rect( x, y, w, h );
+
+		this.m_items.push(clip);
+        return id;
+    }
+    
+    render() {
+
+		let result = [];
+        this.m_items.forEach(i => {
+            result.push(i.render());
+        });
+
+		return result.join('\n');
+     }
 }
 
 /**
@@ -471,8 +520,7 @@ export class SVGComponent<P extends SVGProps = SVGProps> extends Component<P> {
 	constructor( props: P ) {
 		super( props );
 
-		this.setProp('tag','svg');
-		this.setProp('ns','http://www.w3.org/2000/svg');
+		this.setTag('svg','http://www.w3.org/2000/svg');
 		this.setAttribute('xmlns','http://www.w3.org/2000/svg');
 
 		this.setAttributes( {

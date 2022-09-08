@@ -163,16 +163,28 @@ export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<
      */
     appendChild(content: ComponentContent): void;
     /**
+     *
+     */
+    setTag(tag: string, namespace?: string): void;
+    /**
      * get the Component value
      * @param name name to get
-     */
-    getProp(name: string): any;
-    /**
+     * /
+
+    getProp(name: string): any {
+        return this.m_props[name];
+    }
+
+    / **
      * change a Component value
      * @param name name to set
      * @param value new value
-     */
-    setProp(name: string, value?: any): void;
+     * /
+
+    setProp(name: string, value?: any) {
+        (this.m_props as any)[name] = value;
+    }
+    */
     /**
      * get the Component data value
      * @param name name to get

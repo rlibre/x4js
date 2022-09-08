@@ -27,6 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 export * from "./application";
+export * from "./autocomplete";
 export * from "./base_component";
 export * from "./button";
 export * from "./calendar";
@@ -78,3 +79,4 @@ export * from "./tools";
 export * from "./tooltips";
 export * from "./treeview";
 export * from "./x4events";
+export * from "./version";

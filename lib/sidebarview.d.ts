@@ -33,11 +33,12 @@ export interface SideBarItem extends ICardViewItem {
 }
 export interface SideBarProps extends CardViewProps {
     bar_sizable?: boolean;
+    bar_width?: number;
 }
 /**
  *
  */
-export declare class SideBarView extends CardView {
+export declare class SideBarView extends CardView<SideBarProps> {
     m_sidebar: VLayout;
     m_content: Component;
     constructor(props: SideBarProps);

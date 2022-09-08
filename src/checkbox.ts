@@ -84,10 +84,10 @@ export class CheckBox extends Component<CheckBoxProps, CheckBoxEventMap> {
 		let labelWidth = props.labelWidth ?? -1;
 		let uid = '__cb_' + this.uid;
 
+		this.setTag( 'label');
 		this.addClass('@hlayout');
 		this.addClass(props.align ?? 'left');
-		this.setProp('tag', 'label');
-
+		
 		this.setContent([
 			new Input({
 				ref: 'input',

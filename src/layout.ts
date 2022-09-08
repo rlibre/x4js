@@ -163,7 +163,7 @@ export class TableLayout extends Container<TableLayoutProps> {
 	constructor(props: TableLayoutProps) {
 		super(props);
 
-		this.setProp('tag', 'table');
+		this.setTag( 'table');
 		this.m_cells = new Map<number, CellData>();
 	}
 

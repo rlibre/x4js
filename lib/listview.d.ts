@@ -109,7 +109,7 @@ export declare class ListView extends VLayout<ListViewProps, ListViewEventMap> {
      * @param items - new array of items
      */
     setItems(items: ListViewItem[], keepSel?: boolean): void;
-    private _handleKey;
+    handleKey(ev: KeyboardEvent): void;
     /** @ignore */
     private _buildContent;
     /**
@@ -167,6 +167,7 @@ export declare class PopupListView extends Popup<PopupListViewProps, PopupListVi
     m_list: ListView;
     constructor(props: ListViewProps);
     set items(items: ListViewItem[]);
+    handleKey(ev: KeyboardEvent): void;
     private _handleClick;
     show(modal?: boolean): void;
     hide(): void;

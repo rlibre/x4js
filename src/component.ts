@@ -276,23 +276,35 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 	}
 
 	/**
+	 * 
+	 */
+
+	setTag( tag: string, namespace?: string ) {
+		this.m_props.tag = tag;
+		if( namespace ) {
+			this.m_props.ns = namespace;
+		}
+	}
+
+	/**
 	 * get the Component value
 	 * @param name name to get
-	 */
+	 * /
 
 	getProp(name: string): any {
 		return this.m_props[name];
 	}
 
-	/**
+	/ **
 	 * change a Component value
 	 * @param name name to set
 	 * @param value new value
-	 */
+	 * /
 
 	setProp(name: string, value?: any) {
-		this.m_props[name] = value;
+		(this.m_props as any)[name] = value;
 	}
+	*/
 
 	/**
 	 * get the Component data value

@@ -28,6 +28,7 @@
 **/
 
 export * from "./application"
+export * from "./autocomplete"
 export * from "./base_component"
 //export * from "./base64"
 export * from "./button"
@@ -82,3 +83,5 @@ export * from "./tools"
 export * from "./tooltips"
 export * from "./treeview"
 export * from "./x4events"
+
+export * from "./version"

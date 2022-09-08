@@ -76,7 +76,7 @@ export class Label extends Component<LabelProps>
 			this.setContent( text );
 		}
 		else {
-			this.setProp( 'tag', 'span' );
+			this.setTag( 'span' );
 			this.addClass( '@hlayout' );
 
 			this.setContent( [

@@ -69,6 +69,8 @@ export interface TextEditProps extends InputProps<TextEditEventMap> {
 	pattern?: string;
 	uppercase?: boolean;
 	format?: string | 'native'; // default store format on type date. 
+	autosel?: boolean;	// select content on focus
+
 	// by default mysql format without time 'YYYY-MM-DD'
 	// use 'native' to work on real Date object (get/set value)
 
@@ -87,13 +89,13 @@ export interface TextEditProps extends InputProps<TextEditEventMap> {
  * TextEdit is a single line editor, it can have a label and an error descriptor.
  */
 
-export class TextEdit<T extends TextEditProps = TextEditProps> extends Component<TextEditProps, TextEditEventMap> {
+export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEditEventMap = TextEditEventMap > extends Component<T, E> {
 
 	private m_cal_popup: PopupCalendar;
 	protected m_ui_input: Input;
 	private m_error_tip: Tooltip;
 
-	constructor(props: TextEditProps) {
+	constructor(props: T) {
 		super(props);
 		this.addClass( '@hlayout' );
 		this.mapPropEvents( props, 'change', 'click', 'focus' );
@@ -126,7 +128,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps> extends Component
 			flex: 1,
 			dom_events: {
 				focus: ( ) => this._focus( ),
-				blur: ( ) => this._blur( ),
+				focusout: ( ) => this._blur( ),
 				input: ( ) => this._change( )
 			},
 			value: props.value,
@@ -142,6 +144,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps> extends Component
 			attrs: props.attrs,
 			min: props.min,
 			max: props.max,
+			autosel: props.autosel,
 		};
 
 		// date is handled manually with popupcalendar
@@ -410,7 +413,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps> extends Component
 		return this._validate(this.value);
 	}
 
-	private _validate(value: string): boolean {
+	protected _validate(value: string): boolean {
 		let props = this.m_props;
 		let update = false;
 

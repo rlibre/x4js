@@ -89,7 +89,7 @@ export class TextArea extends Component<TextAreaProps, TextAreaEventMap> {
 		}
 
 		if (props.autoGrow) {
-			this.setProp('autoGrow', true);
+			this.m_props.autoGrow = true;
 			this.setAttribute('rows', this._calcHeight(props.text));
 			this.setDomEvent('keydown', () => {
 				asap( ()=>this._updateHeight());
@@ -101,8 +101,8 @@ export class TextArea extends Component<TextAreaProps, TextAreaEventMap> {
 			e.stopPropagation();
 		});
 
+		this.setTag( 'textarea');
 		this.setDomEvent('input', () => this._change());
-		this.setProp('tag', 'textarea');
 	}
 
 	private _change() {

@@ -76,7 +76,14 @@ declare abstract class SVGItem {
      *
      */
     renderStyle(): string;
+    /**
+     *
+     */
     renderContent(): string;
+    /**
+     *
+     */
+    clip(id: string): this;
 }
 /**
  *
@@ -148,9 +155,9 @@ declare class SVGGradient extends SVGItem {
 /**
  *
  */
-export declare class SVGPathBuilder {
-    private m_items;
-    constructor();
+declare class SVGGroup extends SVGItem {
+    protected m_items: SVGItem[];
+    constructor(tag?: string);
     path(): SVGPath;
     text(x: any, y: any, txt: any): SVGText;
     ellipse(x: any, y: any, r1: any, r2?: any): SVGShape;
@@ -160,6 +167,15 @@ export declare class SVGPathBuilder {
      * clear
      */
     clear(): void;
+    renderContent(): string;
+}
+/**
+ *
+ */
+export declare class SVGPathBuilder extends SVGGroup {
+    private static g_clip_id;
+    constructor();
+    addClip(x: number, y: number, w: number, h: number): string;
     render(): string;
 }
 /**

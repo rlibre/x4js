@@ -59,7 +59,7 @@ export interface FormProps extends CProps<FormEventMap> {
  * 
  */
 
-export class Form extends VLayout<FormProps, FormEventMap>
+export class Form<T extends FormProps = FormProps, E extends FormEventMap = FormEventMap> extends VLayout<T, E>
 {
 	protected m_height: string | number;
 	protected m_container: Container;
@@ -67,7 +67,7 @@ export class Form extends VLayout<FormProps, FormEventMap>
 	protected m_dirty: boolean;
 	protected m_watchChanges: boolean;
 
-	constructor(props: FormProps) {
+	constructor(props: T) {
 
 		let content = props.content;
 		props.content = null;
@@ -78,7 +78,7 @@ export class Form extends VLayout<FormProps, FormEventMap>
 
 		super(props);
 
-		this.setProp('tag', props.disableSuggestions ? 'section' : 'form');
+		this.setTag( props.disableSuggestions ? 'section' : 'form');
 		this.mapPropEvents(props, 'btnClick');
 		this.updateContent(content, props.buttons, height);
 

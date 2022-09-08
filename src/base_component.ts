@@ -53,6 +53,7 @@ export interface BaseComponentEventMap extends EventMap {
 
 export interface BaseComponentProps<T = BaseComponentEventMap> {
 	events?: MapEvents<T>;	// basic component event map in base interface, should specialised in derived interfaces
+	[key: string]: any; // added index signature to solve "Type 'X' has no properties with type 'Y'" 
 }
 
 /**

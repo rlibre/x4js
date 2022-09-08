@@ -122,7 +122,7 @@ export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 	constructor(props: ListViewProps) {
 		super(props);
 
-		this.setDomEvent('keydown', (e) => this._handleKey(e));
+		this.setDomEvent('keydown', (e) => this.handleKey(e));
 		this.setDomEvent('click', (e) => this._handleClick(e));
 		this.setDomEvent('dblclick', (e) => this._handleClick(e));
 		this.setDomEvent('contextmenu', (e) => this._handleCtxMenu(e));
@@ -198,7 +198,7 @@ export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 		}
 	}
 
-	private _handleKey(ev: KeyboardEvent) {
+	public handleKey(ev: KeyboardEvent) {
 
 		let moveSel = (sens) => {
 
@@ -237,12 +237,14 @@ export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 		switch (ev.key) {
 			case 'ArrowDown': {
 				moveSel(1);
+				ev.preventDefault( );
 				ev.stopPropagation();
 				break;
 			}
 
 			case 'ArrowUp': {
 				moveSel(-1);
+				ev.preventDefault( );
 				ev.stopPropagation();
 				break;
 			}
@@ -705,7 +707,11 @@ export class PopupListView extends Popup<PopupListViewProps,PopupListViewEventMa
 		this.m_list.items = items;
 	}
 
-	// @override
+	public handleKey( ev: KeyboardEvent ) {
+		this.m_list.handleKey( ev );
+	}
+
+
 	// todo: move into popup
 	private _handleClick = (e: MouseEvent) => {
 		if (!this.dom) {

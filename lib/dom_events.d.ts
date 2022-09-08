@@ -131,6 +131,8 @@ export interface IDOMEvents {
      * Fires when the object receives focus.
      * @param ev The event.
      */
+    focusin?: (ev: FocusEvent) => any;
+    focusout?: (ev: FocusEvent) => any;
     focus?: (ev: FocusEvent) => any;
     gotpointercapture?: (ev: PointerEvent) => any;
     input?: (ev: Event) => any;

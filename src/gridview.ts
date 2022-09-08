@@ -1109,12 +1109,12 @@ export class GridView extends VLayout<GridViewProps, GridViewEventMap> {
 	}
 
 	private _renderCheck(rec: Record) {
-		let cls = '';
+		let icon = '--x4-icon-square';
 		if (this.m_marks.has(rec.getID())) {
-			cls = ' checked';
+			icon = '--x4-icon-square-check';
 		}
 
-		return new Component({ cls: '@grid-checkbox' + cls });
+		return new Icon({ icon: `var(${icon})` });
 	}
 
 	private _toggleMark(rec: Record) {
