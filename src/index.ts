@@ -83,5 +83,6 @@ export * from "./tools"
 export * from "./tooltips"
 export * from "./treeview"
 export * from "./x4events"
+export * from "./x4react"
 
 export * from "./version"

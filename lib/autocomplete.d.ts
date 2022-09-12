@@ -1,11 +1,11 @@
 /**
-*  ___   ___ __
-*  \  \_/  /  / _
-*   \     /  /_| |_
-*   /  _  \____   _|
-*  /__/ \__\   |_|
+*  ___  ___ __
+*  \  \/  /  / _
+*   \    /  /_| |_
+*   /    \____   _|
+*  /__/\__\   |_|
 *
-* @file tabbar.ts
+* @file autocomplete.ts
 * @author Etienne Cochard
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
@@ -26,33 +26,33 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { Component, Container, ContainerEventMap, CProps, EventHandler } from './component';
-import { EvChange } from './x4events';
-import { IconID } from './icon.js';
-interface TabBarEventMap extends ContainerEventMap {
-    change: EvChange;
+import { TextEdit, TextEditProps } from './textedit';
+/**
+ *
+ */
+interface AutoCompleteProps extends TextEditProps {
+    enumValues: (filter: string) => string[];
 }
-interface TabBarProps extends CProps<TabBarEventMap> {
-    pages?: ITabPage[];
-    default?: string;
-    vertical?: boolean;
-    change: EventHandler<EvChange>;
-}
-export interface ITabPage {
-    id: string;
-    title?: string;
-    icon?: IconID;
-    page: Component;
-}
-export declare class TabBar extends Container<TabBarProps, TabBarEventMap> {
-    private m_pages;
-    private m_curPage;
-    constructor(props: TabBarProps);
-    componentCreated(): void;
-    addPage(page: ITabPage): void;
-    render(): void;
-    select(id: string | null, notify?: boolean): boolean;
-    private _select;
-    get selection(): Component<CProps<import("./component").CEventMap>, import("./component").CEventMap>;
+/**
+ *
+ */
+export declare class AutoComplete extends TextEdit<AutoCompleteProps> {
+    private m_popup;
+    private m_popvis;
+    private m_needval;
+    private m_lockpop;
+    constructor(props: AutoCompleteProps);
+    _onKey(e: KeyboardEvent): void;
+    private _onChange;
+    componentDisposed(): void;
+    /**
+     * display the popup
+     */
+    showPopup(items: string[]): void;
+    protected _validate(value: string): boolean;
+    validate(): boolean;
+    private _checkFocus;
+    private _hidePopup;
+    private _onFocus;
 }
 export {};

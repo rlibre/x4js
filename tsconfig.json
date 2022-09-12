@@ -5,8 +5,10 @@
     	"noImplicitAny": false, 
     	"strictNullChecks": false,
     	"outDir": "./lib",
-		"declaration": true,
 		"module": "commonjs",
+		//"outFile": "./lib2/index.js",
+		//"module": "amd",
+		"declaration": true,
 		"strict": true//false,
   	},
 	"files": [

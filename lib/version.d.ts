@@ -5,7 +5,7 @@
 *   /  _  \____   _|
 *  /__/ \__\   |_|
 *
-* @file tabbar.ts
+* @file version.ts
 * @author Etienne Cochard
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
@@ -26,33 +26,4 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { Component, Container, ContainerEventMap, CProps, EventHandler } from './component';
-import { EvChange } from './x4events';
-import { IconID } from './icon.js';
-interface TabBarEventMap extends ContainerEventMap {
-    change: EvChange;
-}
-interface TabBarProps extends CProps<TabBarEventMap> {
-    pages?: ITabPage[];
-    default?: string;
-    vertical?: boolean;
-    change: EventHandler<EvChange>;
-}
-export interface ITabPage {
-    id: string;
-    title?: string;
-    icon?: IconID;
-    page: Component;
-}
-export declare class TabBar extends Container<TabBarProps, TabBarEventMap> {
-    private m_pages;
-    private m_curPage;
-    constructor(props: TabBarProps);
-    componentCreated(): void;
-    addPage(page: ITabPage): void;
-    render(): void;
-    select(id: string | null, notify?: boolean): boolean;
-    private _select;
-    get selection(): Component<CProps<import("./component").CEventMap>, import("./component").CEventMap>;
-}
-export {};
+export declare const x4js_version = "1.4";

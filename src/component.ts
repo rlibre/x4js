@@ -181,7 +181,7 @@ interface CInternalProps {
  * 
  */
 
-export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComponentEventMap>, E extends BaseComponentEventMap = BaseComponentEventMap> extends BaseComponent<P, E> {
+export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends BaseComponent<P, E> {
 	private m_dom: HTMLElement;
 	private m_iprops: CInternalProps;
 
@@ -285,26 +285,6 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 			this.m_props.ns = namespace;
 		}
 	}
-
-	/**
-	 * get the Component value
-	 * @param name name to get
-	 * /
-
-	getProp(name: string): any {
-		return this.m_props[name];
-	}
-
-	/ **
-	 * change a Component value
-	 * @param name name to set
-	 * @param value new value
-	 * /
-
-	setProp(name: string, value?: any) {
-		(this.m_props as any)[name] = value;
-	}
-	*/
 
 	/**
 	 * get the Component data value
@@ -749,9 +729,6 @@ export class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComp
 	}
 
 	public render(props: P) {
-		if( this.m_props.tag=='footer') {
-			debugger;
-		}
 	}
 
 	public _createDOM(): HTMLElement {
@@ -2348,4 +2325,20 @@ export class Container<P extends ContainerProps = ContainerProps, E extends Cont
 
 export type ComponentConstructor<T> = new (props: CProps) => T;
 
+/**
+ * 
+ */
+
+export class TSXComponent<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends Component<P,E> {
+	public render(props: P) {
+		const tsx = this.renderTSX( props );
+		if( tsx ) {
+			this.setContent( tsx );
+		}
+	}
+
+	public renderTSX( props: P ): Component | Component[] {
+		return undefined;
+	}
+}
 

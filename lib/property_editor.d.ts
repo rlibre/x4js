@@ -64,7 +64,7 @@ export declare class PropertyEditor extends Component<PropertyEditorProps, Prope
     private _updateProperties;
     private _cellChange;
     _renderCell(text: any, rec: any): any;
-    _editCell(props: any, row: number, col: number): Component<CProps<import("./base_component").BaseComponentEventMap>, import("./base_component").BaseComponentEventMap>;
+    _editCell(props: any, row: number, col: number): Component<CProps<CEventMap>, CEventMap>;
     private _choicesFromArray;
     private _choicesFromStore;
 }

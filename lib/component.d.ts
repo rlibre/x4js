@@ -136,7 +136,7 @@ export interface CProps<T extends CEventMap = CEventMap> extends BaseComponentPr
 /**
  *
  */
-export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<BaseComponentEventMap>, E extends BaseComponentEventMap = BaseComponentEventMap> extends BaseComponent<P, E> {
+export declare class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends BaseComponent<P, E> {
     private m_dom;
     private m_iprops;
     private static __sb_width;
@@ -166,25 +166,6 @@ export declare class Component<P extends CProps<BaseComponentEventMap> = CProps<
      *
      */
     setTag(tag: string, namespace?: string): void;
-    /**
-     * get the Component value
-     * @param name name to get
-     * /
-
-    getProp(name: string): any {
-        return this.m_props[name];
-    }
-
-    / **
-     * change a Component value
-     * @param name name to set
-     * @param value new value
-     * /
-
-    setProp(name: string, value?: any) {
-        (this.m_props as any)[name] = value;
-    }
-    */
     /**
      * get the Component data value
      * @param name name to get
@@ -617,3 +598,10 @@ export declare class Container<P extends ContainerProps = ContainerProps, E exte
     private _handleKeydown;
 }
 export declare type ComponentConstructor<T> = new (props: CProps) => T;
+/**
+ *
+ */
+export declare class TSXComponent<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends Component<P, E> {
+    render(props: P): void;
+    renderTSX(props: P): Component | Component[];
+}
