@@ -157,6 +157,7 @@ export declare class Component<P extends CProps<CEventMap> = CProps<CEventMap>, 
      * @param content new content or null
      */
     setContent(content: ComponentContent, refreshAll?: boolean): void;
+    getContent(): ComponentContent;
     /**
      * add a new child to the component content
      * @param content
@@ -598,10 +599,3 @@ export declare class Container<P extends ContainerProps = ContainerProps, E exte
     private _handleKeydown;
 }
 export declare type ComponentConstructor<T> = new (props: CProps) => T;
-/**
- *
- */
-export declare class TSXComponent<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends Component<P, E> {
-    render(props: P): void;
-    renderTSX(props: P): Component | Component[];
-}

@@ -240,6 +240,9 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 		}
 	}
 
+	getContent( ) {
+		return this.m_props.content;
+	}
 
 	/**
 	 * add a new child to the component content
@@ -2324,21 +2327,3 @@ export class Container<P extends ContainerProps = ContainerProps, E extends Cont
 }
 
 export type ComponentConstructor<T> = new (props: CProps) => T;
-
-/**
- * 
- */
-
-export class TSXComponent<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends Component<P,E> {
-	public render(props: P) {
-		const tsx = this.renderTSX( props );
-		if( tsx ) {
-			this.setContent( tsx );
-		}
-	}
-
-	public renderTSX( props: P ): Component | Component[] {
-		return undefined;
-	}
-}
-

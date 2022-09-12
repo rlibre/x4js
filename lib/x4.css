@@ -217,6 +217,12 @@ textarea::selection {
   flex: 1;
   flex-basis: 0;
 }
+.x-hlayout > .x-min-content {
+  min-width: min-content;
+}
+.x-vlayout > .x-min-content {
+  min-height: min-content;
+}
 .x-fit {
   position: absolute;
   left: 0;
@@ -328,6 +334,11 @@ textarea::selection {
 .x-base-button .x-icon {
   margin: 0 4px;
   color: inherit;
+}
+.x-base-button .x-svg-icon {
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 .x-base-button:focus {
   border-color: var(--x4-focus-color);
