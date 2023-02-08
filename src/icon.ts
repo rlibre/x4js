@@ -186,6 +186,12 @@ export class Icon extends Component<IconProps>
 
 				match_var = reVar.exec( icon );
 			}
+
+			// <svg ...>
+			if( icon.startsWith('<svg') ) {
+				this._setSVG( 'data:image/svg+xml;utf8,'+icon);
+				return;
+			}
 			
 			//	svg( <svg-filename> )	-> 	svg( "mysvgfile.svg" )	
 			//	<svg-filename>.svg 		->  "mysvgfile.svg"

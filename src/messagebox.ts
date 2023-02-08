@@ -105,6 +105,27 @@ export class MessageBox extends Dialog<MessageBoxProps>
 		return msg;
 	}
 
+	static async showAsync( props: string | HtmlString | MessageBoxProps): Promise<string> {
+		return new Promise( (resolve, reject ) => {
+			
+			let _props: MessageBoxProps;
+
+			const cb = ( btn: string ) => {
+				resolve( btn );
+			}
+
+			if (isString(props) || isHtmlString(props)) {
+				_props = { message: props, click: cb };
+			}
+			else {
+				_props = { ...props, click: cb };
+			}
+
+			const msg = new MessageBox(_props);
+			msg.show();
+		});
+	}
+
 	/**
 	 * display an alert message
 	 */

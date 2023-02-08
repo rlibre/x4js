@@ -145,7 +145,7 @@ export class TabBar extends Container<TabBarProps,TabBarEventMap> {
 		}
 	}
 
-	get selection( ) {
+	get selection( ): Component {
 		return this.m_curPage?.page;
 	}
 }

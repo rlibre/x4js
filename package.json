@@ -1,28 +1,49 @@
 {
 	"name": "x4js",
-	"version": "1.4.51",
+	"version": "1.5.9",
 	"description": "X4js core files",
-	"main": "lib/index.js",
-	"types": "lib/index.d.ts",
+	"main": "lib/cjs/index.js",
+	"types": "lib/types/index.d.ts",
 	"style": "lib/x4.css",
+	"files": [
+		"lib/**/*"
+	],
 	"repository": {
-	  "type": "git",
-	  "url": "git+https://github.com/rlibre/x4js.git"
+		"type": "git",
+		"url": "git+https://github.com/rlibre/x4js.git"
 	},
 	"keywords": [
-	  "typescript",
-	  "framework",
-	  "sap", "web", "desktop", "application"
+		"typescript",
+		"framework",
+		"sap",
+		"web",
+		"desktop",
+		"application"
 	],
 	"scripts": {
-		"build": "tsc && lessc src/x4.less >lib/x4.css",
-		"mkdoc": "typedoc --tsconfig tsconfig.json --readme none"
+		"build": "bash ./build.sh",
+		"mkdoc": "typedoc --tsconfig tsconfig.json --readme none",
+		"prepack": "bash ./build.sh"
 	},
 	"author": "etienne cochard",
 	"license": "MIT",
 	"bugs": {
-	  "url": "https://github.com/rlibre/x4js/issues"
+		"url": "https://github.com/rlibre/x4js/issues"
 	},
-	"homepage": "https://x4js.org"
-  }
-  
+	"homepage": "https://x4js.org",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./lib/types/index.d.ts",
+				"default": "./lib/esm/index.mjs"
+			},
+			"require": {
+				"types": "./lib/types/index.d.ts",
+				"default": "./lib/cjs/index.js"
+			}
+		}
+	},
+	"dependencies": {
+		"typescript": "^4.9.3"
+	}
+}

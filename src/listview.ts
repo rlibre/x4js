@@ -62,7 +62,7 @@ export interface RenderListItem {
  * callback to fill the list
  */
 export interface PopulateItems {
-	(): ListViewItem[];
+	( filter: string ): ListViewItem[];
 }
 
 /**
@@ -137,7 +137,7 @@ export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 			this._buildItems();
 		}
 		else if( this.m_props.populate ) {
-			this.items = this.m_props.populate( );
+			this.items = this.m_props.populate( null );
 		}
 	}
 
@@ -449,6 +449,9 @@ export class ListView extends VLayout<ListViewProps,ListViewEventMap> {
 	/** @ignore */
 	private _handleClick(e: MouseEvent) {
 
+		e.stopImmediatePropagation();
+		e.preventDefault( );
+		
 		let dom = e.target as HTMLElement,
 			self = this.dom,
 			list_items = this.m_props.items as ListViewItem[];	// already created by build

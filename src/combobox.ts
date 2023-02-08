@@ -38,7 +38,7 @@ import { Input } from './input'
 import { Label } from './label'
 import { Button } from './button'
 import { HLayout } from './layout'
-import { PopupListView, ListViewItem, PopulateItems, EvCancel } from './listview';
+import { PopupListView, ListViewItem, EvCancel, PopulateItems } from './listview';
 import { DataStore, DataView, Record } from './datastore'
 import { isFunction, HtmlString } from './tools'
 
@@ -73,12 +73,12 @@ export interface ComboBoxProps extends CProps<ComboBoxEventMap> {
 
 	labelAlign?: 'left' | 'right';	
 
-	items?: ListViewItem[];
-	populate?: PopulateItems; // if not specified, fire 'populate' event
+	items?: ListViewItem[] | PopulateItems;
 	value?: any; // shown value at init
 
 	renderer?: ComboItemRender;
 	selectionChange?: EventCallback<EvSelectionChange>;// shortcut to events: { selectionChange: ... }
+	editable?: boolean;
 }
 
 /**
@@ -87,21 +87,53 @@ export interface ComboBoxProps extends CProps<ComboBoxEventMap> {
 
 export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	
-	private m_ui_input: Component;
+	private m_ui_input: Input | Component;
 	private m_ui_button: Button;
 	private m_popup: PopupListView;
-
+	private m_lockpop: boolean;
+	private m_lockchg: boolean;
+	private m_popvis: boolean;
 	private m_selection: ListViewItem;
-	private m_defer_sel: any;
-	
+		
 	constructor(props: ComboBoxProps) {
 		super(props);
 
-		this.setDomEvent( 'keypress', () => this.showPopup() );
-		this.setDomEvent( 'click', () => this.showPopup() );
+		if( !props.editable ) {
+			this.setDomEvent( 'keypress', () => this.showPopup() );
+		}
 
+		this.setDomEvent( 'click', () => {
+			if( this.m_props.editable ) {
+				this.m_ui_input.focus( );
+			}
+			
+			this.showPopup();
+		} );
+
+		this.setDomEvent("keydown", e => this._onKey(e));
 		this.mapPropEvents(props, 'selectionChange' );
+		
+		this.m_popvis = false;
+		this.m_lockpop = false;
+		this.m_lockchg = false;
 	}
+
+	_onKey(e) {
+        if (this.m_popvis) {
+            if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+				this.m_lockpop = true;
+                this.m_popup.handleKey(e);
+                this.m_lockpop = false;
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            else if (e.key == "Escape") {
+                this._hidePopup();
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+    }
 
 	set items( items: ListViewItem[] ) {
 		this.m_props.items = items;
@@ -109,21 +141,43 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 			this.m_popup.items = items;
 		}
 	}
-
+	
 	/** @ignore */	
 	render( props: ComboBoxProps ) {
 
 		if( !props.renderer ) {
-			this.m_ui_input = new Input( {
+			
+			const input = new Input( {
 				flex 	: 1,
-				readOnly : true,
+				readOnly : this.m_props.editable ? false : true,
 				tabIndex : 0,
 				name: props.name,
 				value_hook: {
 					get: (): string => { return this.value; },
 					set: (v: string) => { this.value = v; }
+				},
+				dom_events: {
+					focus: () => {
+						if( this.m_props.editable && input.value.length==0 ) {
+							this.showPopup( );
+						}
+					},
+					input: ( ) => {
+						if( this.m_lockchg ) {
+							return;
+						}
+
+						const text = input.value;
+						this.m_selection = { id: undefined, text };
+						let items = this.showPopup( );
+						if( items && items.length && items[0].text==text ) {
+							this.m_selection = { id: items[0].id, text };
+						}
+					}
 				}
 			});
+
+			this.m_ui_input = input;
 		}
 		else {
 			this.m_ui_input = new Component( { 
@@ -162,7 +216,9 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 						cls: 'gadget',
 						icon: 'var( --x4-icon-angle-down )',
 						tabIndex: false,
-						click: () => this.showPopup(),
+						click: () => {
+							this.showPopup( false )
+						},
 						dom_events: {
 							focus: () => { this.dom.focus(); },
 						}
@@ -188,11 +244,21 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	 * display the popup 
 	 */
 
-	showPopup() {
+	showPopup( filter_items: boolean = true ) {
 
 		let props = this.m_props;
 		if (props.readOnly || this.hasClass("@disable") ) {
-			return;
+			return null;
+		}
+
+		let items = props.items;
+		if( isFunction( items ) ) {
+			const filter = filter_items ? (this.m_ui_input as Input).value : null;
+			items = items( filter );
+		}
+		
+		if( items.length==0 ) {
+			return null;
 		}
 
 		// need creation ?
@@ -205,10 +271,17 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 			// prepare the combo listview
 			this.m_popup = new PopupListView({
 				cls: '@combo-popup',
-				items: props.items,
 				populate: props.populate,
 				renderItem: this.m_props.renderer,
-				selectionChange: (e) => this._selectItem(e),
+				selectionChange: (e) => {
+
+					this._selectItem(e);
+					
+					if (!this.m_lockpop) {
+                        this._hidePopup();
+                        this.focus();
+                    }
+				},
 				cancel: ( e ) => this.signal( 'cancel', e ),
 				style: {
 					fontFamily,
@@ -216,6 +289,8 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 				}
 			});
 		}
+
+		this.m_popup.items = items;
 	
 		let r1 = this.m_ui_button.getBoundingRect(),
 			r2 = this.m_ui_input.getBoundingRect();
@@ -225,10 +300,14 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 		});
 
 		this.m_popup.displayAt(r2.left, r2.bottom);
+		this.m_popvis = true;
+		this.startTimer("focus-check", 100, true, () => this._checkFocus());
 
 		if( this.value!==undefined ) {
 			this.m_popup.selection = this.value;
 		}
+
+		return items;
 	}
 
 	/** @ignore
@@ -241,8 +320,10 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 			return;
 		}
 
+		this.m_lockchg = true;
 		this._setInput( item, true );
-
+		this.m_lockchg = false;
+					
 		this.m_selection = {
 			id: 	item.id,
 			text: 	item.text
@@ -250,9 +331,8 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 
 		this.emit( 'selectionChange', EvSelectionChange( item ) );
 		this.emit( 'change', EvChange(item.id) );
-		this.m_ui_input.focus( );
-
-		this.m_popup.hide( );
+		//this.m_ui_input.focus( );
+		//this.m_popup.hide( );
 	}
 
 	/**
@@ -294,7 +374,15 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	}
 
 	public get valueText( ) {
-		return this.m_selection ? this.m_selection.text : undefined;
+		if( this.m_selection ) {
+			return this.m_selection.text;
+		}
+
+		if( this.m_props.editable ) {
+			return (this.m_ui_input as Input).value;
+		}
+
+		return '';
 	}
 
 	/**
@@ -305,9 +393,9 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 		let items = this.m_props.items;
 
 		if( isFunction(items) ) {
-			items = items( );
+			items = items( null );
 		}
-
+		
 		const found = items.some( (v) => {
 			if (v.id === id) {
 				this._setInput( v );
@@ -326,6 +414,27 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 		return this.m_ui_input instanceof Input ? this.m_ui_input : null;
 	}
 
+	_checkFocus() {
+        const focus = document.activeElement;
+        if (this.dom && this.dom.contains(focus) || focus==document.body ) {
+            return;
+        }
+
+        if (this.m_popup && this.m_popup.dom && this.m_popup.dom.contains(focus)) {
+            return;
+        }
+
+        this._hidePopup();
+    }
+
+	_hidePopup() {
+        if (this.m_popvis) {
+            this.m_popup.close();
+            this.m_popvis = false;
+			this.stopTimer("focus-check");
+        }
+    }
+	
 	static storeProxy( props: ComboStoreProxyProps ): PopulateItems { 
 
 		let view: DataView = props.store instanceof DataStore ? props.store.createView() : props.store;
@@ -343,20 +452,14 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 			return result;
 		};
 	} 
+
+	focus( ) {
+		if( this.m_props.editable ) {
+			this.m_ui_input.focus( );
+		}
+		else {
+			super.focus( );
+		}
+	}
 }
-
-
-
-/*
- export type CBComboBoxRenderer = ( rec: Record ) => string;
-export interface ComboBoxStore {
-	store: DataStore;
-	display: string | CBComboBoxRenderer;		// if string, the field name to display
-}
-
-*/
-
-
-
-
 

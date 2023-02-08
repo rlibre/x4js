@@ -28,7 +28,7 @@
 **/
 
 import { Component, CProps } from './component'
-import { HtmlString } from './tools'
+import { escapeHtml, HtmlString } from './tools'
 import { Icon, IconID } from './icon'
 
 // ============================================================================
@@ -69,7 +69,7 @@ export class Label extends Component<LabelProps>
 
 		let text: any = this.m_props.text;
 		if( this.m_props.multiline && !(text instanceof HtmlString) ) {
-			text = new HtmlString( (text as string).replace( /\n/g, '<br/>' ) );
+			text = new HtmlString( escapeHtml(text,true) );
 		}
 
 		if( !props.icon ) {
@@ -102,7 +102,7 @@ export class Label extends Component<LabelProps>
 
 			let text: any = this.m_props.text;
 			if( this.m_props.multiline && !(text instanceof HtmlString) ) {
-				text = new HtmlString( (text as string).replace( '/\n/g', '<br/>' ) );
+				text = new HtmlString(escapeHtml(text,true) );
 			}
 
 			if( this.dom ) {

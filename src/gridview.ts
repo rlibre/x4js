@@ -40,7 +40,7 @@ import { HLayout, VLayout } from './layout'
 import { Component, ContainerEventMap, EvSize, EvDblClick, CProps, flyWrap, html, HtmlString, SizerOverlay, Flex } from './component'
 import { Label } from './label'
 import { _tr } from './i18n'
-import * as Formatters from './formatters'
+import { FormatFunc } from './formatters'
 import { downloadData, isFunction } from './tools'
 import { DataView, DataStore, Record } from './datastore'
 
@@ -71,7 +71,7 @@ export interface GridColumn {
 	flex?: number;
 	align?: 'left' | 'center' | 'right';
 	renderer?: CellRenderer;
-	formatter?: Formatters.FormatFunc;
+	formatter?: FormatFunc;
 	cls?: string;
 	sortable?: boolean;
 }

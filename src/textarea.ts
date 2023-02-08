@@ -35,6 +35,11 @@ interface TextAreaEventMap extends CEventMap {
 	change: EvChange;
 }
 
+interface Selection {
+	start: number;
+	end: number;
+}
+
 export interface TextAreaProps extends CProps {
 	text?: string;
 	readOnly?: boolean;
@@ -149,21 +154,56 @@ export class TextArea extends Component<TextAreaProps, TextAreaEventMap> {
 	}
 
 	/**
+	 * @deprected use appendText
 	 * insert text at cursor position
 	 */
 
 	public insertText(text) {
+		this.appendText( text );
+	}
+
+	/**
+	 * append the text
+	 */
+
+	public appendText( text ) {
 		if (this.dom) {
 			let dom = (<HTMLTextAreaElement>this.dom);
+			let end = dom.selectionEnd;
+			dom.setRangeText(text,end,end,"end");
+		}
+	}
 
-			let start = dom.selectionStart;
+	public replaceText( text ) {
+		if (this.dom) {
+			let dom = (<HTMLTextAreaElement>this.dom);
 			dom.setRangeText(text);
-			dom.selectionStart = start;
-			dom.selectionEnd = start + text.length;
+		}
+	}
+
+	public getSelection( ) : Selection {
+		if (this.dom) {
+			let dom = (<HTMLTextAreaElement>this.dom);
+			return { start: dom.selectionStart, end: dom.selectionEnd };
+		}
+		else {
+			return {start: 0, end: 0 };
+		}
+	}
+
+	public setSelection( sel : Selection ) {
+		if (this.dom) {
+			let dom = (<HTMLTextAreaElement>this.dom);
+			if( sel.start!==undefined ) {
+				dom.selectionStart = sel.start;
+			}
+
+			if( sel.end!==undefined ) {
+				dom.selectionEnd = sel.end;
+			}
 		}
 	}
 	
-
 	public getStoreValue( ): any {
 		return this.value;
 	}

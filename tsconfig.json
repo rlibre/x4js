@@ -6,9 +6,6 @@
     	"strictNullChecks": false,
     	"outDir": "./lib",
 		"module": "commonjs",
-		//"outFile": "./lib2/index.js",
-		//"module": "amd",
-		"declaration": true,
 		"strict": true//false,
   	},
 	"files": [

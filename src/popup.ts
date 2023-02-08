@@ -185,9 +185,9 @@ export class Popup<P extends PopupProps = PopupProps, E extends PopupEventMap = 
 	* @param y 
 	*/
 
-	public displayAt(x: number, y: number, align: string = 'top left', offset?: { x, y }) {
+	public displayAt(x: number, y: number, align: string = 'top left', offset?: { x, y }, modal = false ) {
 
-		this.show();
+		this.show( modal );
 
 		let halign = 'l',
 			valign = 't';

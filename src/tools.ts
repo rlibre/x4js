@@ -346,7 +346,7 @@ export function sprintf(format: string, ...args) {
  */
 export function escapeHtml(unsafe: string, nl_br = false): string {
 	if (!unsafe || unsafe.length == 0) {
-		return unsafe;
+		return "";
 	}
 
 	let result = unsafe.replace(/[<>\&\"\']/g, function (c) {
@@ -1208,15 +1208,20 @@ export class Clipboard {
  */
 
 export function crc32(str) {
-
 	let crc = ~0;
-	for (let i = 0, l = str.length; i < l; i++) {
-		crc = (crc >>> 8) ^ crc32tab[(crc ^ str.charCodeAt(i)) & 0xff];
-	}
-	return Math.abs(crc ^ -1);
+	let buf = Buffer.from( str );
+
+	let i = 0,
+		l = buf.length;
+	while( i<l ) {
+        crc = (crc >>> 8) ^ crc32tab[(crc ^ buf[i]) & 0xff];
+		i++;
+    }
+
+    return (crc ^ -1)>>>0;
 }
 
-var crc32tab = [
+var crc32tab = new Int32Array([
 	0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
 	0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
 	0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988,
@@ -1281,7 +1286,7 @@ var crc32tab = [
 	0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
 	0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
 	0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d
-];
+]);
 
 
 // :: MIXINS ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

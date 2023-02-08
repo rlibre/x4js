@@ -30,7 +30,7 @@
 import { x4document } from './x4dom'
 
 import { Component, EvFocus, HtmlString } from './component'
-import { Input, InputProps, InputEventMap } from './input'
+import { Input, InputProps, InputEventMap, EditType } from './input'
 import { IconID } from './icon'
 import { Button } from './button'
 import { HLayout } from './layout'
@@ -538,7 +538,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEdi
 		return this.m_ui_input;
 	}
 
-	get type() {
+	get type(): EditType {
 		return this.m_props.type;
 	}
 }

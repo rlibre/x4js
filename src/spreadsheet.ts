@@ -33,7 +33,7 @@ import { Component, SizerOverlay, EvDblClick, EvSize, ContainerEventMap, Contain
 import { Input, InputProps } from './input';
 import { HLayout, VLayout } from './layout';
 import { TextEditProps, TextEdit } from './textedit';
-import * as Formatters from './formatters';
+import { FormatFunc } from './formatters'
 import { asap, parseIntlFloat } from './tools';
 import { deferCall } from './tools';
 import { EvContextMenu, EvChange, EvSelectionChange, EventCallback } from './x4events'
@@ -56,7 +56,7 @@ export interface ColProp {
 	align?: string;
 	cls?: string;
 	min_width?: number;
-	renderer?: Formatters.FormatFunc;
+	renderer?: FormatFunc;
 	createEditor?: EditorFactory;		// null => disable edition
 }
 

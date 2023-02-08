@@ -11,7 +11,14 @@ see [home](https://x4js.org)
 
 
 ## Documentation
-see [documentation](https://x4js.org/doc/)
+
+**12s**: it's the time needed to have a working project:
+
+```bash
+npx x4build create name=demo model=html
+```
+
+see [full documentation](https://x4js.org/doc/)
 
 ## API
 see [API](https://x4js.org/api/)

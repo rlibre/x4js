@@ -28,6 +28,7 @@
 **/
 
 import { x4document } from './x4dom'
+import { HtmlString } from './tools'
 
 import { Component, CProps, CEventMap } from './component'
 import { EvChange, EventCallback } from './x4events'
@@ -185,11 +186,11 @@ export class RadioBtn extends Component<RadioBtnProps,RadioBtnEventMap> {
 		}
 	}
 
-	get text( ) {
+	get text( ): HtmlString | string {
 		return this.itemWithRef<Label>('label').text;
 	}
 
-	set text( text ) {
+	set text( text: HtmlString | string ) {
 		this.itemWithRef<Label>('label').text = text;
 	}
 }

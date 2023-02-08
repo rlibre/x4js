@@ -33,6 +33,7 @@ import { Button } from './button';
 import { Popup } from './popup';
 import { Component, CProps, ContainerEventMap, Flex } from './component'
 import { EvChange, EventCallback } from './x4events'
+import { Point } from "./tools"
 
 import { _tr } from './i18n';
 import { Label } from './label';
@@ -308,9 +309,14 @@ export class PopupCalendar extends Popup {
 	}
 
 	/** @ignore */
-	show(modal?: boolean) {
+	show(modal?: boolean, at?: Point ) {
 		x4document.addEventListener('mousedown', this._handleClick);
-		super.show(modal);
+		if( at ) {
+			super.displayAt( at.x, at.y, 'top left', undefined, modal );
+		}
+		else {
+			super.show(modal);
+		}
 	}
 
 	/** @ignore */
