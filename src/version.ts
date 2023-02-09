@@ -27,4 +27,4 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-export const x4js_version = "1.5.9";
+export const x4js_version = "1.5.11";

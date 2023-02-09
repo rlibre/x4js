@@ -138,6 +138,14 @@ export class TextArea extends Component<TextAreaProps, TextAreaEventMap> {
 			}
 		}
 	}
+	
+	get text( ): string {
+		return this.value;
+	}
+
+	set text( text: string ) {
+		this.value = text;
+	}
 
 	private _calcHeight(text: string): number {
 		return 1 + (text.match(/\n/g) || []).length;

@@ -46,6 +46,7 @@ export interface HierarchicalNode {
 	id: number;
 	parent: number;
 	name: string;
+	cls: string;
 	leaf: boolean
 }
 
@@ -239,6 +240,14 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 		this.update();
 	}
 
+	openAll( open = true) {
+		this.forEach((node: TreeNode) => {
+			node.open = open;
+		});
+
+		this.__update( )
+	}
+
 	/**
 	 * same as root = xxx but keep elements open
 	 */
@@ -255,7 +264,9 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 		});
 
 		let oldSel = this.selection;
-		this.m_props.root = root;
+		if( root ) {
+			this.m_props.root = root;
+		}
 
 		this.forEach((node: TreeNode): boolean => {
 
@@ -366,7 +377,7 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 	 * 
 	 */
 
-	forEach(cb: (node) => boolean) {
+	forEach(cb: (node: TreeNode) => boolean | void ) {
 		let found = null;
 
 		function scan(node) {
@@ -645,6 +656,7 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 					id: node.id,
 					text: node.name,
 					parent: node.parent,
+					cls: node.cls
 				};
 
 				if (!node.leaf) {
