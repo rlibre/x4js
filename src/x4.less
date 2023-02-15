@@ -812,41 +812,46 @@ textarea {
 		height: 1px;
 	}
 
-	.x-label:before {
-		box-sizing: border-box;
-		position: absolute;
-		left: 0px;
-		top: 3px;
-		content: "";
-		display: inline-block;
+	.x-slide-el {
 		width: 2.4em;
 		height: 1.4em;
-		border-radius: 1.4rem;
-		padding: 2px;
-		background-color: @BLACK30;
-		transition: all .2s;
-		border: 1px solid @WHITE50
+
+		&:before {
+			box-sizing: border-box;
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			content: "";
+			display: inline-block;
+			width: 2.4em;
+			height: 1.4em;
+			border-radius: 1.4rem;
+			padding: 2px;
+			background-color: @BLACK30;
+			transition: all .2s;
+			border: 1px solid @WHITE50
+		}
+
+		// circle
+		&:after {
+			box-sizing: border-box;
+			content: "";
+			top: 2px;
+			height: calc(1.4em - 4px);
+			width: calc(1.4em - 4px);
+			border-radius: 50%;
+			background-color: #fff;
+			transition: all .2s;
+			position: absolute;
+			left: 2px;
+		}
 	}
 
-	// circle
-	.x-label:after {
-		box-sizing: border-box;
-		content: "";
-		top: 5px;
-		height: calc(1.4em - 4px);
-		width: calc(1.4em - 4px);
-		border-radius: 50%;
-		background-color: #fff;
-		transition: all .2s;
-		position: absolute;
-		left: 2px;
-	}
-
-	input:checked + .x-label:before {
+	input:checked + .x-slide-el:before {
 		background-color: var( --x4-selection-color );
 	}
 
-	input:checked + .x-label:after {
+	input:checked + .x-slide-el:after {
 		left: calc( 1em + 2px);
 		background-color: white;
 	}

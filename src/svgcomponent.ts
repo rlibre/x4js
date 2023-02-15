@@ -28,7 +28,7 @@
 **/
 
 import { Component, CProps, _x4_unitless } from './component'
-import { isNumber } from "./tools"
+import { isNumber, isString } from "./tools"
 
 const reNumber = /^-?\d+(\.\d+)?$/;
 
@@ -208,6 +208,30 @@ abstract class SVGItem {
 		this.attr( "clip-path", `url(#${id})` );
 		return this;
 	}
+
+	/**
+	 * 
+	 */
+
+	transform( tr: string ) {
+		this.attr( "transform", tr );
+	}
+
+	/**
+	 * 
+	 */
+
+	rotate( deg: number, cx: number, cy: number ) {
+		this.transform( `rotate( ${deg} ${cx} ${cy} )` );
+	}
+
+	translate( dx: number, dy: number ) {
+		this.transform( `translate( ${dx} ${dy} )` );
+	}
+
+	scale( x: number ) {
+		this.transform( `scale( ${x} )` );
+	}
 }
 
 /**
@@ -359,22 +383,24 @@ class SVGShape extends SVGItem {
  * 
  */
 
+type number_or_perc = number | `${string}%`
+
 class SVGGradient extends SVGItem {
 
 	private static g_id = 1;
 
 	private m_id: string;
-	private m_stops: { offset: number, color: string } [];
+	private m_stops: { offset: number_or_perc, color: string } [];
 
-	constructor( x1: number, y1: number, x2: number, y2: number ) {
+	constructor( x1: number_or_perc, y1: number_or_perc, x2: number_or_perc, y2: number_or_perc ) {
 		super( 'linearGradient')
 		
 		this.m_id = 'gx-'+SVGGradient.g_id;
 		this.attr( 'id', this.m_id );
-		this.attr( 'x1', num(x1)+'' );
-		this.attr( 'x2', num(x2)+'' );
-		this.attr( 'y1', num(y1)+'' );
-		this.attr( 'y2', num(y2)+'' );
+		this.attr( 'x1', isString(x1) ? x1 : num(x1)+'' );
+		this.attr( 'x2', isString(x2) ? x2 : num(x2)+'' );
+		this.attr( 'y1', isString(y1) ? y1 : num(y1)+'' );
+		this.attr( 'y2', isString(y2) ? y2 : num(y2)+'' );
 
 		this.m_stops = [];
 		SVGGradient.g_id++;
@@ -384,7 +410,7 @@ class SVGGradient extends SVGItem {
 		return 'url(#'+this.m_id+')';
 	}
 
-	addStop( offset: number, color: string ): this {
+	addStop( offset: number_or_perc, color: string ): this {
 		this.m_stops.push( {offset,color} );
 		return this;
 	}
@@ -445,7 +471,21 @@ class SVGGroup extends SVGItem {
 		return shape;
 	}
 
-	gradient( x1, y1, x2, y2 ) {
+	/**
+	 * 
+	 * example
+	 * ```ts
+	 * const g = c.linear_gradient( '0%', '0%', '0%', '100%' )
+	 * 				.addStop( 0, 'red' )
+	 * 				.addStop( 100, 'green' );
+	 * 
+	 * p.rect( 0, 0, 100, 100 )
+	 * 		.stroke( g.id );
+	 * 
+	 * ```
+	 */
+
+	linear_gradient( x1: number_or_perc, y1: number_or_perc, x2: number_or_perc, y2: number_or_perc ) {
 		const grad = new SVGGradient( x1, y1, x2, y2 );
 		this.m_items.push( grad );
 		return grad;

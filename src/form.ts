@@ -337,7 +337,8 @@ export class Form<T extends FormProps = FormProps, E extends FormEventMap = Form
 	}
 
 	/**
-	 * 
+	 * to be abble to see the dirty flag, you need to call this method
+	 * cf. isDirty, setDirty
 	 */
 
 	watchChanges() {
@@ -356,9 +357,17 @@ export class Form<T extends FormProps = FormProps, E extends FormEventMap = Form
 		}
 	}
 
+	/**
+	 * cf. watchChanges
+	 */
+
 	setDirty(set = true) {
 		this.m_dirty = set;
 	}
+
+	/**
+	 * cf. watchChanges
+	 */
 
 	isDirty() {
 		return this.m_dirty;

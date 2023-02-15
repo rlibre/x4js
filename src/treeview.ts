@@ -44,10 +44,12 @@ function EvExpand(node: TreeNode) {
 
 export interface HierarchicalNode {
 	id: number;
-	parent: number;
 	name: string;
-	cls: string;
-	leaf: boolean
+	parent?: number;
+	cls?: string;
+	leaf?: boolean
+	icon?: string;
+	data?: any;
 }
 
 export interface TreeNode {
@@ -242,7 +244,9 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 
 	openAll( open = true) {
 		this.forEach((node: TreeNode) => {
-			node.open = open;
+			if( node.children ) {
+				node.open = open;
+			}
 		});
 
 		this.__update( )
@@ -409,23 +413,26 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 	}
 
 	set selection(id: any) {
+		this.select( id, false );
+	}
 
-		if (this.m_selection?.el) {
-			this.m_selection.el.removeClass('selected');
+	/**
+	 * idem selection = xx but with a notification
+	 * @param id 
+	 */
+
+	public select( id: any, notify = false ) {
+		if (id === null || id === undefined) {
+			this._selectItem(null, null);
 		}
-
-		this.m_selection = null;
-
-		if (id !== undefined) {
-			const { node: sel } = this._getNode( id );
-			if( sel ) {
-				this.m_selection = {
-					id: id,
-					el: sel
-				};
-
-				sel.addClass('selected');
-				sel.scrollIntoView(  );
+		else {
+			if (isFunction(this.m_props.items)) {
+				this.m_defer_sel = id;
+			}
+			else {
+				let item = this.m_props.items.find((item) => item.id == id);
+				let citem = this._findItemWithId(item.id);
+				this._selectItem(item, citem, notify );
 			}
 		}
 	}
@@ -656,7 +663,9 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 					id: node.id,
 					text: node.name,
 					parent: node.parent,
-					cls: node.cls
+					cls: node.cls,
+					icon: node.icon,
+					data: node.data,
 				};
 
 				if (!node.leaf) {

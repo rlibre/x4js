@@ -103,6 +103,7 @@ export class CheckBox extends Component<CheckBoxProps, CheckBoxEventMap> {
 					change: this._change.bind(this),
 				}
 			}),
+			props.slider ? new Component( { cls: '@slide-el' } ) : null,
 			new Label({
 				text: props.text ?? '',
 				width: labelWidth < 0 ? undefined : labelWidth,
@@ -114,7 +115,7 @@ export class CheckBox extends Component<CheckBoxProps, CheckBoxEventMap> {
 				attrs: {
 					"for": uid
 				}
-			})
+			}),
 		]);
 	}
 

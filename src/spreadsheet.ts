@@ -192,8 +192,15 @@ export class Spreadsheet extends VLayout<SpreadsheetProps, SpreadsheetEventSet> 
 		this.update(10);
 	}
 
-	reset(columns: ColProp[]) {
-		this.m_columns = columns;
+	/**
+	 * reset the spreadsheet
+	 * @param columns 
+	 */
+	reset(columns?: ColProp[]) {
+		if( columns ) {
+			this.m_columns = columns;
+		}
+		
 		this.m_cells_data = new Map<number, CellData>();
 		this.m_rows_data = new Map<number, string>();
 		this.update(10);
