@@ -646,11 +646,15 @@ textarea::selection {
   width: 1px;
   height: 1px;
 }
-.x-check-box.slider .x-label:before {
+.x-check-box.slider .x-slide-el {
+  width: 2.4em;
+  height: 1.4em;
+}
+.x-check-box.slider .x-slide-el:before {
   box-sizing: border-box;
   position: absolute;
   left: 0px;
-  top: 3px;
+  top: 0px;
   content: "";
   display: inline-block;
   width: 2.4em;
@@ -661,10 +665,10 @@ textarea::selection {
   transition: all 0.2s;
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
-.x-check-box.slider .x-label:after {
+.x-check-box.slider .x-slide-el:after {
   box-sizing: border-box;
   content: "";
-  top: 5px;
+  top: 2px;
   height: calc(1.4em - 4px);
   width: calc(1.4em - 4px);
   border-radius: 50%;
@@ -673,10 +677,10 @@ textarea::selection {
   position: absolute;
   left: 2px;
 }
-.x-check-box.slider input:checked + .x-label:before {
+.x-check-box.slider input:checked + .x-slide-el:before {
   background-color: var(--x4-selection-color);
 }
-.x-check-box.slider input:checked + .x-label:after {
+.x-check-box.slider input:checked + .x-slide-el:after {
   left: calc(1em + 2px);
   background-color: white;
 }

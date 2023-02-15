@@ -1,6 +1,6 @@
 {
 	"name": "x4js",
-	"version": "1.5.16",
+	"version": "1.5.18",
 	"description": "X4js core files",
 	"main": "lib/cjs/index.js",
 	"types": "lib/types/index.d.ts",
@@ -42,8 +42,5 @@
 				"default": "./lib/cjs/index.js"
 			}
 		}
-	},
-	"dependencies": {
-		"typescript": "^4.9.3"
 	}
 }

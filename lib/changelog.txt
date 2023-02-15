@@ -1,0 +1,17 @@
+2022/12/xx : 1.5.7 --------------------------------------------------------
+	package.json - removed erroneous dependency to typescript
+	calendar.ts - show now has a parameter named 'at'
+
+2022/12/08 : 1.5.6 --------------------------------------------------------
+	combobox.ts - allow editable
+	              items can be a function
+				  populate removed
+
+	listview.ts - focus bug on popuplistview
+	label.ts    - bug: display dangerous html elements when multiline = true
+
+2022/12/05 : 1.5.1 --------------------------------------------------------
+	icon.ts - now accepts direct <svg>..</svg> in argument (var or other)
+
+2022/11/24 : 1.5.0 --------------------------------------------------------
+	tools.js - crc32 optimization

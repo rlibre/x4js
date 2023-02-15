@@ -5,7 +5,6 @@ mv lib/esm/index.js lib/esm/index.mjs
 tsc -p tsconfig.cjs.json
 
 mkdir -p lib/src
-cp src/* lib/src
 cp ./changelog.txt lib
 cp ./README.md lib
 cp ./license.md lib

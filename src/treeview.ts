@@ -417,25 +417,45 @@ export class TreeView extends VLayout<TreeViewProps, TreeViewEventMap> {
 	}
 
 	/**
-	 * idem selection = xx but with a notification
-	 * @param id 
+	 * care, component should have been created, to select an item at startup,
+	 * use something like 
+	 * componentCreated( ) {
+	 * 	mytree.select( id );
+	 * }
 	 */
 
-	public select( id: any, notify = false ) {
-		if (id === null || id === undefined) {
-			this._selectItem(null, null);
+	select( id: any, notify = true ) {
+		
+		if (this.m_selection?.el) {
+			this.m_selection.el.removeClass('selected');
+		}
+
+		this.m_selection = null;
+
+		if (id !== undefined) {
+			const { node: sel } = this._getNode( id );
+			if( sel ) {
+				this.m_selection = {
+					id: id,
+					el: sel
+				};
+
+				sel.addClass('selected');
+				sel.scrollIntoView(  );
+
+				if( notify ) {
+					let nd = sel.getData('node') as TreeNode;
+					this.emit('selectionchange', EvSelectionChange(nd));
+				}
+			}
 		}
 		else {
-			if (isFunction(this.m_props.items)) {
-				this.m_defer_sel = id;
-			}
-			else {
-				let item = this.m_props.items.find((item) => item.id == id);
-				let citem = this._findItemWithId(item.id);
-				this._selectItem(item, citem, notify );
+			if( notify ) {
+				this.emit('selectionchange', EvSelectionChange(null));
 			}
 		}
 	}
+	
 
 	private _getNode( id ): {node:Component,item:TreeNode} {
 		let found = { node: null, item: null };
