@@ -5,7 +5,7 @@
 *   /  _  \____   _|  
 *  /__/ \__\   |_|
 *        
-* @file version.ts
+* @file x4react.ts
 * @author Etienne Cochard 
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
@@ -27,4 +27,64 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-export const x4js_version = "1.5.23";
+import { Component, ComponentContent, CProps, CEventMap } from './component';
+
+
+const createElement = ( clsOrTag, attrs, ...children ): ComponentContent => {
+
+	let comp: Component;
+
+	// fragment
+	if( clsOrTag==createFragment || clsOrTag==Fragment ) {
+		return children;
+	}
+	// class constructor, yes : dirty
+	else if( clsOrTag instanceof Function ) {
+		comp = new (clsOrTag as any)( attrs );
+	}
+	// basic tag
+	else {
+		comp = new Component( {
+			tag: clsOrTag,
+			...attrs,
+		});
+	}
+
+	if( children && children.length ) {
+		comp.setContent( children );
+	}
+
+	return comp;
+}
+
+const Fragment = Symbol( "fragment" );
+
+const createFragment = ( ): ComponentContent => {
+	return null;
+}
+
+export let React = {
+	createElement,
+	createFragment,
+	Fragment,
+}
+
+
+
+
+
+/**
+ * 
+ */
+
+ export abstract class TSXComponent<P extends CProps<CEventMap> = CProps<CEventMap>, E extends CEventMap = CEventMap> extends Component<P,E> {
+	public render(props: P) {
+		const tsx = this.renderTSX( props );
+		if( tsx ) {
+			this.setContent( tsx );
+		}
+	}
+
+	public abstract renderTSX( props: P ): Component | Component[];
+}
+

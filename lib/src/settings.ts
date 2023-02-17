@@ -5,7 +5,7 @@
 *   /  _  \____   _|  
 *  /__/ \__\   |_|
 *        
-* @file version.ts
+* @file local_storage.ts
 * @author Etienne Cochard 
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
@@ -27,4 +27,51 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-export const x4js_version = "1.5.23";
+export class Settings {
+
+	private m_data: any;
+	private m_name: string;
+
+	constructor( name?: string ) {
+		this.m_data = null;
+		this.m_name = name ?? 'settings';
+	}
+
+	set( name: string, value: any ) {
+		this._load( );
+		this.m_data[name] = value;
+		this._save( );
+	}
+
+	get( name: string, defValue? ) : any {
+		this._load( );
+		return this.m_data[name] ?? defValue;
+	}
+
+	private _save( ) {
+		let data = JSON.stringify(this.m_data);
+		localStorage.setItem( this.m_name, data );
+	}
+
+	private _load( ) {
+		if( this.m_data ) {
+			return;
+		}
+
+		this.m_data = {};
+
+		let data = localStorage.getItem( this.m_name );
+		if( data!==null ) {
+			data = JSON.parse( data );
+			if( data ) {
+				this.m_data = data;
+			}
+			else {
+				console.info('There was an error attempting to read your settings.');
+				
+			}
+		}
+		// console.info('There was an error attempting to read your settings.');
+	}
+}
+

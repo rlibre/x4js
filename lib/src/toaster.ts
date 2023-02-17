@@ -5,7 +5,7 @@
 *   /  _  \____   _|  
 *  /__/ \__\   |_|
 *        
-* @file version.ts
+* @file toaster.ts
 * @author Etienne Cochard 
 *
 * Copyright (c) 2019-2022 R-libre ingenierie
@@ -27,4 +27,54 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-export const x4js_version = "1.5.23";
+import { IconID } from './icon';
+import { Label } from "./label";
+import { Popup, PopupProps} from './popup';
+
+
+export interface ToasterProps extends PopupProps {
+	message: string;
+	icon?: IconID;
+}
+
+export class Toaster extends Popup<ToasterProps> {
+
+	private m_message: string;
+	private m_icon: IconID;
+
+	constructor( props: ToasterProps ) {
+		super( props );
+
+		this.m_message = props.message;
+		this.m_icon = props.icon;
+		this.enableMask( false );
+		this.addClass( '@non-maskable' );
+	}
+
+	/** @ignore */	
+	render( ) {
+		this.addClass( '@hlayout' );
+		this.setContent( [
+			new Label( { icon: this.m_icon, text: this.m_message } )
+		]);
+	}
+
+	show( ) {
+		this.show = super.show;
+		this.displayAt( 9999, 9999, 'br', {x:0,y:-24} );
+
+		let opacity = 1.0;
+
+		this.startTimer( 'fadeout', 2000, false, ( ) => {
+			
+			this.startTimer( 'opacity', 100, true, ( ) => {
+				this.setStyleValue( 'opacity', opacity );
+				opacity -= 0.1;
+			
+				if( opacity<0 ) {
+					this.dispose( );
+				}
+			});
+		} );
+	}
+}

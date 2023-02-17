@@ -51,7 +51,7 @@ export declare class Md5 {
     appendAsciiStr(str: string): this;
     appendByteArray(input: Uint8Array): this;
     getState(): {
-        buffer: string;
+        buffer: any;
         buflen: number;
         length: number;
         state: number[];

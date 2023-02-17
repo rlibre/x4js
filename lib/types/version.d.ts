@@ -26,4 +26,4 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-export declare const x4js_version = "1.5.18";
+export declare const x4js_version = "1.5.23";
