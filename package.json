@@ -1,6 +1,6 @@
 {
 	"name": "x4js",
-	"version": "1.5.23",
+	"version": "1.5.29",
 	"description": "X4js core files",
 	"main": "lib/cjs/index.js",
 	"types": "lib/types/index.d.ts",

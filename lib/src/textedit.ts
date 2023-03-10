@@ -318,7 +318,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEdi
 		let rc = this.m_ui_input.getBoundingRect();
 
 		this.m_error_tip.text = text;
-		this.m_error_tip.displayAt(rc.right, rc.top, 'top left');
+		this.m_error_tip.displayAt(rc.right, rc.top-8, 'top right');
 		this.addClass('@error');
 	}
 

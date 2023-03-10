@@ -174,6 +174,7 @@ interface CInternalProps {
 	dom_events: any;
 	classes: IMap<boolean>;
 	uid: number;
+	created: boolean;
 	inrender: boolean;
 }
 
@@ -891,6 +892,18 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 
 		// notify descendants that we have been created (dom exists)
 
+		const notify = ( c: Component ) => {
+
+			if( !c.m_iprops.created ) {
+				if (c.dom && c.m_iprops.dom_events && c.m_iprops.dom_events.create) {
+					c.dom.dispatchEvent(new Event('create'));
+				}
+		
+				c.componentCreated();
+				c.m_iprops.created = true;
+			}
+		}
+
 		for (let mutation of mutations) {
 
 			if (mutation.type == 'childList') {
@@ -902,24 +915,16 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 
 					if (el) {
 						el.enumChilds((c: Component) => {
-
-							if (c.dom && c.m_iprops.dom_events && c.m_iprops.dom_events.create) {
-								c.dom.dispatchEvent(new Event('create'));
-							}
-
-							c.componentCreated();
-
+							notify( c );
 						}, true);
 
-						if (el.m_iprops.dom_events && el.m_iprops.dom_events.create) {
-							el.dom.dispatchEvent(new Event('create'));
-						}
-
-						el.componentCreated();
+						notify( el );
 					}
 				}
 			}
 		}
+
+		
 	}
 
 	public dispose() {
@@ -953,6 +958,7 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 		}
 
 		this.componentDisposed();
+		this.m_iprops.created = false;
 		// todo: pb on update this.removeAllListeners( null );
 	}
 
@@ -2200,9 +2206,11 @@ export class Container<P extends ContainerProps = ContainerProps, E extends Cont
 
 	private m_shortcuts: Shortcut[];
 
-	constructor( props: P | ComponentOrString[] ) {
+	constructor( props: P );
+	constructor( items: ComponentOrString[], cls?: string );
+	constructor( props: P | ComponentOrString[], cls?: string ) {
 		if( isArray(props) ) {
-			super( {content: props} as P );
+			super( {content: props,cls} as P );
 		}
 		else {
 			super( props );

@@ -31,11 +31,36 @@ type RouteHandler = (params: any, path: string) => void;
 interface RouterEventMap extends EventMap {
     error: EvError;
 }
+/**
+ * micro router
+ *
+ * ```
+ * const router = new Router( );
+ *
+ * router.get( "/detail/:id", ( params: any ) => {
+ * 	this._showDetail( detail );
+ * } );
+ *
+ * router.get( "/:id", ( params: any ) => {
+ *   if( params.id==0 )
+ * 		router.navigate( '/home' );
+ *	 }
+ * });
+ *
+ * router.on( "error", ( ) => {
+ * 	router.navigate( '/home' );
+ * })
+ *
+ * router.init( );
+ * ```
+ */
 export declare class Router extends EventSource<RouterEventMap> {
-    private routes;
-    constructor();
+    private m_routes;
+    private m_useHash;
+    constructor(useHash?: boolean);
     get(uri: string | RegExp, handler: RouteHandler): void;
     init(): void;
+    private _getLocation;
     navigate(uri: string, notify?: boolean): void;
     private _find;
 }

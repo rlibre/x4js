@@ -26,21 +26,26 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-import { Component, Container, CProps, ContainerEventMap, ComponentContent } from './component';
+import { Component, Container, CProps, ContainerEventMap, ComponentContent, EventHandler } from './component';
 import { HLayout, VLayout } from './layout';
 import { Button } from './button';
 import { RequestProps } from './request';
-import { EventCallback } from './x4events';
+import { BasicEvent } from './x4events';
 import { EvBtnClick } from './dialog';
+export interface EvDirty extends BasicEvent {
+    dirty: boolean;
+}
 export type FormBtn = 'ok' | 'cancel' | 'ignore' | 'yes' | 'no' | 'close' | 'save' | 'dontsave';
 export type FormButtons = (FormBtn | Button | Component)[];
 export interface FormEventMap extends ContainerEventMap {
     btnClick?: EvBtnClick;
+    dirty?: EvDirty;
 }
 export interface FormProps extends CProps<FormEventMap> {
     disableSuggestions?: boolean;
     buttons?: FormButtons;
-    btnClick?: EventCallback<EvBtnClick>;
+    btnClick?: EventHandler<EvBtnClick>;
+    dirty?: EventHandler<EvDirty>;
 }
 /**
  *
@@ -107,6 +112,10 @@ export declare class Form<T extends FormProps = FormProps, E extends FormEventMa
      *
      */
     setValues(values: any): void;
+    /**
+     *
+     */
+    clearValues(): void;
     /**
      * values are not escaped
      * checkbox set true when checked

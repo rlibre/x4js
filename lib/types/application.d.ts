@@ -30,6 +30,7 @@ import { EvMessage } from './x4events';
 import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base_component';
 import { Component } from './component';
 import { Settings } from './settings';
+import { Router } from './router';
 interface ApplicationEventMap extends BaseComponentEventMap {
     message: EvMessage;
     global: EvMessage;
@@ -77,8 +78,10 @@ export declare class Application<P extends ApplicationProps = ApplicationProps, 
     private m_user_data;
     private m_touch_time;
     private m_touch_count;
+    private m_router;
     constructor(props: P);
     ApplicationCreated(): void;
+    get router(): Router;
     get app_name(): string;
     get app_uid(): string;
     get app_version(): string;
@@ -101,4 +104,5 @@ export declare class Application<P extends ApplicationProps = ApplicationProps, 
     enterModal(enter: boolean): void;
     enableTouchDblClick(): void;
 }
+export declare let x4app: Application;
 export {};

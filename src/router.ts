@@ -93,18 +93,46 @@ function parseRoute(str: string | RegExp, loose = false): Segment {
 interface RouterEventMap extends EventMap {
 	error: EvError;
 }
-   
+
+
+/**
+ * micro router
+ * 
+ * ```
+ * const router = new Router( );
+ * 
+ * router.get( "/detail/:id", ( params: any ) => {
+ * 	this._showDetail( detail );
+ * } );
+ * 
+ * router.get( "/:id", ( params: any ) => {
+ *   if( params.id==0 )
+ * 		router.navigate( '/home' );
+ *	 }
+ * });
+ * 
+ * router.on( "error", ( ) => {
+ * 	router.navigate( '/home' );
+ * })
+ * 
+ * router.init( );
+ * ```
+ */
+
+
 export class Router extends EventSource< RouterEventMap > {
 
-	private routes: Route[];
+	private m_routes: Route[];
+	private m_useHash: boolean;
 
-	constructor() {
+	constructor( useHash = true ) {
 		super( );
 
-		this.routes = [];
+		this.m_routes = [];
+		this.m_useHash = useHash;
 
 		window.addEventListener('popstate', (event) => {
-			const url = x4document.location.pathname;
+			const url = this._getLocation( );
 			const found = this._find(url);
 		
 			found.handlers.forEach(h => {
@@ -115,14 +143,22 @@ export class Router extends EventSource< RouterEventMap > {
 
 	get(uri: string | RegExp, handler: RouteHandler ) {
 		let { keys, pattern } = parseRoute(uri);
-		this.routes.push({ keys, pattern, handler });
+		this.m_routes.push({ keys, pattern, handler });
 	}
 
 	init() {
-		this.navigate( window.location.pathname );
+		this.navigate( this._getLocation() );
+	}
+
+	private _getLocation( ) {
+		return this.m_useHash ? '/'+x4document.location.hash.substring(1) : x4document.location.pathname;
 	}
 
 	navigate( uri: string, notify = true ) {
+
+		if( !uri.startsWith('/') ) {
+			uri = '/'+uri;
+		}
 
 		const found = this._find( uri );
 
@@ -133,7 +169,16 @@ export class Router extends EventSource< RouterEventMap > {
 			return;
 		}
 
-		window.history.pushState({}, '', uri )
+		if( this.m_useHash ) {
+			while( uri.startsWith('/') ) {
+				uri = uri.substring( 1 );
+			}
+			
+			window.history.pushState({}, '', '#'+uri );
+		}
+		else {
+			window.history.pushState({}, '', uri );
+		}
 
 		if( notify ) {
 			found.handlers.forEach( h => {
@@ -148,7 +193,7 @@ export class Router extends EventSource< RouterEventMap > {
 		let params = {};
 		let handlers = [];
 
-		for (const tmp of this.routes ) {
+		for (const tmp of this.m_routes ) {
 			if (!tmp.keys ) {
 				matches = tmp.pattern.exec(url);
 				if (!matches) {

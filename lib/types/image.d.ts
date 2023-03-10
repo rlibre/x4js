@@ -27,11 +27,12 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 import { Component, CProps } from './component';
-interface ImageProps extends CProps {
+export interface ImageProps extends CProps {
     src: string;
     alt?: string;
     lazy?: boolean;
     alignment?: 'fill' | 'contain' | 'cover' | 'scale-down' | 'none';
+    overlays?: Component[];
 }
 /**
  * Standard image class
@@ -39,6 +40,7 @@ interface ImageProps extends CProps {
 export declare class Image extends Component<ImageProps> {
     protected m_created: boolean;
     protected m_lazysrc: string;
+    private m_img;
     constructor(props: ImageProps);
     /** @ignore */
     render(): void;
@@ -52,4 +54,3 @@ export declare class Image extends Component<ImageProps> {
     private static lazy_image_timer;
     private static lazyWatch;
 }
-export {};

@@ -38,15 +38,16 @@ export type CalcCallback = () => string;
 export type FieldType = 'string' | 'int' | 'float' | 'date' | 'bool' | 'array' | 'object' | 'any' | 'calc';
 export type DataIndex = Uint32Array;
 
-interface EvDataChange extends BasicEvent {
-
+export interface EvDataChange extends BasicEvent {
 	type: string;
 	id: any;
 }
 
-function EvDataChange( type: 'create' | 'update' | 'delete' | 'data' | 'change', id?: any ) {
+export function EvDataChange( type: 'create' | 'update' | 'delete' | 'data' | 'change', id?: any ) {
 	return BasicEvent<EvDataChange>( { type, id } );
 }
+
+
 
 
 /**
@@ -432,7 +433,11 @@ export class Record {
 				return undefined;
 			}
 		}
-		else if( name>=0 && name<fields.length ) {
+		else if( name<fields.length ) {
+			if( name<0 ) {
+				return undefined
+			}
+
 			idx = name;
 		}
 		else {
@@ -553,55 +558,55 @@ interface DataEventMap extends BaseComponentEventMap {
 	change?: EvChange;
 }
 
+type DataSolver = ( data: any ) => Record[];
+
 export interface DataProxyProps extends BaseComponentProps<DataEventMap> {
-	type: 'local' | 'immediate' | 'ajax';
-	path?: string;
-	params?: any;
+	url: string;
+	params?: string[];
+	solver?: DataSolver;
 }
 
 export class DataProxy extends BaseComponent<DataProxyProps,DataEventMap> {
-	
+
 	constructor( props: DataProxyProps ) {
 		super( props );
 	}
 
-	load( ) {
+	load( url?: string ) {
+		if( url ) {
+			this.m_props.url = url;
+		}
+
 		this._refresh( );
 	}	
 
-	save( data ) {
-		if( this.m_props.type=='local' ) {
-			console.assert( false );	// not imp
-			/*
-			const fs = require('fs');
-			fs.writeFileSync( this.m_path, data );
-			*/
-		}
-	}
-
 	private _refresh( delay: number = 0 ) {
 
-		if( this.m_props.type=='local' ) {
-			console.assert( false );	// not imp
-			/*
-			const fs = require('fs');
-			fs.readFile( this.m_path, ( _, bdata ) => {;
-				let data = JSON.parse(bdata);
-				this.emit( 'dataready', data );
-			} );
-			*/
+		const load = async ( ) => {
+
+			let url = this.m_props.url;
+			if( this.m_props.params ) {
+				url += '?' + this.m_props.params.join( '&' );
+			}
+
+			const r = await fetch( url );
+			if( r.ok ) {
+				const raw = await r.json( );
+				
+				let json = raw;
+				if( this.m_props.solver ) {
+					json = this.m_props.solver( json );
+				}
+
+				this.emit( 'change', EvChange(json,raw) );
+			}
+		}
+
+		if( delay ) {
+			setTimeout( load, delay );
 		}
 		else {
-			setTimeout( ( ) => {
-				ajaxRequest( {
-					url: this.m_props.path,
-					method: 'GET',
-					params: this.m_props.params,
-					success: ( data ) => {
-						this.emit( 'change', EvChange(data) );
-					}
-				});
-			}, delay );
+			load( );
 		}
 	}
 }
@@ -650,7 +655,13 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 			this.setRawData( props.data );
 		}
 		else if( props.url ) {
-			this.load( props.url );
+			this.m_proxy = new DataProxy( {
+				url: props.url,
+				solver: props.solver,
+				events: { change: (ev) => { this.setData( ev.value ); } }
+			});
+
+			this.m_proxy.load( );
 		}
 	}
 
@@ -659,27 +670,8 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @param records 
 	 */
 
-	load( url: string ) {
-
-		//todo: that
-		if( url.substr(0,7)==='file://' ) {
-			this.m_proxy = new DataProxy( {
-				type: 'local',
-				path: url.substr( 7 ),
-				events: { change: (ev) => { this.setData( ev.value ); } }
-			});
-	
-			this.m_proxy.load( );
-		}
-		else {
-			this.m_proxy = new DataProxy( {
-				type: 'ajax',
-				path: url,
-				events: { change: (ev) => { this.setData( ev.value ); } }
-			});
-
-			this.m_proxy.load( );
-		}
+	load( url?: string ) {
+		this.m_proxy.load( url );
 	}
 
 	reload( ) {

@@ -63,6 +63,8 @@ export declare class TableLayout extends Container<TableLayoutProps> {
     private _getCell;
     private _setCell;
     setCell(row: number, col: number, item: ComponentContent): void;
+    setCellData(row: number, col: number, data: any): void;
+    getCellData(row: number, col: number): any;
     merge(row: number, col: number, rowCount: number, colCount: number): void;
     setCellWidth(row: number, col: number, width?: number): void;
     setCellHeight(row: number, col: number, height?: number): void;

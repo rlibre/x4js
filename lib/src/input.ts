@@ -84,7 +84,7 @@ export class Input extends Component<InputProps,InputEventMap>
 			placeholder: props.placeHolder,
 			autofocus: props.autoFocus,
 			readonly: props.readOnly,
-			autocomplete: 'new-password',	// chrome ignore 'off' but not something else than 'on'
+			autocomplete: 'off',	// chrome ignore 'off' but not something else than 'on'
 			tabIndex: props.tabIndex,
 			spellcheck: props.spellcheck===false ? 'false' : undefined,
 			min: props.min,

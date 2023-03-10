@@ -28,25 +28,30 @@
 **/
 
 import { x4document } from './x4dom'
-
 import { Component, CProps, html } from './component'
+
+interface LazyLoad {
+	el: Component;
+	src: string;
+}
 
 // ============================================================================
 // [IMAGE]
 // ============================================================================
 
-interface ImageProps extends CProps
+export interface ImageProps extends CProps
 {
 	src: string;
 	alt?: string;
 	lazy?: boolean;	// mark image as lazy loading
 	alignment?: 'fill' | 'contain' | 'cover' | 'scale-down' | 'none';
+	overlays?: Component[];
 }
 
 const emptyImageSrc = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 function _isStaticImage( src: string ) {
-	return src.substr(0,5)=='data:';
+	return src.substring(0,5)=='data:';
 }
 
 
@@ -58,6 +63,7 @@ export class Image extends Component<ImageProps>
 {
 	protected m_created: boolean;
 	protected m_lazysrc: string;		// expected 
+	private m_img: Component;
 	
 	constructor(props: ImageProps) {
 		super(props);
@@ -83,7 +89,7 @@ export class Image extends Component<ImageProps>
 	render( ) {
 		let mp = this.m_props;
 
-		const img = new Component( {
+		this.m_img = new Component( {
 			tag: 'img',
 			attrs: {
 				draggable: false,
@@ -95,7 +101,13 @@ export class Image extends Component<ImageProps>
 			}
 		});
 
-		this.setContent( img );
+		if( mp.overlays ) {
+			mp.overlays.forEach( x => x.addClass('@fit') );
+			this.setContent( [this.m_img,...mp.overlays] );
+		}
+		else {
+			this.setContent( this.m_img );
+		}
 	}
 	
 	/**
@@ -107,14 +119,18 @@ export class Image extends Component<ImageProps>
 
 		if( !src ) {
 			src = emptyImageSrc;
+			this.addClass( 'empty' );
+		}
+		else {
+			this.removeClass( 'empty' );
 		}
 		
 		if( !this.m_props.lazy ) {
 			this.m_props.src = src;
 			this.m_lazysrc = src;
 
-			if( this.dom ) {
-				(<HTMLElement>this.dom.firstChild).setAttribute( 'src', src );
+			if( this.m_img.dom ) {
+				this.m_img.dom.setAttribute( 'src', src );
 			}
 		}
 		else if( force || this.m_lazysrc!=src ) {
@@ -123,15 +139,15 @@ export class Image extends Component<ImageProps>
 				this.m_props.src = src;
 				this.m_lazysrc = src;
 
-				if( this.dom ) {
-					(<HTMLElement>this.dom.firstChild).setAttribute( 'src', this.m_props.src );
+				if( this.m_img.dom ) {
+					this.m_img.dom.setAttribute( 'src', this.m_props.src );
 				}
 			}
 			else {
 				// clear current image while waiting
 				this.m_props.src = emptyImageSrc;
-				if( this.dom ) {
-					(<HTMLElement>this.dom.firstChild).setAttribute( 'src', this.m_props.src );
+				if( this.m_img.dom ) {
+					this.m_img.dom.setAttribute( 'src', this.m_props.src );
 				}
 				
 				this.m_lazysrc = src;
@@ -148,14 +164,18 @@ export class Image extends Component<ImageProps>
 
 		if( this.m_lazysrc && !_isStaticImage(this.m_lazysrc) ) {
 			// we do not push Components in a static array...
-			Image.lazy_images_waiting.push( { dom: this.dom, src: this.m_lazysrc } );
+			Image.lazy_images_waiting.push( { 
+				el: this, 
+				src: this.m_lazysrc 
+			} );
+
 			if( Image.lazy_image_timer===undefined ) {
 				Image.lazy_image_timer = setInterval( Image.lazyWatch as TimerHandler, 10 );
 			}
 		}
 	}
 
-	private static lazy_images_waiting = [];
+	private static lazy_images_waiting: LazyLoad[] = [];
 	private static lazy_image_timer: number = undefined;
 
 	private static lazyWatch( ) {
@@ -163,10 +183,10 @@ export class Image extends Component<ImageProps>
 		let newList = [];
 		let done = 0;
 			
-		Image.lazy_images_waiting.forEach( ( el ) => {
+		Image.lazy_images_waiting.forEach( ( lazy ) => {
 
-			let dom = el.dom,
-				src = el.src;
+			let dom = lazy.el.dom,
+				src = lazy.src;
 				
 			// skip deleted elements
 			if( !dom || dom.offsetParent === null ) {
@@ -185,11 +205,12 @@ export class Image extends Component<ImageProps>
 				// ok, we load the image
 				let img = <HTMLElement>dom.firstChild;
 				img.setAttribute( 'src', src );
+				lazy.el.removeClass( 'empty' );
 				done++;
 			}
 			else {
 				// still not visible: may be next time
-				newList.push( el );
+				newList.push( lazy );
 			}
 		} );
 

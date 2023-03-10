@@ -58,9 +58,17 @@ interface LoadingEventMap extends EventMap {
 
 function trimQuotes( str:string ): string {
 	const l = str.length;
+
+	//chrome
 	if( str[0]=='"' && str[l-1]=='"' ) {
 		str = str.substring( 1, l-1 )
 		str = str.replaceAll( '\\"', "'" );
+		return str;
+	}
+
+	//firefox
+	if( str[0]=="'" && str[l-1]=="'" ) {
+		str = str.substring( 1, l-1 )
 		return str;
 	}
 

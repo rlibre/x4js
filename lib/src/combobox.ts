@@ -31,6 +31,8 @@
  * TODO: replace custom combo list by listview or gridview
  */
 
+import { x4document } from './x4dom'
+
 import { Component, CProps, ContainerEventMap } from './component'
 import { EvChange, EvSelectionChange, EventCallback } from './x4events'
 
@@ -41,6 +43,8 @@ import { HLayout } from './layout'
 import { PopupListView, ListViewItem, EvCancel, PopulateItems } from './listview';
 import { DataStore, DataView, Record } from './datastore'
 import { isFunction, HtmlString } from './tools'
+import { Tooltip } from './tooltips'
+import { _tr } from './i18n'
 
 export interface ComboStoreProxyProps {
 	store: DataView | DataStore;
@@ -65,6 +69,7 @@ export interface ComboBoxProps extends CProps<ComboBoxEventMap> {
 	tabIndex?: number | boolean;
 	name?: string;
 	readOnly?: boolean;
+	required?: true;
 	
 	label?: string;							
 	labelWidth?: number; // < 0 for flex 
@@ -94,6 +99,7 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	private m_lockchg: boolean;
 	private m_popvis: boolean;
 	private m_selection: ListViewItem;
+	private m_error_tip: Tooltip;
 		
 	constructor(props: ComboBoxProps) {
 		super(props);
@@ -147,6 +153,8 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 
 		if( !props.renderer ) {
 			
+			this.setClass('@required', props.required);
+
 			const input = new Input( {
 				flex 	: 1,
 				readOnly : this.m_props.editable ? false : true,
@@ -158,6 +166,7 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 				},
 				dom_events: {
 					focus: () => {
+						this.clearError();
 						if( this.m_props.editable && input.value.length==0 ) {
 							this.showPopup( );
 						}
@@ -220,7 +229,10 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 							this.showPopup( false )
 						},
 						dom_events: {
-							focus: () => { this.dom.focus(); },
+							focus: () => { 
+								this.clearError();
+								this.dom.focus(); 
+							},
 						}
 					})
 				]
@@ -233,6 +245,10 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	}
 
 	componentDisposed( ) {
+		if (this.m_error_tip) {
+			this.m_error_tip.dispose();
+		}
+
 		if( this.m_popup ) {
 			this.m_popup.close( );
 		}
@@ -308,6 +324,40 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 		}
 
 		return items;
+	}
+
+	/**
+	 * 
+	 */
+
+	validate( ) {
+		if( this.m_props.required && !this.m_selection ) {
+			this.showError(_tr.global.required_field);
+			return false;
+		}
+
+		return true;
+	}
+
+	public showError(text: string) {
+
+		if (!this.m_error_tip) {
+			this.m_error_tip = new Tooltip({ cls: 'error' });
+			x4document.body.appendChild(this.m_error_tip._build());
+		}
+
+		let rc = this.m_ui_input.getBoundingRect();
+		this.m_error_tip.text = text;
+		this.m_error_tip.displayAt(rc.right, rc.top-8, 'top right');
+
+		this.addClass('@error');
+	}
+
+	public clearError() {
+		if (this.m_error_tip) {
+			this.m_error_tip.hide();
+			this.removeClass('@error');
+		}
 	}
 
 	/** @ignore

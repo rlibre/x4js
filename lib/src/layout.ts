@@ -153,7 +153,8 @@ interface CellData {
 	width?: number;
 	height?: number;
 	cls?: string;
-	item: ComponentContent;
+	item?: ComponentContent;
+	data?: any;
 }
 
 export class TableLayout extends Container<TableLayoutProps> {
@@ -202,6 +203,17 @@ export class TableLayout extends Container<TableLayoutProps> {
 		let cell = this._getCell(row, col);
 		cell.item = item;
 		this._setCell(row, col, cell, true);
+	}
+
+	setCellData(row: number, col: number, data: any ) {
+		let cell = this._getCell(row, col);
+		cell.data = data;
+		this._setCell(row, col, cell, true);
+	}
+
+	getCellData(row: number, col: number ) {
+		let cell = this._getCell(row, col, false);
+		return cell?.data;
 	}
 
 	merge(row: number, col: number, rowCount: number, colCount: number) {

@@ -28,7 +28,11 @@
 **/
 import { Component } from './component';
 import { Point } from './tools';
-type DropCallback = (command: 'enter' | 'leave' | 'drag' | 'drop', el: Component, point: Point) => void;
+interface DropInfo {
+    pt: Point;
+    data: DataTransfer;
+}
+type DropCallback = (command: 'enter' | 'leave' | 'drag' | 'drop', el: Component, infos: DropInfo) => void;
 type FilterCallback = (el: Component) => boolean;
 /**
  *
@@ -46,7 +50,7 @@ declare class DragManager {
     /**
      *
      */
-    registerDropTarget(el: Component, cb: DropCallback, filterCB: FilterCallback): void;
+    registerDropTarget(el: Component, cb: DropCallback, filterCB?: FilterCallback): void;
     _startCheck(): void;
     _check(): void;
 }

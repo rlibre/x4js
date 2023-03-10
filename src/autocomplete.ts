@@ -35,7 +35,11 @@ import { TextEdit, TextEditProps } from './textedit';
  */
 
 interface AutoCompleteProps extends TextEditProps {
-	enumValues: ( filter: string ) => string[];
+	// return an array of values to display in the popup list
+	enumValues: ( filter: string ) => string[] | Promise<string[]>;
+
+	// a way to change the real value vs displayed value in the popup list
+	selectValue?: ( text: string ) => string;
 }
 
 /**
@@ -87,9 +91,18 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 		}
 	}
 
-	private _onChange( ) {
-		const items = this.m_props.enumValues( this.value );
-		this.showPopup( items );
+	private async _onChange( ) {
+		let items = this.m_props.enumValues( this.value );
+		if( items instanceof Promise ) {
+			items = await items;
+		}
+		
+		if( items.length==0 ) {
+			this._hidePopup( );
+			return;
+		}
+
+		this._showPopup( items );
 	}
 
 	componentDisposed( ) {
@@ -100,11 +113,15 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 		super.componentDisposed( );
 	}
 
+	showPopup( ) {
+		this._onChange( );
+	}
+
 	/** 
 	 * display the popup 
 	 */
 
-	showPopup( items: string[] ) {
+	private _showPopup( items: string[] ) {
 
 		let props = this.m_props;
 		if (props.readOnly || this.hasClass("@disable") ) {
@@ -125,7 +142,12 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 					tabindex: 0
 				},
 				selectionChange: (e) => {
-					this.value = (e.selection as ListViewItem).id
+					let value = (e.selection as ListViewItem).id
+					if( this.m_props.selectValue ) {
+						value = this.m_props.selectValue( value );
+					}
+
+					this.value = value;
 					if( !this.m_lockpop ) {
 						this._hidePopup( );
 						this.focus( );
@@ -138,7 +160,9 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 			});
 		}
 
-		this.m_popup.items = items.map( c => ({ id: c, text: c }) );
+		if( items ) {
+			this.m_popup.items = items.map( c => ({ id: c, text: c }) );
+		}
 	
 		let r1 = this.m_ui_input.getBoundingRect();
 		this.m_popup.setStyle({

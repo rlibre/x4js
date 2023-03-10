@@ -33,6 +33,7 @@ import { BaseComponent, BaseComponentEventMap, BaseComponentProps } from './base
 import { Component, flyWrap } from './component'
 import { Settings } from './settings'
 import { _tr } from './i18n'
+import { Router } from './router'
 
 const _x4_touch_time = Symbol( );
 
@@ -97,6 +98,8 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 
 	private m_touch_time: number;
 	private m_touch_count: number;
+
+	private m_router: Router;
 	
 	constructor( props : P ) {
 		console.assert( Application.self===null, 'application is a singleton' );
@@ -112,8 +115,9 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 
 		this.m_touch_time = 0;
 		this.m_touch_count = 0;
+		this.m_router = null;
 	
-		(Application.self as any) = this;
+		x4app = (Application.self as any) = this;
 
 		if( 'onload' in globalThis ) {
 			globalThis.addEventListener( 'load', ( ) => {
@@ -127,6 +131,13 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 
 	ApplicationCreated( ) {
 		this.setTitle( '' );
+	}
+
+	public get router( ) {
+		if( !this.m_router ) {
+			this.m_router = new Router( );
+		}
+		return this.m_router;
 	}
 
 	public get app_name( ) {
@@ -247,5 +258,5 @@ export class Application<P extends ApplicationProps = ApplicationProps, E extend
 	}
 };
 
-
+export let x4app: Application;
 

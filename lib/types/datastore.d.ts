@@ -32,11 +32,11 @@ export type ChangeCallback = (type: string, id?: any) => void;
 export type CalcCallback = () => string;
 export type FieldType = 'string' | 'int' | 'float' | 'date' | 'bool' | 'array' | 'object' | 'any' | 'calc';
 export type DataIndex = Uint32Array;
-interface EvDataChange extends BasicEvent {
+export interface EvDataChange extends BasicEvent {
     type: string;
     id: any;
 }
-declare function EvDataChange(type: 'create' | 'update' | 'delete' | 'data' | 'change', id?: any): EvDataChange;
+export declare function EvDataChange(type: 'create' | 'update' | 'delete' | 'data' | 'change', id?: any): EvDataChange;
 /**
  * fields definition
  * 	field with index=0 is record id
@@ -208,15 +208,15 @@ export declare class AutoRecord extends Record {
 interface DataEventMap extends BaseComponentEventMap {
     change?: EvChange;
 }
+type DataSolver = (data: any) => Record[];
 export interface DataProxyProps extends BaseComponentProps<DataEventMap> {
-    type: 'local' | 'immediate' | 'ajax';
-    path?: string;
-    params?: any;
+    url: string;
+    params?: string[];
+    solver?: DataSolver;
 }
 export declare class DataProxy extends BaseComponent<DataProxyProps, DataEventMap> {
     constructor(props: DataProxyProps);
-    load(): void;
-    save(data: any): void;
+    load(url?: string): void;
     private _refresh;
 }
 /**
@@ -244,7 +244,7 @@ export declare class DataStore extends EventSource<DataStoreEventMap> {
      *
      * @param records
      */
-    load(url: string): void;
+    load(url?: string): void;
     reload(): void;
     /**
      * convert raw objects to real records from model

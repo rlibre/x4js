@@ -31,7 +31,8 @@ import { TextEdit, TextEditProps } from './textedit';
  *
  */
 interface AutoCompleteProps extends TextEditProps {
-    enumValues: (filter: string) => string[];
+    enumValues: (filter: string) => string[] | Promise<string[]>;
+    selectValue?: (text: string) => string;
 }
 /**
  *
@@ -45,10 +46,11 @@ export declare class AutoComplete extends TextEdit<AutoCompleteProps> {
     _onKey(e: KeyboardEvent): void;
     private _onChange;
     componentDisposed(): void;
+    showPopup(): void;
     /**
      * display the popup
      */
-    showPopup(items: string[]): void;
+    private _showPopup;
     protected _validate(value: string): boolean;
     validate(): boolean;
     private _checkFocus;

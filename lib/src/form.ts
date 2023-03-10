@@ -27,16 +27,22 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { Component, Container, CProps, ContainerEventMap, ComponentContent, flyWrap } from './component'
+import { Component, Container, CProps, ContainerEventMap, ComponentContent, flyWrap, EventHandler } from './component'
 import { HLayout, VLayout } from './layout'
 import { Button } from './button'
 import { Input } from './input'
 import { TextEdit } from './textedit'
 import { ajaxRequest, RequestProps } from './request'
-import { EventCallback } from './x4events'
+import { BasicEvent } from './x4events'
 import { EvBtnClick } from './dialog'
+import { ComboBox } from './combobox'
 
 import { _tr } from './i18n'
+
+
+export interface EvDirty extends BasicEvent {
+	dirty: boolean;
+}
 
 // ============================================================================
 // [FORM]
@@ -47,12 +53,14 @@ export type FormButtons = (FormBtn | Button | Component)[];
 
 export interface FormEventMap extends ContainerEventMap {
 	btnClick?: EvBtnClick;
+	dirty?: EvDirty;
 }
 
 export interface FormProps extends CProps<FormEventMap> {
 	disableSuggestions?: boolean;
 	buttons?: FormButtons;
-	btnClick?: EventCallback<EvBtnClick>;	// shortcut for events: { btnClick: ... }
+	btnClick?: EventHandler<EvBtnClick>;	// shortcut for events: { btnClick: ... }
+	dirty?: EventHandler<EvDirty>;
 }
 
 /**
@@ -79,7 +87,7 @@ export class Form<T extends FormProps = FormProps, E extends FormEventMap = Form
 		super(props);
 
 		this.setTag( props.disableSuggestions ? 'section' : 'form');
-		this.mapPropEvents(props, 'btnClick');
+		this.mapPropEvents(props, 'btnClick', 'dirty');
 		this.updateContent(content, props.buttons, height);
 
 		this.m_dirty = false;
@@ -221,10 +229,17 @@ export class Form<T extends FormProps = FormProps, E extends FormEventMap = Form
 			result = true;
 
 		for (let i = 0; i < inputs.length; i++) {
-			let input = Component.getElement(inputs[i], TextEdit);
+			const input = Component.getElement(inputs[i], TextEdit);
 			if (input && !input.validate()) {
 				result = false;
 			}
+			else {
+				const combo = Component.getElement(inputs[i], ComboBox);
+				if( combo && !combo.validate() ) {
+					result = false;
+				}
+			}
+			
 		}
 
 		return result;
@@ -273,6 +288,28 @@ export class Form<T extends FormProps = FormProps, E extends FormEventMap = Form
 			if (values[name] !== undefined) {
 				(<Input>item).setStoreValue(values[name]);
 			}
+		}
+
+		this.setDirty(false);
+	}
+
+	/**
+	 * 
+	 */
+
+	public clearValues() {
+
+		let elements = this._getElements();
+		for (let e = 0; e < elements.length; e++) {
+
+			let input = <HTMLInputElement>elements[e];
+
+			let item = Component.getElement(input);
+			if (!item.hasAttribute("name")) {
+				continue;
+			}
+
+			(<Input>item).setStoreValue( null );
 		}
 
 		this.setDirty(false);
@@ -363,6 +400,7 @@ export class Form<T extends FormProps = FormProps, E extends FormEventMap = Form
 
 	setDirty(set = true) {
 		this.m_dirty = set;
+		this.emit( 'dirty', { dirty: set } );
 	}
 
 	/**

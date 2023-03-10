@@ -584,7 +584,8 @@ export interface ContainerProps<E extends ContainerEventMap = ContainerEventMap>
  */
 export declare class Container<P extends ContainerProps = ContainerProps, E extends ContainerEventMap = ContainerEventMap> extends Component<P, E> {
     private m_shortcuts;
-    constructor(props: P | ComponentOrString[]);
+    constructor(props: P);
+    constructor(items: ComponentOrString[], cls?: string);
     /**
      * add an application shortcut
      * @param sequence key sequence Shift+Ctrl+Alt+K

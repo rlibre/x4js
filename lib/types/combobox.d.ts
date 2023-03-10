@@ -26,9 +26,6 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
-/**
- * TODO: replace custom combo list by listview or gridview
- */
 import { Component, CProps, ContainerEventMap } from './component';
 import { EvChange, EvSelectionChange, EventCallback } from './x4events';
 import { Input } from './input';
@@ -52,6 +49,7 @@ export interface ComboBoxProps extends CProps<ComboBoxEventMap> {
     tabIndex?: number | boolean;
     name?: string;
     readOnly?: boolean;
+    required?: true;
     label?: string;
     labelWidth?: number;
     labelAlign?: 'left' | 'right';
@@ -72,6 +70,7 @@ export declare class ComboBox extends HLayout<ComboBoxProps, ComboBoxEventMap> {
     private m_lockchg;
     private m_popvis;
     private m_selection;
+    private m_error_tip;
     constructor(props: ComboBoxProps);
     _onKey(e: any): void;
     set items(items: ListViewItem[]);
@@ -82,6 +81,12 @@ export declare class ComboBox extends HLayout<ComboBoxProps, ComboBoxEventMap> {
      * display the popup
      */
     showPopup(filter_items?: boolean): ListViewItem[];
+    /**
+     *
+     */
+    validate(): boolean;
+    showError(text: string): void;
+    clearError(): void;
     /** @ignore
       */
     private _selectItem;

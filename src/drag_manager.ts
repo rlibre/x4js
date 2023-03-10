@@ -34,7 +34,12 @@ import { Point } from './tools';
 
 const x_drag_cb = Symbol( 'x-drag-cb' );
 
-type DropCallback = ( command: 'enter' | 'leave' | 'drag' | 'drop', el: Component, point: Point ) => void;
+interface DropInfo {
+	pt: Point;
+	data: DataTransfer;
+}
+
+type DropCallback = ( command: 'enter' | 'leave' | 'drag' | 'drop', el: Component, infos: DropInfo ) => void;
 type FilterCallback = ( el: Component ) => boolean;
 
 /**
@@ -91,10 +96,10 @@ class DragManager {
 	 * 
 	 */
 
-	registerDropTarget(el: Component, cb: DropCallback, filterCB: FilterCallback ) {
+	registerDropTarget(el: Component, cb: DropCallback, filterCB?: FilterCallback ) {
 
 		const dragEnter = (ev: DragEvent) => {
-			if( !filterCB(this.dragSource) ) {
+			if( filterCB && !filterCB(this.dragSource) ) {
 				console.log( 'reject ', el );
 				ev.dataTransfer.dropEffect = 'none';	
 				return;
@@ -108,7 +113,7 @@ class DragManager {
 		const dragOver = (ev: DragEvent) => {
 			//console.log( "dragover", ev.target );
 			
-			if( !filterCB(this.dragSource) ) {
+			if( filterCB && !filterCB(this.dragSource) ) {
 				console.log( 'reject ', el );
 				ev.dataTransfer.dropEffect = 'none';	
 				return;
@@ -122,7 +127,12 @@ class DragManager {
 			}
 
 			if( this.dropTarget ) {
-				cb( 'drag', this.dragSource, {x:ev.pageX,y:ev.pageY} );
+				const infos = {
+					pt: new Point( ev.pageX, ev.pageY ),
+					data: ev.dataTransfer,
+				}
+
+				cb( 'drag', this.dragSource, infos );
 			}
 
 			ev.dataTransfer.dropEffect = 'copy';
@@ -135,10 +145,17 @@ class DragManager {
 		};
 
 		const drop = (ev: DragEvent) => {
-			cb('drop', this.dragSource, {x:ev.pageX,y:ev.pageY} );
+			const infos = {
+				pt: new Point( ev.pageX, ev.pageY ),
+				data: ev.dataTransfer,
+			}
+
+			cb('drop', this.dragSource, infos );
 			
 			this.dropTarget = null;
 			el.removeClass('drop-over');
+
+			ev.preventDefault();
 		}
 
 		el.setDomEvent('dragenter', dragEnter);
