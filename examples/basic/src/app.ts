@@ -1,5 +1,5 @@
 // import required elements
-import { Application, VLayout, Label, installHMR, HLayout, Image, Flex, formatIntlDate, Container, Button, Icon, Menu, MenuItem, MessageBox, EvClick } from 'x4js'
+import { Application, VLayout, Label, installHMR, HLayout, Image, Flex, formatIntlDate, Container, Button, Icon, Menu, MenuItem, MessageBox, EvClick, ContainerProps } from 'x4js'
 
 // create the application
 let app = new Application( {
@@ -7,40 +7,72 @@ let app = new Application( {
 	app_version: "1.0.0"
 } );
 
+// -----------------------------------------------------------------
 // the header bar
-//	just one icon and a title
+//	just one icon, a title and a user button
+//
+
+/**
+ * we declare a custom property: title
+ */
+
+interface HeaderProps extends ContainerProps {
+	title: string;
+}
+
+/**
+ * the the header class
+ */
 
 class Header extends HLayout {
 
-	constructor( props ) {
+	constructor( props: HeaderProps ) {
 		super( props );
 
 		this.addClass( "center" );
 
 		this.setContent( [
 			new Icon( { id: "logo", icon: 'url(assets/logo.svg)' } ),
-			new Label( { text: "X4 Application", flex: 1 } ),
-			new Button( { id: 'user-btn', icon: 'url(assets/bars-light.svg)', click: ( e ) => this._openMenu( e ) } ),
+			new Label( { id: 'title', text: props.title, flex: 1 } ),
+			new Button( { id: 'usr-btn', icon: 'var(--icon-usr-btn)', click: ( e ) => this._openMenu( e ) } ),
 		]);
+
+		// instead of using elements with ids, we should have make a member with them:
+		//
+		// this.setContent( [
+		//	new Icon( { id: "logo", icon: 'url(assets/logo.svg)' } ),
+		//	this.title = new Label( { text: props.title, flex: 1 } ),
+		//	this.btn = new Button( { icon: 'var(--icon-usr-btn)', click: ( e ) => this._openMenu( e ) } ),
+		//]);
+		//
+		// then use directly the member
 	}
 
 	private _openMenu( ev: EvClick ) {
 		const menu = new Menu( {
 			items: [
 				new MenuItem( { text: "Logout", click: ( ) => {
-					MessageBox.show( "Logout" )
+					MessageBox.show( "Logout" );
 				} } ),
 			]
 		})
 
-		const btn = this.itemWithId( 'user-btn' )
+		const btn = this.itemWithId( 'usr-btn' )
 		const rc = btn.getBoundingRect( );
 		menu.displayAt( rc.left, rc.bottom );
 	}
+
+	// just use Header.title = 'blah' to change the title
+	
+	set title ( title: string ) {
+		//this.m_props.title = title;
+		this.itemWithId<Label>( 'title' ).text = title;
+	}
 }
 
+// -----------------------------------------------------------------
 // the footer bar
-//	just time at right bottom
+//	just display time at right 
 
 class Footer extends HLayout {
 
@@ -52,7 +84,7 @@ class Footer extends HLayout {
 		this.addClass( "center" );
 
 		this.setContent( [
-			new Flex( ),
+			new Flex( ), // time is 'pushed' by flex to the right
 			this.time = new Label( "" ),
 		]);
 
@@ -62,12 +94,14 @@ class Footer extends HLayout {
 	}
 }
 
+// -----------------------------------------------------------------
+// create the main frame, this is just a vertical layout
+//
 
-// create the main frame
 let frame = new VLayout( {
 	cls: "@fit",
     content: [
-		new Header( { } ),
+		new Header( { title: "X4 Application" } ),
 		new Container( { flex: 1 } ),
 		new Footer( { } ),
     ]
@@ -78,5 +112,5 @@ app.mainView = frame;
 
 declare const DEBUG; // defined by x4build
 if( DEBUG ) {
-	installHMR()	
+	installHMR();	// this way, in debug mode, the page is automatically refreshed on source change (if --hmr specified in x4build command line)
 }

@@ -119,7 +119,7 @@ class Loader extends EventSource<LoadingEventMap> {
 						// check response, must be svg
 						//TODO: find better
 						if (!svg.startsWith("<svg") && !svg.startsWith('<?xml') ) {
-							console.error( "svg loading error: ", svg );
+							console.error( "svg loading error (svg files must start with <svg... ): ", svg );
 							this.signal( 'loaded', EvLoaded(url,"") );
 						}
 						else {
