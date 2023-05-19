@@ -5,4 +5,4 @@ This is a really basic sample of x4 (80)
 
 
 
-![screenshot](.\screenshot.png)
+![screenshot](screenshot.png)
