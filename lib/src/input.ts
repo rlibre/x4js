@@ -27,6 +27,8 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
+import { x4document } from './x4dom'
+import { Tooltip } from './tooltips';
 import { Component, CProps, CEventMap, EvFocus } from './component'
 //import { EvChange } from './x4_events';
 
@@ -67,8 +69,18 @@ export interface InputProps<P extends InputEventMap = InputEventMap> extends CPr
 
 export class Input extends Component<InputProps,InputEventMap>
 {
+	private m_error_tip: Tooltip;
+
 	constructor( props: InputProps ) {
 		super( props );
+	}
+
+	componentDisposed() {
+		if (this.m_error_tip) {
+			this.m_error_tip.dispose();
+		}
+
+		super.componentDisposed();
 	}
 
 	/** @ignore */	
@@ -105,6 +117,28 @@ export class Input extends Component<InputProps,InputEventMap>
 		}
 	}
 
+	public showError(text: string) {
+
+		if (!this.m_error_tip) {
+			this.m_error_tip = new Tooltip({ cls: 'error' });
+			x4document.body.appendChild(this.m_error_tip._build());
+		}
+
+		let rc = this.getBoundingRect();
+
+		this.m_error_tip.text = text;
+		this.m_error_tip.displayAt(rc.right, rc.top-8, 'top right');
+		this.addClass('@error');
+	}
+
+	public clearError() {
+
+		if (this.m_error_tip) {
+			this.m_error_tip.hide();
+			this.removeClass('@error');
+		}
+	}
+
 	public getType( ) {
 		return this.m_props.type;
 	}
@@ -114,22 +148,27 @@ export class Input extends Component<InputProps,InputEventMap>
      */
 
     public get value( ) : string {
-		
+		return this.getValue( );
+    }
+
+	public getValue( ): string {
+		const dom = this.dom as HTMLInputElement;
+
 		if( this.dom ) {
-			this.m_props.value = (<HTMLInputElement>this.dom).value;
+			this.m_props.value = dom.value;
 		}
 		
 		if( this.m_props.uppercase ) {
 			let upper = this.m_props.value.toUpperCase( );	// todo: locale ?
-			if( this.dom && upper!=this.m_props.value ) {
-				(<HTMLInputElement>this.dom).value = upper; // update the input
+			if( dom && upper!=this.m_props.value ) {
+				dom.value = upper; // update the input
 			}
 
 			this.m_props.value = upper;
 		}
 		
 		return this.m_props.value;
-    }
+	}
 
     /**
      * Change the editor value
@@ -137,7 +176,10 @@ export class Input extends Component<InputProps,InputEventMap>
      */
 	
 	public set value( value: string ) {
-		
+		this.setValue( value );
+	}
+	
+	public setValue( value: string ) {
 		this.m_props.value = value;
 
 		if( this.dom ) {
@@ -154,8 +196,8 @@ export class Input extends Component<InputProps,InputEventMap>
 			let type = this.getAttribute('type');
 			if( type ) { type = type.toLowerCase( ); }
 
-			let value,
-				dom = (<HTMLInputElement>this.dom);
+			let value;
+			const dom = this.dom as HTMLInputElement;
 
             if( type === "file") {
 				value = [];
@@ -181,6 +223,12 @@ export class Input extends Component<InputProps,InputEventMap>
 			else if( type === 'date' ) {
 				debugger;
 			}
+			else if( type=='number' ) {
+				value = this.value;
+				if (value.indexOf(",") >= 0) {
+					value = value.replace(",", ".");
+				} 
+			}
 			else {
 				value = this.value;
 			}
@@ -190,7 +238,7 @@ export class Input extends Component<InputProps,InputEventMap>
 	}
 
 	public setStoreValue( v: any ) {
-		
+		this.clearError( );
 		if( this.m_props.value_hook ) {
 			return this.m_props.value_hook.set( v );
 		}

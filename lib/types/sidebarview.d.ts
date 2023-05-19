@@ -29,11 +29,13 @@
 import { Component } from './component';
 import { VLayout } from './layout';
 import { CardView, CardViewProps, ICardViewItem } from './cardview';
+import { Image } from './image';
 export interface SideBarItem extends ICardViewItem {
 }
 export interface SideBarProps extends CardViewProps {
     bar_sizable?: boolean;
     bar_width?: number;
+    logo?: Image;
 }
 /**
  *

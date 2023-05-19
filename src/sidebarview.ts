@@ -31,6 +31,7 @@ import { Component, CProps, Flex, Separator } from './component'
 import { HLayout, VLayout } from './layout'
 import { Button } from './button'
 import { CardView, CardViewProps, ICardViewItem } from './cardview'
+import { Image } from './image';
 
 export interface SideBarItem extends ICardViewItem {
 }
@@ -38,6 +39,7 @@ export interface SideBarItem extends ICardViewItem {
 export interface SideBarProps extends CardViewProps {
 	bar_sizable?: boolean;
 	bar_width?: number;
+	logo?: Image;
 }
 
 /**
@@ -74,7 +76,10 @@ export class SideBarView extends CardView<SideBarProps> {
 		this.m_sidebar.setContent( new VLayout( {
 			flex: 1,
 			cls: 'content',
-			content: tabs
+			content: [
+				this.m_props.logo,
+				...tabs
+			]
 		}) );
 
 		this.setContent( [

@@ -36,6 +36,14 @@ import { BasicEvent, EvChange, EventMap, EventSource } from './x4events';
 // [ICON]
 // ============================================================================
 
+/**
+ * iconID can be:
+ * - "url( <path to image> )" ex: "url(my/path/to/my/image.svg)"
+ * - "var( <css variable> )"
+ * - "cls( <font class> )"
+ * - "char( <character> )" ex: "font-char( \uf00d )"
+ */
+
 export type IconID = string | number;
 
 export interface IconProps extends CProps {
@@ -245,6 +253,17 @@ export class Icon extends Component<IconProps>
 				this._setSVG( url );
 				return;
 			}
+
+			//	url( "www.google.com" )
+			//
+			const reChar = /\s*font-char\s*\(\s*(.+)\s*\)\s*/gi;
+			let match_char = reChar.exec( icon );
+			if( match_char ) {
+				this.removeClass( '@svg-icon' );
+				this.setContent( match_char[1], false );
+				return;
+			}
+			
 			else {
 				// todo: deprecated
 				console.error( "deprecation error: invalid icon name" );	

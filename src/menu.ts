@@ -329,7 +329,7 @@ export class MenuItem extends Component<MenuItemProps, MenuItemEventMap> {
 		//	this.setAttribute( 'tabindex', '0' );
 
 		this.setContent([
-			icon < 0 ? null : new Icon({ icon }),
+			icon ? null : new Icon({ icon }),
 			new Label({ flex: 1, text }),
 			popIco
 		]);

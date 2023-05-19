@@ -154,7 +154,7 @@ export class Router extends EventSource< RouterEventMap > {
 		return this.m_useHash ? '/'+x4document.location.hash.substring(1) : x4document.location.pathname;
 	}
 
-	navigate( uri: string, notify = true ) {
+	navigate( uri: string, notify = true, replace = false ) {
 
 		if( !uri.startsWith('/') ) {
 			uri = '/'+uri;
@@ -170,11 +170,15 @@ export class Router extends EventSource< RouterEventMap > {
 		}
 
 		if( this.m_useHash ) {
-			while( uri.startsWith('/') ) {
+			while( uri.at(0)=='/' ) {
 				uri = uri.substring( 1 );
 			}
 			
-			window.history.pushState({}, '', '#'+uri );
+			uri = '#'+uri;
+		}
+		
+		if( replace ) {
+			window.history.replaceState({}, '', uri );
 		}
 		else {
 			window.history.pushState({}, '', uri );

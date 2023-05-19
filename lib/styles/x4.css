@@ -552,8 +552,8 @@ textarea::selection {
   content: '*';
   padding-right: 2px;
 }
-.x-text-edit.x-error input,
-.x-combo-box.x-error input {
+.x-text-edit input.x-error,
+.x-combo-box input.x-error {
   border-bottom: none;
   border-left: 4px solid var(--x4-error-color);
 }

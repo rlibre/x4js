@@ -28,6 +28,13 @@
 **/
 import { Component, CProps } from './component';
 import { BasicEvent } from './x4events';
+/**
+ * iconID can be:
+ * - "url( <path to image> )" ex: "url(my/path/to/my/image.svg)"
+ * - "var( <css variable> )"
+ * - "cls( <font class> )"
+ * - "char( <character> )" ex: "font-char( \uf00d )"
+ */
 export type IconID = string | number;
 export interface IconProps extends CProps {
     icon: IconID;

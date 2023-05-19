@@ -59,10 +59,8 @@ export interface TextEditProps extends InputProps<TextEditEventMap> {
 export declare class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEditEventMap = TextEditEventMap> extends Component<T, E> {
     private m_cal_popup;
     protected m_ui_input: Input;
-    private m_error_tip;
     constructor(props: T);
     componentCreated(): void;
-    componentDisposed(): void;
     focus(): void;
     /** @ignore */
     render(props: TextEditProps): void;
@@ -82,7 +80,12 @@ export declare class TextEdit<T extends TextEditProps = TextEditProps, E extends
     showError(text: string): void;
     clearError(): void;
     get value(): string;
+    getValue(): string;
+    /**
+     *
+     */
     set value(value: string);
+    setValue(value: string): void;
     /**
      * select all the text
      */

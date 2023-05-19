@@ -80,7 +80,7 @@ export class Label extends Component<LabelProps>
 			this.addClass( '@hlayout' );
 
 			this.setContent( [
-				new Icon( { icon: props.icon } ),
+				new Icon( { id: 'l_icon', icon: props.icon } ),
 				new Component( { content: text, ref: 'text' } )
 			] );
 		}
@@ -123,6 +123,31 @@ export class Label extends Component<LabelProps>
 
 	public get text( ) : string | HtmlString {
 		return this.m_props.text;
+	}
+
+	/**
+	 * change the displayed icon
+	 * @param icon - new icon
+	 */
+
+	public set icon( icon: IconID ) {
+		this.m_props.icon = icon;
+		let ico = this.itemWithRef<Icon>('l_icon');
+		if (ico) {
+			ico.icon = icon;
+		}
+		else {
+			this.update( 0 );
+		}
+	}
+
+	/**
+	 * 
+	 */
+
+	public get icon( ) : IconID {
+		let ico = this.itemWithRef<Icon>('l_icon');
+		return ico?.icon;
 	}
 }
 

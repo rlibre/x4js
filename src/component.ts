@@ -170,8 +170,13 @@ export interface CProps<T extends CEventMap = CEventMap> extends BaseComponentPr
 	enabled?: boolean;		// add @disabled to the element if false
 }
 
+interface DomListener {
+	listener: EventListener,
+	passive?: boolean
+}
+
 interface CInternalProps {
-	dom_events: any;
+	dom_events: Record<string,DomListener[]>;
 	classes: IMap<boolean>;
 	uid: number;
 	created: boolean;
@@ -205,6 +210,7 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 			dom_events: {},
 			uid: Component.__comp_guid++,
 			inrender: false,
+			created: false,
 		};
 
 		// prepare iprops
@@ -276,6 +282,20 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 		}
 		else {
 			append(content);
+		}
+	}
+
+	removeChild( item: Component ) {
+		if( this.m_props.content ) {
+			if (!isArray(this.m_props.content)) {
+				this.m_props.content = [this.m_props.content];
+			}
+
+			this.m_props.content = this.m_props.content.filter( x => x!==item );
+		}
+
+		if( this.dom && item.dom ) {
+			this.dom.removeChild( item.dom );
 		}
 	}
 
@@ -524,11 +544,12 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 			return this.m_dom.getAttribute(name);
 		}
 		else {
-			if (!this.m_props.attrs) {
-				return undefined;
+			//todo move to attrs
+			if( name=='id' ) {
+				return this.m_props.id;
 			}
 
-			return this.m_props.attrs[name];
+			return this.m_props.attrs ? this.m_props.attrs[name] : undefined;
 		}
 	}
 
@@ -830,7 +851,7 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 			for (let e in evt) {
 				let handlers = evt[e];
 				for (let h of handlers) {
-					this.createEvent(e, h);
+					this._createEvent(e, h.listener, h.passive );
 				}
 			}
 		}
@@ -1095,12 +1116,12 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 	 * this.setDomEvent( 'dblclick', this._handleDblClick, this );
 	 */
 
-	public setDomEvent<K extends keyof X4ElementEventMap>(type: K, listener: (this: HTMLDivElement, ev: X4ElementEventMap[K]) => void) {
+	public setDomEvent<K extends keyof X4ElementEventMap>(type: K, listener: (this: HTMLDivElement, ev: X4ElementEventMap[K]) => void, passive?: boolean ) {
 		let _listener = listener as EventListener;
-		this._setDomEvent(type as string, _listener);
+		this._setDomEvent(type as string, _listener, passive);
 	}
 
-	private _setDomEvent(type: string, listener: EventListener) {
+	private _setDomEvent(type: string, listener: EventListener, passive?: boolean) {
 
 		// add event to the vdom
 		if (!this.m_iprops.dom_events) {
@@ -1109,15 +1130,15 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 
 		let listeners = this.m_iprops.dom_events[type];
 		if (!listeners) {
-			listeners = this.m_iprops.dom_events[type] = [listener];
+			listeners = this.m_iprops.dom_events[type] = [{listener,passive}];
 		}
 		else {
-			listeners.push(listener);
+			listeners.push({listener,passive});
 		}
 
 		if (this.m_dom) {
 			//this.m_dom.addEventListener(type, listener);
-			this.createEvent(type, listener);
+			this._createEvent(type, listener,passive);
 		}
 	}
 
@@ -1147,7 +1168,7 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 	 * @param handler 
 	 */
 
-	public createEvent(name: string, handler: Function) {
+	private _createEvent(name: string, handler: Function, passive?: boolean) {
 
 		let _dom = this.m_dom;
 		let store = _dom[_x4_el_store];
@@ -1171,11 +1192,16 @@ export class Component<P extends CProps<CEventMap> = CProps<CEventMap>, E extend
 		else if (!Component.__privateEvents[name]) {
 			Component.__privateEvents[name] = true; // todo count it
 
-			if (passiveEvents[name]) {
-				x4document.addEventListener(name as any, Component._dispatchEvent, { passive: false, capture: true });
+			if( passive===undefined ) {
+				if ( passiveEvents[name] ) {
+					x4document.addEventListener(name as any, Component._dispatchEvent, { passive: false, capture: true });
+				}
+				else {
+					x4document.addEventListener(name as any, Component._dispatchEvent, true);
+				}
 			}
 			else {
-				x4document.addEventListener(name as any, Component._dispatchEvent, true);
+				x4document.addEventListener(name as any, Component._dispatchEvent, { passive, capture: passive ? true : false } );
 			}
 		}
 

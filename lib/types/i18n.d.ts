@@ -62,7 +62,7 @@ export declare let _tr: any;
  * select the given language as current
  * @param name laguage name (code)
  */
-export declare function selectLanguage(name: string): void;
+export declare function selectLanguage(name: string): any;
 /**
  *
  */

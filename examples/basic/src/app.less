@@ -1,0 +1,36 @@
+//out: false
+@import "../node_modules/x4js/lib/styles/x4.less";
+
+// demo "how to embed font"
+
+// @font-face {
+// 	font-family: 'montserrat';
+// 	src: url('./assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+// 	font-weight: normal;
+// 	font-style: normal;
+// }
+
+:root {
+	--color1: white;
+	--color2: #126e9e;
+}
+
+.x-header {
+	background-color: var(--color1);;
+    color: var(--color2);
+    gap: 8px;
+    padding: 8px;
+    font-size: 2rem;
+    .z-float-15;
+
+	#logo {
+		width: 3rem;
+		height: 3rem;
+	}
+}
+
+.x-footer {
+	border-top: 1px solid var(--color2);
+	padding: 4px;
+	min-height: 2em;
+}

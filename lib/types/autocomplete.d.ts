@@ -26,6 +26,7 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
+import { RenderListItem } from "./listview";
 import { TextEdit, TextEditProps } from './textedit';
 /**
  *
@@ -33,6 +34,7 @@ import { TextEdit, TextEditProps } from './textedit';
 interface AutoCompleteProps extends TextEditProps {
     enumValues: (filter: string) => string[] | Promise<string[]>;
     selectValue?: (text: string) => string;
+    renderItem?: RenderListItem;
 }
 /**
  *
@@ -46,7 +48,7 @@ export declare class AutoComplete extends TextEdit<AutoCompleteProps> {
     _onKey(e: KeyboardEvent): void;
     private _onChange;
     componentDisposed(): void;
-    showPopup(): void;
+    showPopup(show?: boolean): void;
     /**
      * display the popup
      */
@@ -56,5 +58,6 @@ export declare class AutoComplete extends TextEdit<AutoCompleteProps> {
     private _checkFocus;
     private _hidePopup;
     private _onFocus;
+    isPopupVisible(): boolean;
 }
 export {};

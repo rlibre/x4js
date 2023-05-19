@@ -27,7 +27,7 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
 
-import { ListViewItem, PopupListView } from "./listview";
+import { RenderListItem, ListViewItem, PopupListView } from "./listview";
 import { TextEdit, TextEditProps } from './textedit';
 
 /**
@@ -40,6 +40,7 @@ interface AutoCompleteProps extends TextEditProps {
 
 	// a way to change the real value vs displayed value in the popup list
 	selectValue?: ( text: string ) => string;
+	renderItem?: RenderListItem
 }
 
 /**
@@ -113,8 +114,13 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 		super.componentDisposed( );
 	}
 
-	showPopup( ) {
-		this._onChange( );
+	showPopup( show = true ) {
+		if( show ) {
+			this._onChange( );
+		}
+		else {
+			this._hidePopup( );
+		}
 	}
 
 	/** 
@@ -156,7 +162,8 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 				style: {
 					fontFamily,
 					fontSize
-				}
+				},
+				renderItem: props.renderItem,
 			});
 		}
 
@@ -217,5 +224,9 @@ export class AutoComplete extends TextEdit<AutoCompleteProps> {
 		}
 
 		this.m_needval = true;
+	}
+
+	isPopupVisible( ) {
+		return this.m_popvis;
 	}
 }

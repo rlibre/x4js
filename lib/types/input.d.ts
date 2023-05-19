@@ -55,19 +55,25 @@ export interface InputProps<P extends InputEventMap = InputEventMap> extends CPr
  * CARE derived classes must set this.ui.input
  */
 export declare class Input extends Component<InputProps, InputEventMap> {
+    private m_error_tip;
     constructor(props: InputProps);
+    componentDisposed(): void;
     /** @ignore */
     render(props: InputProps): void;
+    showError(text: string): void;
+    clearError(): void;
     getType(): EditType;
     /**
      * return the current editor value
      */
     get value(): string;
+    getValue(): string;
     /**
      * Change the editor value
      * @param value - new value to set
      */
     set value(value: string);
+    setValue(value: string): void;
     getStoreValue(): any;
     setStoreValue(v: any): void;
     set readOnly(ro: boolean);

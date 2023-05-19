@@ -55,4 +55,13 @@ export declare class Label extends Component<LabelProps> {
      *
      */
     get text(): string | HtmlString;
+    /**
+     * change the displayed icon
+     * @param icon - new icon
+     */
+    set icon(icon: IconID);
+    /**
+     *
+     */
+    get icon(): IconID;
 }

@@ -241,7 +241,7 @@ export class Calendar extends VLayout<CalendarProps, CalendarEventMap>
 			let min = this.m_props.minDate?.getFullYear() ?? 1900;
 			let max = this.m_props.maxDate?.getFullYear() ?? 2037;
 
-			for (let m = min; m < max; m++) {
+			for (let m = max; m >= min; m--) {
 				items.push(new MenuItem({
 					text: '' + m,
 					click: () => { this.m_date.setFullYear(m); this.update(); }

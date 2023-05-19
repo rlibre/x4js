@@ -163,6 +163,7 @@ export declare class Component<P extends CProps<CEventMap> = CProps<CEventMap>, 
      * @param content
      */
     appendChild(content: ComponentContent): void;
+    removeChild(item: Component): void;
     /**
      *
      */
@@ -339,7 +340,7 @@ export declare class Component<P extends CProps<CEventMap> = CProps<CEventMap>, 
      * this.setDomEvent( 'drag drop', this._handleDrag, this );
      * this.setDomEvent( 'dblclick', this._handleDblClick, this );
      */
-    setDomEvent<K extends keyof X4ElementEventMap>(type: K, listener: (this: HTMLDivElement, ev: X4ElementEventMap[K]) => void): void;
+    setDomEvent<K extends keyof X4ElementEventMap>(type: K, listener: (this: HTMLDivElement, ev: X4ElementEventMap[K]) => void, passive?: boolean): void;
     private _setDomEvent;
     /**
      *
@@ -350,7 +351,7 @@ export declare class Component<P extends CProps<CEventMap> = CProps<CEventMap>, 
      * @param name
      * @param handler
      */
-    createEvent(name: string, handler: Function): void;
+    private _createEvent;
     /**
      * dispatch a dom event to the appropriated component
      * called by the system

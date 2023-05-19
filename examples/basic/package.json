@@ -1,0 +1,23 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "description": "test project",
+    "main": "src/index.html",
+    "scripts": {
+        "build-dev": "x4build build --watch --serve --hmr",
+        "build-release": "x4build build --release"
+    },
+    "devDependencies": {
+        "x4build": "latest"
+    },
+    "dependencies": {
+        "esbuild": "^0.17.19",
+        "x4js": "latest"
+    },
+    "x4build": {
+        "type": "html",
+		"postBuild": [
+			"@copy ${srcdir}/src/assets ${outdir}/assets"
+		]
+    }
+}

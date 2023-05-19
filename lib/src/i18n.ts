@@ -99,29 +99,83 @@ export function addTranslation( name, ...parts ) {
 	const lang = languages[name];
     
 	parts.forEach( p => {
-		_patch( lang.src_translations, p, lang.base );
+		_patch( lang.src_translations, p );
 	} );
 
-	lang.translations = _mk_proxy( lang.src_translations, lang.base, true );
+	lang.translations = _proxyfy( lang.src_translations, lang.base, true );
 }
 
 /**
- * 
+ * patch the base object with the given object
+ * (real patch)
  */
 
-function _patch( obj: any, by: any, def: string ) {
+function _patch( obj: any, by: any ) {
+
 	for( let n in by ) {
-		if( obj[n] instanceof Object ) {
-			_patch( obj[n], by[n], def );
+		const src = by[n];
+		if( typeof src === "string" ) {
+			obj[n] = src;
 		}
 		else {
-			obj[n] = by[n];
-			obj[n] = _mk_proxy( obj[n], def, false );
+			if( Array.isArray(src) && (!obj[n] || !Array.isArray(obj[n])) ) {
+				obj[n] = [...src];
+			}
+			else if( !obj[n] || (typeof obj[n] !== "object") ) {
+				obj[n] = { ...src };
+			}
+			else {
+				_patch( obj[n], by[n] );
+			}
+		}
+	}
+}
+
+/**
+ * create a proxy for all sub objects
+ * (deep traverse)
+ */
+
+function _proxyfy( obj: any, base: any, root ) {
+
+	const result = {}
+
+	for( const n in obj ) {
+		if( typeof obj[n]!=="string" && !Array.isArray(obj[n])) {
+			result[n] = _proxyfy( obj[n], base, false );
+		}
+		else {
+			result[n] = obj[n];
 		}
 	}
 
-	return obj;
+	return _mk_proxy( result, base, root );
 }
+
+
+/**
+ * create a proxy for the given object
+ */
+
+function _mk_proxy( obj: any, base: string, root: boolean ) : any {
+	return new Proxy( obj, {
+		get: (target, prop) => {
+			if( root ) {
+				req_path = [prop];
+		}
+			else {
+				req_path.push( prop );
+	}
+
+			let value = target[prop];
+			if( value===undefined && base ) {
+				value = _findBaseTrans( base );
+			}
+			return value;
+		}
+	});
+}
+
 
 /**
  * when we ask for _tr.xxx
@@ -166,31 +220,6 @@ function _findBaseTrans( base ) {
 	return undefined;
 }
 
-/**
- * 
- */
-
-function _mk_proxy( obj: any, base: string, root: boolean ) : any {
-	return new Proxy( obj, {
-		get: (target, prop) => {
-			if( root ) {
-				req_path = [prop];
-			}
-			else {
-				req_path.push( prop );
-			}
-
-			let value = target[prop];
-			if( value===undefined && base ) {
-				value = _findBaseTrans( base );
-				// keep it for later
-				target[prop] = value;
-			}
-			return value;
-		}
-	});
-}
-
 export let _tr: any = {};
 
 /**
@@ -206,6 +235,7 @@ export function selectLanguage( name: string ) {
 
 	_tr = languages[name].translations;
 	_tr[sym_lang] = name;
+	return _tr;
 }
 
 /**

@@ -239,7 +239,7 @@ interface RecordConstructor {
  */
 
 	export function array( ctor: RecordConstructor, props?: MetaData  ) {
-		return data.field( { ...props, type: 'array', model: new ctor() } )
+		return data.field( { ...props, type: 'array', model: ctor ? new ctor() : null } )
 	}
 
 }
@@ -572,41 +572,28 @@ export class DataProxy extends BaseComponent<DataProxyProps,DataEventMap> {
 		super( props );
 	}
 
-	load( url?: string ) {
+	async load( url?: string ) {
 		if( url ) {
 			this.m_props.url = url;
 		}
-
-		this._refresh( );
-	}	
-
-	private _refresh( delay: number = 0 ) {
-
-		const load = async ( ) => {
-
-			let url = this.m_props.url;
-			if( this.m_props.params ) {
-				url += '?' + this.m_props.params.join( '&' );
-			}
-
-			const r = await fetch( url );
-			if( r.ok ) {
-				const raw = await r.json( );
-				
-				let json = raw;
-				if( this.m_props.solver ) {
-					json = this.m_props.solver( json );
-				}
-
-				this.emit( 'change', EvChange(json,raw) );
-			}
-		}
-
-		if( delay ) {
-			setTimeout( load, delay );
-		}
 		else {
-			load( );
+			url = this.m_props.url;
+		}
+
+		if( this.m_props.params ) {
+			url += '?' + this.m_props.params.join( '&' );
+		}
+
+		const r = await fetch( url );
+		if( r.ok ) {
+			const raw = await r.json( );
+			
+			let json = raw;
+			if( this.m_props.solver ) {
+				json = this.m_props.solver( json );
+			}
+
+			this.emit( 'change', EvChange(json,raw) );
 		}
 	}
 }
@@ -616,10 +603,11 @@ export class DataProxy extends BaseComponent<DataProxyProps,DataEventMap> {
  * 
  */
 
-interface DataStoreProps extends BaseComponentProps<DataStoreEventMap> {
-	model: Record;
-	data?: Record[];
+interface DataStoreProps<T extends Record> extends BaseComponentProps<DataStoreEventMap> {
+	model: T;
+	data?: T[];
 	url?: string;
+	autoload?: false;
 }
 
 
@@ -633,16 +621,16 @@ interface DataStoreEventMap extends EventMap {
  * 
  */
 
-export class DataStore extends EventSource<DataStoreEventMap> {
+export class DataStore<T extends Record = Record> extends EventSource<DataStoreEventMap> {
 	
-	protected m_model: Record;
+	protected m_model: T;
 	protected m_fields: FieldInfo[];
-	protected m_records: Record[];
+	protected m_records: T[];
 
 	protected m_proxy: DataProxy;
 	protected m_rec_index: DataIndex;
 
-	constructor(props: DataStoreProps) {
+	constructor(props: DataStoreProps<T> ) {
 		super( );
 
 		this.m_fields = undefined;
@@ -661,7 +649,9 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 				events: { change: (ev) => { this.setData( ev.value ); } }
 			});
 
-			this.m_proxy.load( );
+			if( props.autoload!=false ) {
+				this.m_proxy.load( );
+			}
 		}
 	}
 
@@ -670,12 +660,12 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @param records 
 	 */
 
-	load( url?: string ) {
-		this.m_proxy.load( url );
+	async load( url?: string ) {
+		return this.m_proxy.load( url );
 	}
 
-	reload( ) {
-		this.m_proxy.load( );
+	async reload( ) {
+		return this.m_proxy.load( );
 	}
 
 	/**
@@ -685,7 +675,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 
 	public setData( records: any[] ) {
 
-		let realRecords: Record[] = [];
+		let realRecords: T[] = [];
 
 		records.forEach( (rec) => {
 			realRecords.push( this.m_model.clone(rec) );
@@ -699,7 +689,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @param records - must be of the same type as model
 	 */
 
-	public setRawData(records: any[]) {
+	public setRawData(records: T[]) {
 
 		this.m_records = records;
 		this._rebuildIndex( );
@@ -717,7 +707,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * 
 	 */
 
-	public update( rec: Record ) {
+	public update( rec: T ) {
 		let id = rec.getID();
 		let index = this.indexOfId(id);
 		if (index < 0) {
@@ -734,7 +724,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @param data 
 	 */
 
-	public append( rec: Record | any ) {
+	public append( rec: T | any ) {
 
 		if( !(rec instanceof Record) ) {
 			let nrec = this.m_model.clone( );
@@ -835,7 +825,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @returns record or null
 	 */
 
-	public getById(id: any): Record {
+	public getById(id: any): T {
 		let idx = this.indexOfId( id );
 		if( idx<0 ) {
 			return null;
@@ -850,16 +840,16 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @returns record or null
 	 */
 
-	public getByIndex( index: number ): Record {
+	public getByIndex( index: number ): T {
 		let idx = this.m_rec_index[index];
 		return this._getRecord( idx );
 	}
 
-	private _getRecord( index: number ) : Record {
+	private _getRecord( index: number ) : T {
 		return this.m_records[index] ?? null;
 	}
 
-	public moveTo( other: DataStore ) {
+	public moveTo( other: DataStore<T> ) {
 		other.setRawData( this.m_records );
 	}
 	
@@ -868,7 +858,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * @param opts 
 	 */
 
-	createView( opts?: DataViewProps ) : DataView {
+	createView( opts?: DataViewProps<T> ) : DataView<T> {
 		let eopts = { ...opts, store: this };
 		return new DataView( eopts );
 	}
@@ -1074,7 +1064,7 @@ export class DataStore extends EventSource<DataStoreEventMap> {
 	 * 
 	 */
 
-	forEach( cb: ( rec:Record, index: number ) => any ) {
+	forEach( cb: ( rec:T, index: number ) => any ) {
 		
 		if( this.m_rec_index ) {
 			this.m_rec_index.some( (ri,index) => {
@@ -1118,8 +1108,8 @@ interface DataViewEventMap extends BaseComponentEventMap {
 	view_change: EvViewChange;
 }
 
-interface DataViewProps extends BaseComponentProps<DataViewEventMap> {
-	store?: DataStore;
+interface DataViewProps<T extends Record> extends BaseComponentProps<DataViewEventMap> {
+	store?: DataStore<T>;
 	filter?: FilterInfo;
 	order?: string | SortProp[] | SortProp;
 }
@@ -1147,15 +1137,15 @@ export interface SortProp {
  * You can have multiple views for a single DataStore
  */
 
-export class DataView extends BaseComponent<DataViewProps,DataViewEventMap>
+export class DataView<T extends Record = Record> extends BaseComponent<DataViewProps<T>,DataViewEventMap>
 {
 	protected m_index: DataIndex;
-	protected m_store: DataStore;	
+	protected m_store: DataStore<T>;	
 
 	protected m_sort: SortProp[];
 	protected m_filter: FilterInfo;
 
-	constructor( props: DataViewProps ) {
+	constructor( props: DataViewProps<T> ) {
 		super( props );
 
 		this.m_store = props.store;
@@ -1269,7 +1259,7 @@ export class DataView extends BaseComponent<DataViewProps,DataViewEventMap>
 	 * @param index 
 	 */
 
-	public getByIndex(index: number): Record {
+	public getByIndex(index: number): T {
 		
 		if (index >= 0 && index < this.m_index.length) {
 			let rid = this.m_index[index];
@@ -1284,7 +1274,7 @@ export class DataView extends BaseComponent<DataViewProps,DataViewEventMap>
 	 * @param id 
 	 */
 
-	public getById( id: any): Record {
+	public getById( id: any): T {
 		return this.m_store.getById( id );
 	}
 
@@ -1296,9 +1286,7 @@ export class DataView extends BaseComponent<DataViewProps,DataViewEventMap>
 	 * 
 	 */
 
-	 forEach( cb: ( rec:Record, index: number ) => any ) {
-
-		debugger;
+	 forEach( cb: ( rec:T, index: number ) => any ) {
 		this.m_index.some( ( index ) => {
 			let rec = this.m_store.getByIndex( index );
 			if( rec ) {

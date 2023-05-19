@@ -93,8 +93,7 @@ export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEdi
 
 	private m_cal_popup: PopupCalendar;
 	protected m_ui_input: Input;
-	private m_error_tip: Tooltip;
-
+	
 	constructor(props: T) {
 		super(props);
 		this.addClass( '@hlayout' );
@@ -107,14 +106,6 @@ export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEdi
 		if (this.m_props.autoFocus) {
 			this.focus();
 		}
-	}
-
-	componentDisposed() {
-		if (this.m_error_tip) {
-			this.m_error_tip.dispose();
-		}
-
-		super.componentDisposed();
 	}
 
 	focus() {
@@ -309,28 +300,18 @@ export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEdi
 	}
 
 	public showError(text: string) {
-
-		if (!this.m_error_tip) {
-			this.m_error_tip = new Tooltip({ cls: 'error' });
-			x4document.body.appendChild(this.m_error_tip._build());
-		}
-
-		let rc = this.m_ui_input.getBoundingRect();
-
-		this.m_error_tip.text = text;
-		this.m_error_tip.displayAt(rc.right, rc.top-8, 'top right');
-		this.addClass('@error');
+		this.m_ui_input.showError( text );
 	}
 
 	public clearError() {
-
-		if (this.m_error_tip) {
-			this.m_error_tip.hide();
-			this.removeClass('@error');
-		}
+		this.m_ui_input.clearError( );
 	}
 
 	public get value(): string {
+		return this.getValue( );
+	}
+
+	public getValue( ) : string {
 		if (this.m_ui_input) {
 			return this.m_ui_input.value;
 		}
@@ -339,7 +320,15 @@ export class TextEdit<T extends TextEditProps = TextEditProps, E extends TextEdi
 		}
 	}
 
+	/**
+	 * 
+	 */
+
 	public set value(value: string) {
+		this.setValue( value );
+	}
+
+	public setValue( value: string ) {
 		if (this.m_ui_input) {
 			this.m_ui_input.value = value;
 		}

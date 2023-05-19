@@ -216,16 +216,16 @@ export interface DataProxyProps extends BaseComponentProps<DataEventMap> {
 }
 export declare class DataProxy extends BaseComponent<DataProxyProps, DataEventMap> {
     constructor(props: DataProxyProps);
-    load(url?: string): void;
-    private _refresh;
+    load(url?: string): Promise<void>;
 }
 /**
  *
  */
-interface DataStoreProps extends BaseComponentProps<DataStoreEventMap> {
-    model: Record;
-    data?: Record[];
+interface DataStoreProps<T extends Record> extends BaseComponentProps<DataStoreEventMap> {
+    model: T;
+    data?: T[];
     url?: string;
+    autoload?: false;
 }
 interface DataStoreEventMap extends EventMap {
     data_change: EvDataChange;
@@ -233,19 +233,19 @@ interface DataStoreEventMap extends EventMap {
 /**
  *
  */
-export declare class DataStore extends EventSource<DataStoreEventMap> {
-    protected m_model: Record;
+export declare class DataStore<T extends Record = Record> extends EventSource<DataStoreEventMap> {
+    protected m_model: T;
     protected m_fields: FieldInfo[];
-    protected m_records: Record[];
+    protected m_records: T[];
     protected m_proxy: DataProxy;
     protected m_rec_index: DataIndex;
-    constructor(props: DataStoreProps);
+    constructor(props: DataStoreProps<T>);
     /**
      *
      * @param records
      */
-    load(url?: string): void;
-    reload(): void;
+    load(url?: string): Promise<void>;
+    reload(): Promise<void>;
     /**
      * convert raw objects to real records from model
      * @param records
@@ -255,17 +255,17 @@ export declare class DataStore extends EventSource<DataStoreEventMap> {
      * just set the records
      * @param records - must be of the same type as model
      */
-    setRawData(records: any[]): void;
+    setRawData(records: T[]): void;
     private _rebuildIndex;
     /**
      *
      */
-    update(rec: Record): boolean;
+    update(rec: T): boolean;
     /**
      *
      * @param data
      */
-    append(rec: Record | any): void;
+    append(rec: T | any): void;
     /**
      *
      */
@@ -291,19 +291,19 @@ export declare class DataStore extends EventSource<DataStoreEventMap> {
      * return the record by it's id
      * @returns record or null
      */
-    getById(id: any): Record;
+    getById(id: any): T;
     /**
      * return a record by it's index
      * @returns record or null
      */
-    getByIndex(index: number): Record;
+    getByIndex(index: number): T;
     private _getRecord;
-    moveTo(other: DataStore): void;
+    moveTo(other: DataStore<T>): void;
     /**
      * create a new view on the DataStore
      * @param opts
      */
-    createView(opts?: DataViewProps): DataView;
+    createView(opts?: DataViewProps<T>): DataView<T>;
     /**
      *
      */
@@ -312,8 +312,8 @@ export declare class DataStore extends EventSource<DataStoreEventMap> {
     /**
      *
      */
-    forEach(cb: (rec: Record, index: number) => any): void;
-    export(): Record[];
+    forEach(cb: (rec: T, index: number) => any): void;
+    export(): T[];
     changed(): void;
 }
 export interface EvViewChange extends BasicEvent {
@@ -323,8 +323,8 @@ export declare function EvViewChange(action: 'filter' | 'sort' | 'change'): EvVi
 interface DataViewEventMap extends BaseComponentEventMap {
     view_change: EvViewChange;
 }
-interface DataViewProps extends BaseComponentProps<DataViewEventMap> {
-    store?: DataStore;
+interface DataViewProps<T extends Record> extends BaseComponentProps<DataViewEventMap> {
+    store?: DataStore<T>;
     filter?: FilterInfo;
     order?: string | SortProp[] | SortProp;
 }
@@ -344,12 +344,12 @@ export interface SortProp {
  * You can sort the columns & filter data
  * You can have multiple views for a single DataStore
  */
-export declare class DataView extends BaseComponent<DataViewProps, DataViewEventMap> {
+export declare class DataView<T extends Record = Record> extends BaseComponent<DataViewProps<T>, DataViewEventMap> {
     protected m_index: DataIndex;
-    protected m_store: DataStore;
+    protected m_store: DataStore<T>;
     protected m_sort: SortProp[];
     protected m_filter: FilterInfo;
-    constructor(props: DataViewProps);
+    constructor(props: DataViewProps<T>);
     private _storeChange;
     /**
      *
@@ -367,7 +367,7 @@ export declare class DataView extends BaseComponent<DataViewProps, DataViewEvent
     /**
      *
      */
-    get store(): DataStore;
+    get store(): DataStore<T>;
     /**
      *
      */
@@ -381,16 +381,16 @@ export declare class DataView extends BaseComponent<DataViewProps, DataViewEvent
      *
      * @param index
      */
-    getByIndex(index: number): Record;
+    getByIndex(index: number): T;
     /**
      *
      * @param id
      */
-    getById(id: any): Record;
+    getById(id: any): T;
     changed(): void;
     /**
      *
      */
-    forEach(cb: (rec: Record, index: number) => any): void;
+    forEach(cb: (rec: T, index: number) => any): void;
 }
 export {};

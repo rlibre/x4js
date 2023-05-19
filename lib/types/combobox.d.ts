@@ -70,7 +70,6 @@ export declare class ComboBox extends HLayout<ComboBoxProps, ComboBoxEventMap> {
     private m_lockchg;
     private m_popvis;
     private m_selection;
-    private m_error_tip;
     constructor(props: ComboBoxProps);
     _onKey(e: any): void;
     set items(items: ListViewItem[]);

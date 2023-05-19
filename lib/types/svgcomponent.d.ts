@@ -30,7 +30,7 @@ import { Component, CProps } from './component';
 /**
  *
  */
-declare abstract class SVGItem {
+export declare abstract class SVGItem {
     private m_tag;
     private m_attrs;
     private m_style;
@@ -87,18 +87,18 @@ declare abstract class SVGItem {
     /**
      *
      */
-    transform(tr: string): void;
+    transform(tr: string): this;
     /**
      *
      */
-    rotate(deg: number, cx: number, cy: number): void;
-    translate(dx: number, dy: number): void;
-    scale(x: number): void;
+    rotate(deg: number, cx: number, cy: number): this;
+    translate(dx: number, dy: number): this;
+    scale(x: number): this;
 }
 /**
  *
  */
-declare class SVGPath extends SVGItem {
+export declare class SVGPath extends SVGItem {
     private m_path;
     constructor();
     renderAttrs(): string;
@@ -134,7 +134,7 @@ declare class SVGPath extends SVGItem {
 /**
  *
  */
-declare class SVGText extends SVGItem {
+export declare class SVGText extends SVGItem {
     private m_text;
     constructor(x: number, y: number, txt: string);
     font(font: string): this;
@@ -147,14 +147,14 @@ declare class SVGText extends SVGItem {
 /**
  *
  */
-declare class SVGShape extends SVGItem {
+export declare class SVGShape extends SVGItem {
     constructor(tag: string);
 }
 /**
  *
  */
 type number_or_perc = number | `${string}%`;
-declare class SVGGradient extends SVGItem {
+export declare class SVGGradient extends SVGItem {
     private static g_id;
     private m_id;
     private m_stops;
@@ -166,13 +166,14 @@ declare class SVGGradient extends SVGItem {
 /**
  *
  */
-declare class SVGGroup extends SVGItem {
+export declare class SVGGroup extends SVGItem {
     protected m_items: SVGItem[];
     constructor(tag?: string);
     path(): SVGPath;
     text(x: any, y: any, txt: any): SVGText;
     ellipse(x: any, y: any, r1: any, r2?: any): SVGShape;
     rect(x: any, y: any, w: any, h: any): SVGShape;
+    group(): SVGGroup;
     /**
      *
      * example

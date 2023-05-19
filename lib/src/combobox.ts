@@ -86,20 +86,27 @@ export interface ComboBoxProps extends CProps<ComboBoxEventMap> {
 	editable?: boolean;
 }
 
+abstract class InputLike extends Component {
+	abstract setValue( text: string );
+	abstract getValue( ): string;
+	abstract showError( text: string );
+	abstract clearError( );
+}
+
+
 /**
  * @review use textedit
  */
 
 export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	
-	private m_ui_input: Input | Component;
+	private m_ui_input: Input | InputLike;
 	private m_ui_button: Button;
 	private m_popup: PopupListView;
 	private m_lockpop: boolean;
 	private m_lockchg: boolean;
 	private m_popvis: boolean;
 	private m_selection: ListViewItem;
-	private m_error_tip: Tooltip;
 		
 	constructor(props: ComboBoxProps) {
 		super(props);
@@ -193,7 +200,7 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 				flex: 1, 
 				cls: '@fake-input @hlayout', 
 				tabIndex: 1 
-			} );
+			} ) as any;
 		}
 
 		let width = undefined,
@@ -245,10 +252,6 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	}
 
 	componentDisposed( ) {
-		if (this.m_error_tip) {
-			this.m_error_tip.dispose();
-		}
-
 		if( this.m_popup ) {
 			this.m_popup.close( );
 		}
@@ -340,24 +343,11 @@ export class ComboBox extends HLayout<ComboBoxProps,ComboBoxEventMap> {
 	}
 
 	public showError(text: string) {
-
-		if (!this.m_error_tip) {
-			this.m_error_tip = new Tooltip({ cls: 'error' });
-			x4document.body.appendChild(this.m_error_tip._build());
-		}
-
-		let rc = this.m_ui_input.getBoundingRect();
-		this.m_error_tip.text = text;
-		this.m_error_tip.displayAt(rc.right, rc.top-8, 'top right');
-
-		this.addClass('@error');
+		this.m_ui_input.showError( text );
 	}
 
 	public clearError() {
-		if (this.m_error_tip) {
-			this.m_error_tip.hide();
-			this.removeClass('@error');
-		}
+		this.m_ui_input.clearError( );
 	}
 
 	/** @ignore

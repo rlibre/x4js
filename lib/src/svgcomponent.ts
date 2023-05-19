@@ -68,7 +68,7 @@ function clean( a, ...b ) {
  * 
  */
 
-abstract class SVGItem {
+export abstract class SVGItem {
 	private m_tag: string
 	private m_attrs: Map<string,string>;
 	private m_style: Map<string,string>;
@@ -135,7 +135,7 @@ abstract class SVGItem {
 		
 		if (value === undefined || value==='' || value===undefined ) {
 			this.m_style.delete( name );
-			return;
+			return this;
 		}
 		
 		if (!_x4_unitless[name] && (isNumber(value) || reNumber.test(value))) {
@@ -204,7 +204,7 @@ abstract class SVGItem {
 	 * 
 	 */
 
-	clip( id: string ) {
+	clip( id: string ): this {
 		this.attr( "clip-path", `url(#${id})` );
 		return this;
 	}
@@ -213,24 +213,28 @@ abstract class SVGItem {
 	 * 
 	 */
 
-	transform( tr: string ) {
+	transform( tr: string ): this {
 		this.attr( "transform", tr );
+		return this;
 	}
 
 	/**
 	 * 
 	 */
 
-	rotate( deg: number, cx: number, cy: number ) {
+	rotate( deg: number, cx: number, cy: number ): this {
 		this.transform( `rotate( ${deg} ${cx} ${cy} )` );
+		return this;
 	}
 
-	translate( dx: number, dy: number ) {
+	translate( dx: number, dy: number ): this {
 		this.transform( `translate( ${dx} ${dy} )` );
+		return this;
 	}
 
-	scale( x: number ) {
+	scale( x: number ): this {
 		this.transform( `scale( ${x} )` );
+		return this;
 	}
 }
 
@@ -238,7 +242,7 @@ abstract class SVGItem {
  * 
  */
 
-class SVGPath extends SVGItem {
+export class SVGPath extends SVGItem {
 	private m_path: string;
 
 	constructor( ) {
@@ -310,7 +314,7 @@ class SVGPath extends SVGItem {
  * 
  */
 
-class SVGText extends SVGItem {
+export class SVGText extends SVGItem {
 
 	private m_text;
 
@@ -373,7 +377,7 @@ class SVGText extends SVGItem {
  * 
  */
 
-class SVGShape extends SVGItem {
+export class SVGShape extends SVGItem {
 	constructor( tag: string ) {
 		super( tag );
 	}
@@ -385,7 +389,7 @@ class SVGShape extends SVGItem {
 
 type number_or_perc = number | `${string}%`
 
-class SVGGradient extends SVGItem {
+export class SVGGradient extends SVGItem {
 
 	private static g_id = 1;
 
@@ -430,7 +434,7 @@ class SVGGradient extends SVGItem {
  * 
  */
 
-class SVGGroup extends SVGItem {
+export class SVGGroup extends SVGItem {
 	protected m_items: SVGItem[];
 
 	constructor( tag = "g" ) {
@@ -469,6 +473,12 @@ class SVGGroup extends SVGItem {
 		shape.attr( 'height', num(h)+'' );
 		this.m_items.push( shape );
 		return shape;
+	}
+
+	group( ) {
+		const group = new SVGGroup( );
+		this.m_items.push( group );
+		return group;
 	}
 
 	/**

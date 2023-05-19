@@ -61,7 +61,7 @@ export declare class Router extends EventSource<RouterEventMap> {
     get(uri: string | RegExp, handler: RouteHandler): void;
     init(): void;
     private _getLocation;
-    navigate(uri: string, notify?: boolean): void;
+    navigate(uri: string, notify?: boolean, replace?: boolean): void;
     private _find;
 }
 export {};
