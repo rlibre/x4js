@@ -12,10 +12,10 @@ see [home](https://x4js.org)
 
 ## Documentation
 
-**12s**: it's the time needed to have a working project:
+**20 seconds**: it's the time needed to have a working project:
 
 ```bash
-npx x4build create name=demo model=html
+npx x4build create demo --type=html
 ```
 
 see [full documentation](https://x4js.org/doc/)

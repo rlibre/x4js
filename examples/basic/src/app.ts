@@ -94,7 +94,7 @@ class Footer extends HLayout {
 
 let frame = new VLayout( {
 	cls: "@fit",
-    content: [
+	content: [
 		new Header( { title: "X4 Application" } ),
 		new Container( { flex: 1 } ),
 		new Footer( { } ),
