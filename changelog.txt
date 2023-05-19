@@ -1,3 +1,6 @@
+2023/05/xx : 1.5.38 --------------------------------------------------------
+	changelog working again
+
 2022/12/xx : 1.5.7 --------------------------------------------------------
 	package.json - removed erroneous dependency to typescript
 	calendar.ts - show now has a parameter named 'at'
