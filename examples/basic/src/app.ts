@@ -38,14 +38,8 @@ class Header extends HLayout {
 		]);
 
 		// instead of using elements with ids, we should have make a member with them:
-		//
-		// this.setContent( [
-		//	new Icon( { id: "logo", icon: 'url(assets/logo.svg)' } ),
-		//	this.title = new Label( { text: props.title, flex: 1 } ),
-		//	this.btn = new Button( { icon: 'var(--icon-usr-btn)', click: ( e ) => this._openMenu( e ) } ),
-		//]);
-		//
 		// then use directly the member
+		// see Footer class to see how
 	}
 
 	private _openMenu( ev: EvClick ) {
